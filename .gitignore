@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -33,3 +34,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+=======
+/node_modules
+>>>>>>> 9477a6b9f30f9f8b73c9f559e0583dc138fa703d
