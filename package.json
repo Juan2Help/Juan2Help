@@ -1,25 +1,23 @@
 {
-<<<<<<< HEAD
-  "name": "juan2help",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "12.1.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
-  },
-  "devDependencies": {
-    "eslint": "8.9.0",
-    "eslint-config-next": "12.1.0"
-=======
-  "dependencies": {
-    "tailwind": "^4.0.0"
->>>>>>> 9477a6b9f30f9f8b73c9f559e0583dc138fa703d
-  }
+    "name": "juan2help",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint"
+    },
+    "dependencies": {
+        "next": "12.1.0",
+        "react": "17.0.2",
+        "react-dom": "17.0.2"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.2",
+        "eslint": "8.9.0",
+        "eslint-config-next": "12.1.0",
+        "postcss": "^8.4.7",
+        "tailwindcss": "^3.0.23"
+    }
 }
