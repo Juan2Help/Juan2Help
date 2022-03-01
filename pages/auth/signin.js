@@ -10,12 +10,10 @@ import Button from "../../components/Button";
 function signin({ providers }) {
   //get session
   const { data: session } = useSession();
-
   const [userDetails, setUserDetails] = useState({ email: "", password: "" });
   const { email, password } = userDetails;
 
-  console.log("providers", providers);
-  console.log("session", session);
+  console.log(session);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,28 +25,20 @@ function signin({ providers }) {
     }
 
     // try to sign in
-    try {
-      const result = await signIntoProviders("credentials", {
-        redirect: false,
-        email: email,
-        password: password,
-      });
+    const result = await signIntoProviders("credentials", {
+      redirect: false,
+      email: email,
+      password: password,
+    });
 
-      console.log(session);
-    } catch (err) {
-      console.error("Error: ", err);
-    }
-
+    console.log(result);
     return;
   };
 
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
-
     setUserDetails({ ...userDetails, [name]: value });
-    console.log(name, value);
-    console.log("userDetails", userDetails);
   };
 
   if (session) {
