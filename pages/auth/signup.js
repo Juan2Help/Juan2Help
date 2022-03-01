@@ -120,7 +120,7 @@ function signup() {
                 type="tel"
                 autoComplete="tel"
                 required
-                placeholder="Mobile Number (+639xxxxxxxxx)"
+                placeholder="Mobile Number (09xxxxxxxxx)"
                 onChange={handleChange}
               />
               <Input
