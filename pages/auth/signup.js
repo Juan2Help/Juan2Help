@@ -1,15 +1,68 @@
-import { useState } from 'react';
-import {
-    getProviders,
-    signIn as signIntoProviders,
-    useSession,
-    signOut,
-} from 'next-auth/react';
 import Head from 'next/head';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
+import ErrorMessage from '../../components/ErrorMessage';
 
 function signup() {
+    const router = useRouter();
+    const [userDetails, setUserDetails] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        mobileNumber: '',
+        confirmPassword: '',
+    });
+
+    const {
+        firstName,
+        lastName,
+        email,
+        password,
+        mobileNumber,
+        confirmPassword,
+    } = userDetails;
+
+    const handleSubmit = async (e) => {
+        //prevent default
+        e.preventDefault();
+
+        //check if password and confirm password match
+        if (password !== confirmPassword) {
+            alert('Passwords dont match');
+            return;
+        }
+
+        //try to sign up
+        const response = await fetch('/api/auth/signup', {
+            method: 'POST',
+            body: JSON.stringify({
+                firstName,
+                lastName,
+                email,
+                password,
+                mobileNumber,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        // redirect to signin page
+        router.push('/auth/signin');
+
+        return;
+    };
+
+    const handleChange = (e) => {
+        // Grab values from form and create local state
+        const { name, value } = e.target;
+        setUserDetails({ ...userDetails, [name]: value });
+    };
+
     return (
         <>
             <Head>
@@ -32,26 +85,26 @@ function signup() {
                             className="mt-8 space-y-4"
                             action="#"
                             method="POST"
-                            onSubmit={() => {}}
+                            onSubmit={handleSubmit}
                         >
                             <div className="flex flex-row space-x-4">
                                 <Input
                                     id="first-name"
-                                    name="first-name"
+                                    name="firstName"
                                     type="text"
                                     autoComplete="given-name"
                                     required
                                     placeholder="First Name"
-                                    onChange={() => {}}
+                                    onChange={handleChange}
                                 />
                                 <Input
                                     id="last-name"
-                                    name="last-name"
+                                    name="lastName"
                                     type="text"
                                     autoComplete="family-name"
                                     required
                                     placeholder="Last Name"
-                                    onChange={() => {}}
+                                    onChange={handleChange}
                                 />
                             </div>
                             <Input
@@ -61,16 +114,16 @@ function signup() {
                                 autoComplete="email"
                                 required
                                 placeholder="Email Address"
-                                onChange={() => {}}
+                                onChange={handleChange}
                             />
                             <Input
                                 id="mobile-number"
-                                name="mobile-number"
+                                name="mobileNumber"
                                 type="tel"
                                 autoComplete="tel"
                                 required
-                                placeholder="Mobile Number"
-                                onChange={() => {}}
+                                placeholder="Mobile Number (09xxxxxxxxx)"
+                                onChange={handleChange}
                             />
                             <Input
                                 id="password"
@@ -79,19 +132,26 @@ function signup() {
                                 autoComplete="password"
                                 required
                                 placeholder="Choose Password"
-                                onChange={() => {}}
+                                onChange={handleChange}
                             />
                             <Input
                                 id="confirm-password"
-                                name="confirm-password"
+                                name="confirmPassword"
                                 type="password"
                                 autoComplete="password"
                                 required
                                 placeholder="Confirm Password"
-                                onChange={() => {}}
+                                onChange={handleChange}
                             />
+                            <ErrorMessage />
                             <Button text="Sign Up" />
                         </form>
+                        <div className="w-full text-sm font-medium text-gray-400 text-center">
+                            Already have an account?{' '}
+                            <span className="font-semibold text-indigo-600 hover:text-indigo-500">
+                                <Link href="/auth/signin">Sign In</Link>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

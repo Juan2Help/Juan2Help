@@ -8,6 +8,8 @@ import {
 import Head from 'next/head';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import ErrorMessage from '../../components/ErrorMessage';
+import Link from 'next/link';
 
 function signin({ providers }) {
     //get session
@@ -81,7 +83,7 @@ function signin({ providers }) {
             </Head>
             <div className="min-h-screen flex items-center justify-center">
                 <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
-                    <div className="max-w-md w-full space-y-4">
+                    <div className="max-w-md w-full space-y-6">
                         <div>
                             <img
                                 className="mx-auto h-12 w-auto"
@@ -99,7 +101,7 @@ function signin({ providers }) {
                             onSubmit={handleSubmit}
                         >
                             <input type="hidden" name="remember" value="true" />
-                            <div className="rounded-md shadow-sm space-y-4">
+                            <div className="rounded-md space-y-4">
                                 <Input
                                     id="email-address"
                                     name="email"
@@ -118,6 +120,7 @@ function signin({ providers }) {
                                     placeholder="Password"
                                     onChange={handleChange}
                                 />
+                                <ErrorMessage />
                             </div>
 
                             <div className="flex items-center justify-between">
@@ -148,20 +151,27 @@ function signin({ providers }) {
                                 </div>
                             </div>
 
-                            <div>
-                                <Button text="Log In" />
+                            <div className="space-y-3">
+                                <Button type="submit" text="Log In" />
+                                <div className="w-full text-xs text-gray-400 font-medium text-center mt-0">
+                                    - OR -
+                                </div>
+                                <Button
+                                    type="button"
+                                    text="Sign in with Google"
+                                    isGoogleSignIn={true}
+                                    onClick={() =>
+                                        signIntoProviders(providers.google.id)
+                                    }
+                                />
                             </div>
                         </form>
-                        <div className="w-full text-sm text-gray-400 font-medium text-center mt-0">
-                            - OR -
+                        <div className="w-full text-sm font-medium text-gray-400 text-center">
+                            Don't have an account?{' '}
+                            <span className="font-semibold text-indigo-600 hover:text-indigo-500">
+                                <Link href="/auth/signup">Sign Up</Link>
+                            </span>
                         </div>
-                        <Button
-                            text="Sign in with Google"
-                            isGoogleSignIn={true}
-                            onClick={() =>
-                                signIntoProviders(providers.google.id)
-                            }
-                        />
                     </div>
                 </div>
             </div>

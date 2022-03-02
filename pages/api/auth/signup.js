@@ -1,11 +1,11 @@
-import { MongoClient } from "mongodb";
 import { hash } from "bcryptjs";
+import { ConnectDB } from "../../../config/connectDB";
 
 async function handler(req, res) {
   //Only POST mothod is accepted
   if (req.method === "POST") {
-    //Getting email and password from body
-    const { email, password } = req.body;
+    // destructure the request body
+    const { email, password, firstName, lastName, mobileNumber } = req.body;
 
     //Validate
     if (!email || !email.includes("@") || !password) {
@@ -13,10 +13,7 @@ async function handler(req, res) {
       return;
     }
     //Connect with database
-    const client = await MongoClient.connect(
-      `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.n4tnm.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`,
-      { useNewUrlParser: true, useUnifiedTopology: true }
-    );
+    const client = await ConnectDB();
     const db = client.db();
     //Check existing
     const checkExisting = await db
@@ -28,10 +25,15 @@ async function handler(req, res) {
       client.close();
       return;
     }
-    //Hash password
+
+    const name = `${firstName} ${lastName}`;
+
+    //Hash password and insert data into DB
     const status = await db.collection("users").insertOne({
+      name,
       email,
       password: await hash(password, 12),
+      mobileNumber,
     });
     //Send success response
     res.status(201).json({ message: "User created", ...status });
