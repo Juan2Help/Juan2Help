@@ -2,7 +2,6 @@ import { MongoClient } from "mongodb";
 
 export async function ConnectDB() {
   //connect to database using mongoclietn
-  console.log("CONNECTING TO DB");
   const opts = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
