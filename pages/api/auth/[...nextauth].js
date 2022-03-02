@@ -29,7 +29,7 @@ export default NextAuth({
         //Not found - send error res
         if (!user) {
           client.close();
-          throw new Error("No user found with the email");
+          throw new Error("Email has not been registered.");
         }
         //Check hashed password with DB password
         console.log(`Comparing ${credentials.password} ${user.password}`);
