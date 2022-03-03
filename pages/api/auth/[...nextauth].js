@@ -29,7 +29,12 @@ export default NextAuth({
         //Not found - send error res
         if (!user) {
           client.close();
-          throw new Error("Email has not been registered.");
+          throw new Error(
+            JSON.stringify({
+              message: "Email has not been registered.",
+              type: "email",
+            })
+          );
         }
         //Check hashed password with DB password
         console.log(`Comparing ${credentials.password} ${user.password}`);
@@ -40,7 +45,9 @@ export default NextAuth({
         //Incorrect password - send response
         if (!checkPassword) {
           client.close();
-          throw new Error("Password doesnt match");
+          throw new Error(
+            JSON.stringify({ message: "Incorrect password.", type: "password" })
+          );
         }
         //Else send success response
         client.close();

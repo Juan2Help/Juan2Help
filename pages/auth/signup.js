@@ -8,7 +8,10 @@ import ErrorMessage from "../../components/ErrorMessage";
 
 function signup() {
   const router = useRouter();
-  const [errorState, setErrorState] = useState({ error: false, message: "" });
+  const [errorState, setErrorState] = useState({
+    error: false,
+    message: "",
+  });
   const [userDetails, setUserDetails] = useState({
     firstName: "",
     lastName: "",
@@ -37,6 +40,7 @@ function signup() {
       setErrorState({
         error: true,
         message: "Password and confirm password do not match",
+        type: 0,
       });
       return;
     }

@@ -10,17 +10,19 @@ import Button from "../../components/Button";
 import Input from "../../components/Input";
 import ErrorMessage from "../../components/ErrorMessage";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 function signin({ providers }) {
-  //get session
+  const router = useRouter();
   const { data: session } = useSession();
-  const [errorState, setErrorState] = useState({ error: false, message: "" });
+  const [errorState, setErrorState] = useState({
+    error: false,
+    message: "",
+    errorType: "",
+  });
   const [userDetails, setUserDetails] = useState({ email: "", password: "" });
   const { email, password } = userDetails;
-  const { error, message } = errorState;
-
-  console.log("providers", providers);
-  console.log("session", session);
+  const { error, message, errorType } = errorState;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,10 +41,18 @@ function signin({ providers }) {
         password: password,
       });
 
-      console.log("result", result);
       if (result.error) {
-        setErrorState({ error: true, message: result.error });
+        const errorResponse = JSON.parse(result.error);
+        setErrorState({
+          error: true,
+          message: errorResponse.message,
+          errorType: errorResponse.type,
+        });
+        return;
       }
+
+      //if no error, redirect to home page
+      router.push("/");
     } catch (err) {
       console.error("Error: ", err);
     }
@@ -55,8 +65,15 @@ function signin({ providers }) {
     const { name, value } = e.target;
 
     setUserDetails({ ...userDetails, [name]: value });
-    console.log(name, value);
-    console.log("userDetails", userDetails);
+
+    // checks if current field has error, if so, remove error
+    if (errorType === name) {
+      setErrorState({
+        error: false,
+        message: "",
+        errorType: "",
+      });
+    }
   };
 
   if (session) {
@@ -111,6 +128,7 @@ function signin({ providers }) {
                   required
                   placeholder="Email address"
                   onChange={handleChange}
+                  hasError={errorType === "email"}
                 />
                 <Input
                   id="password"
@@ -120,6 +138,7 @@ function signin({ providers }) {
                   required
                   placeholder="Password"
                   onChange={handleChange}
+                  hasError={errorType === "password"}
                 />
                 <ErrorMessage
                   text={error ? "Error: " + message : ""}
