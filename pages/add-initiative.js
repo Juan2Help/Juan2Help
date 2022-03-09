@@ -90,9 +90,47 @@ function Causes() {
     );
 }
 
+function Date() {
+    return (
+        <div className="w-full flex flex-row space-x-4">
+            <div className="flex-1 space-y-2">
+                <span className="font-bold text-md">Start date</span>
+                <Input type="date" />
+            </div>
+            <div className="flex-1 space-y-2">
+                <span className="font-bold text-md">End date</span>
+                <Input type="date" />
+            </div>
+        </div>
+    );
+}
+
+function Participants() {
+    return (
+        <div class="w-full">
+            <label for="step" class="text-lg font-bold">
+                Participants
+                <div className="flex flex-row space-x-4 items-center">
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        class="range range-primary range-sm flex"
+                    />
+                    <input
+                        type="number"
+                        placeholder="1000"
+                        className="px-2 py-3 bg-white w-20 font-medium"
+                    />
+                </div>
+            </label>
+        </div>
+    );
+}
+
 function AddInitiative() {
     return (
-        <div className="bg-white h-screen w-screen p-4 flex flex-col space-y-6">
+        <div className="bg-white min-h-screen w-screen p-4 flex flex-col space-y-6">
             <div className="text-xl flex flex-row w-full items-center space-x-2">
                 <Link href="/explore">
                     <FiArrowLeft />
@@ -112,17 +150,21 @@ function AddInitiative() {
                     id="description"
                     name="text"
                     type="text"
+                    rows="7"
                     required
                     placeholder="Initiative Description"
                 />
             </div>
+            <Date />
             <Causes />
-            <div class="w-full">
-                <label for="step" class="text-lg font-bold">
-                    Participants
-                    <Slider />
-                </label>
-            </div>
+            <Input
+                id="location"
+                name="location"
+                type="text"
+                placeholder="Location"
+            />
+            <Participants />
+            <Button text="Deploy" />
         </div>
     );
 }

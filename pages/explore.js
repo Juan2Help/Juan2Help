@@ -29,6 +29,7 @@ import {
 } from 'react-icons/fi';
 import { FaBookmark, FaChalkboardTeacher } from 'react-icons/fa';
 import Image from 'next/image';
+import Header from '../components/Header';
 
 function Post() {
     const userName = '';
@@ -38,7 +39,7 @@ function Post() {
     return (
         <div className="bg-white rounded-2xl w-screen sm:w-96">
             <div className="flex flex-row space-x-2 p-4">
-                <div className="h-10 w-10 rounded-full text-purple-700 text-5xl flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full text-primary text-5xl flex items-center justify-center">
                     <MdAccountCircle />
                 </div>
                 <div className="flex flex-col">
@@ -61,7 +62,7 @@ function Post() {
                 <FiSend />
                 <div className="flex-auto"></div>
                 {isBookmarked ? (
-                    <span className="text-purple-700">
+                    <span className="text-primary">
                         <FaBookmark />
                     </span>
                 ) : (
@@ -81,7 +82,7 @@ function Post2() {
     return (
         <div className="bg-white rounded-2xl w-screen sm:w-96 p-4 space-y-4">
             <div className="flex flex-row space-x-2">
-                <div className="h-10 w-10 rounded-full text-purple-700 text-5xl flex items-center justify-center">
+                <div className="h-10 w-10 rounded-full text-primary text-5xl flex items-center justify-center">
                     <MdAccountCircle />
                 </div>
                 <div className="flex flex-col">
@@ -112,7 +113,7 @@ function Post2() {
             </div>
             <div className="flex flex-row space-x-4 text-2xl p-2 text-gray-700">
                 {isLiked ? (
-                    <MdThumbUp className="text-purple-700" />
+                    <MdThumbUp className="text-primary" />
                 ) : (
                     <FiThumbsUp />
                 )}
@@ -120,33 +121,10 @@ function Post2() {
                 <FiSend />
                 <div className="flex-auto"></div>
                 {isBookmarked ? (
-                    <FaBookmark className="text-purple-700" />
+                    <FaBookmark className="text-primary" />
                 ) : (
                     <FiBookmark />
                 )}
-            </div>
-        </div>
-    );
-}
-
-function Header() {
-    return (
-        <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
-            <div className="flex flex-row items-center justify-center relative p-4 lg:max-w-screen-lg md:max-w-screen-sm w-screen">
-                <h1 className="text-purple-700 font-bold text-3xl flex-auto">
-                    JUAN2HELP
-                </h1>
-                <div className="flex flex-row items-center justify-center space-x-2">
-                    <div className="rounded-full p-2 bg-purple-100 text-purple-700 text-xl">
-                        <FiMessageCircle />
-                    </div>
-                    <div className="rounded-full p-2 bg-purple-100 text-purple-700 text-xl">
-                        <FiBell />
-                    </div>
-                    <div className="text-purple-700 text-4xl">
-                        <MdAccountCircle />
-                    </div>
-                </div>
             </div>
         </div>
     );
@@ -212,7 +190,7 @@ function Nearby() {
         <div className="flex flex-col space-y-2">
             <div className="flex flex-row justify-between items-center">
                 <span className="text-xl font-bold">Nearby Initiatives</span>
-                <div className="text-sm text-purple-700 font-bold space-x-2 flex flex-row items-center">
+                <div className="text-sm text-primary font-bold space-x-2 flex flex-row items-center">
                     <span>View all</span>
                     <FiArrowRight className="inline" />
                 </div>
@@ -247,44 +225,40 @@ function Causes() {
             <span className="text-xl font-bold">Causes</span>
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="flex flex-col justify-center items-center p-4 text-purple-700 bg-purple-100 rounded-full space-y-2">
+                    <div className="flex flex-col justify-center items-center p-4 text-primary bg-purple-100 rounded-full space-y-2">
                         <MdOutlineFastfood className="text-2xl" />
                     </div>
-                    <span className="font-bold text-xs text-purple-700">
-                        Food
-                    </span>
+                    <span className="font-bold text-xs text-primary">Food</span>
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="flex flex-col justify-center items-center p-4 text-purple-700 bg-purple-100 rounded-full space-y-2">
+                    <div className="flex flex-col justify-center items-center p-4 text-primary bg-purple-100 rounded-full space-y-2">
                         <MdOutlineMedication className="text-2xl" />
                     </div>
-                    <span className="font-bold text-xs text-purple-700">
+                    <span className="font-bold text-xs text-primary">
                         Medicine
                     </span>
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="flex flex-col justify-center items-center p-4 text-purple-700 bg-purple-100 rounded-full space-y-2">
+                    <div className="flex flex-col justify-center items-center p-4 text-primary bg-purple-100 rounded-full space-y-2">
                         <MdNature className="text-2xl" />
                     </div>
-                    <span className="font-bold text-xs text-purple-700">
+                    <span className="font-bold text-xs text-primary">
                         Nature
                     </span>
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="flex flex-col justify-center items-center p-4 text-purple-700 bg-purple-100 rounded-full space-y-2">
+                    <div className="flex flex-col justify-center items-center p-4 text-primary bg-purple-100 rounded-full space-y-2">
                         <FaChalkboardTeacher className="text-2xl" />
                     </div>
-                    <span className="font-bold text-xs text-purple-700">
+                    <span className="font-bold text-xs text-primary">
                         Teach
                     </span>
                 </div>
                 <div className="flex flex-col items-center justify-center space-y-1">
-                    <div className="flex flex-col justify-center items-center p-4 text-purple-700 bg-purple-100 rounded-full space-y-2">
+                    <div className="flex flex-col justify-center items-center p-4 text-primary bg-purple-100 rounded-full space-y-2">
                         <FiCrosshair className="text-2xl" />
                     </div>
-                    <span className="font-bold text-xs text-purple-700">
-                        More
-                    </span>
+                    <span className="font-bold text-xs text-primary">More</span>
                 </div>
             </div>
         </div>
@@ -293,7 +267,7 @@ function Causes() {
 
 function Explore() {
     return (
-        <div className="bg-slate-100 min-h-screen flex flex-col justify-between">
+        <div className="bg-slate-100 min-h-screen flex flex-col justify-between text-neutral">
             <Head>
                 <title>Welcome Explore!</title>
             </Head>

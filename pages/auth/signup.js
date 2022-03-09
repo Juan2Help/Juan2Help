@@ -84,7 +84,7 @@ function signup() {
             <Head>
                 <title>Sign Up</title>
             </Head>
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center text-neutral bg-white">
                 <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-md w-full space-y-4">
                         <div>
@@ -168,7 +168,7 @@ function signup() {
                         </form>
                         <div className="w-full text-sm font-medium text-gray-400 text-center">
                             Already have an account?{' '}
-                            <span className="font-semibold text-indigo-600 hover:text-indigo-500">
+                            <span className="font-semibold text-primary hover:text-primary">
                                 <Link href="/auth/signin">Sign In</Link>
                             </span>
                         </div>

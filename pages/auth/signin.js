@@ -82,7 +82,7 @@ function signin({ providers }) {
                 <Head>
                     <title>Welcome back {session.user.name}!</title>
                 </Head>
-                <div className="min-h-screen flex items-center justify-center">
+                <div className="min-h-screen flex items-center justify-center text-neutral bg-white">
                     <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
                         <div className="max-w-md w-full space-y-8">
                             <div>
@@ -102,13 +102,13 @@ function signin({ providers }) {
             <Head>
                 <title>Sign In</title>
             </Head>
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center text-neutral bg-white">
                 <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
                     <div className="max-w-md w-full space-y-6">
                         <div>
                             <img
                                 className="mx-auto h-12 w-auto"
-                                src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+                                src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg"
                                 alt="Workflow"
                             />
                             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -156,7 +156,7 @@ function signin({ providers }) {
                                         id="remember-me"
                                         name="remember-me"
                                         type="checkbox"
-                                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                        className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                                     />
                                     <label
                                         htmlFor="remember-me"
@@ -167,7 +167,7 @@ function signin({ providers }) {
                                     </label>
                                 </div>
 
-                                <div className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                <div className="text-sm font-medium text-primary hover:text-primary">
                                     <Link href="/auth/forgot-password">
                                         Forgot your password?
                                     </Link>
@@ -176,8 +176,8 @@ function signin({ providers }) {
 
                             <div className="space-y-3">
                                 <Button type="submit" text="Log In" />
-                                <div className="w-full text-xs text-gray-400 font-medium text-center mt-0">
-                                    - OR -
+                                <div className="divider text-gray-300 text-xs">
+                                    OR
                                 </div>
                                 <Button
                                     type="button"
@@ -191,7 +191,7 @@ function signin({ providers }) {
                         </form>
                         <div className="w-full text-sm font-medium text-gray-400 text-center">
                             Don't have an account?{' '}
-                            <span className="font-semibold text-indigo-600 hover:text-indigo-500">
+                            <span className="font-semibold text-primary hover:text-primary">
                                 <Link href="/auth/signup">Sign Up</Link>
                             </span>
                         </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 function ErrorMessage({ text, isInformation, hasError }) {
-    const def = 'mt-2 text-sm text-red-600 dark:text-red-500 font-medium';
+    const def = 'mt-2 text-sm text-error dark:text-red-500 font-medium';
     return (
         <p className={hasError ? def : 'hidden'}>
             {isInformation ? (

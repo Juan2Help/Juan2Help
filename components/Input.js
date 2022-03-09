@@ -11,9 +11,9 @@ function Input({
     onChange,
 }) {
     const fail =
-        'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400 focus:border-indigo-500 focus:z-10';
+        'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full px-4 py-3 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10';
     const nofail =
-        'appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm';
+        'appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-purple-700 focus:border-purple-700 focus:z-10 sm:text-sm';
     let variant = hasError ? fail : nofail;
     let isClicked = false;
 
@@ -42,17 +42,17 @@ function Input({
 function TextArea({
     id,
     name,
-    type,
     autoComplete,
     required,
     placeholder,
     hasError,
+    rows,
     onChange,
 }) {
     const fail =
-        'resize-none h-96 bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400 focus:border-indigo-500 focus:z-10';
+        'resize-none bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10';
     const nofail =
-        'resize-none h-96 appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm';
+        'resize-none appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-purple-700 focus:border-purple-700 focus:z-10 sm:text-sm';
     let variant = hasError ? fail : nofail;
     let isClicked = false;
 
@@ -64,6 +64,7 @@ function TextArea({
                 autoComplete={autoComplete}
                 required={required}
                 placeholder={placeholder}
+                rows={rows}
                 className={!isClicked ? variant : nofail}
             />
         </div>
