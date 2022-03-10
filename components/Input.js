@@ -9,6 +9,7 @@ function Input({
     placeholder,
     hasError,
     onChange,
+    value,
 }) {
     const fail =
         'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full px-4 py-3 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10';
@@ -34,6 +35,7 @@ function Input({
                     isClicked = !isClicked;
                 }}
                 onChange={onChange}
+                value={value}
             />
         </div>
     );
@@ -71,25 +73,19 @@ function TextArea({
     );
 }
 
-function Slider() {
+function Date() {
     return (
-        <div className="flex flex-row space-x-2 items-center">
-            <input
-                type="range"
-                id="participants"
-                min="0"
-                step="1"
-                max="5"
-                defaultValue="0"
-                class="w-full h-2 bg-purple-100 appearance-none rounded-xl"
-            />
-            <input
-                type="number"
-                placeholder={1000}
-                className="w-16 border rounded-md px-2 py-1 font-medium text-gray-300 text-xl"
-            />
+        <div className="w-full flex flex-row space-x-4">
+            <div className="flex-1 space-y-2">
+                <span className="font-bold text-md">Start date</span>
+                <Input type="date" />
+            </div>
+            <div className="flex-1 space-y-2">
+                <span className="font-bold text-md">End date</span>
+                <Input type="date" />
+            </div>
         </div>
     );
 }
 
-export { Input, Slider, TextArea };
+export { Input, TextArea, Date };

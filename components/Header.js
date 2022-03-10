@@ -7,7 +7,7 @@ function Header() {
     const hasNotification = true;
     return (
         <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
-            <div className="flex flex-row items-center justify-center relative p-4 lg:max-w-screen-lg md:max-w-screen-sm w-screen">
+            <div className="flex flex-row items-center justify-center relative p-4 xl:max-w-screen-xl xl:px-0 lg:max-w-screen-lg md:max-w-screen-sm w-screen">
                 <h1 className="text-primary font-bold text-3xl flex-auto">
                     JUAN2HELP
                 </h1>
