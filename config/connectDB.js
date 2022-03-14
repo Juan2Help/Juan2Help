@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
 export async function ConnectDB() {
-  //connect to database using mongoclietn
+  //connect to database using mongoclient
   const opts = {
     useNewUrlParser: true,
     useUnifiedTopology: true,

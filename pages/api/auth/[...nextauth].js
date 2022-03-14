@@ -63,7 +63,8 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: ({ token, user, account }) => {
+      if (account?.provider === "google") token.provider = "google";
       if (user) token.id = user.id;
 
       return token;
@@ -71,15 +72,21 @@ export default NextAuth({
     async session({ session, token }) {
       if (token) {
         session.id = token.id;
+
+        if (token.provider === "google") {
+          session.provider = "google";
+        }
       }
 
       if (session) {
-        session.user.username = session.user.name
+        session.user.username = session.user?.name
           .split(" ")
           .join("")
           .toLocaleLowerCase();
         session.user.uid = token.sub;
       }
+
+      console.log(session);
       return session;
     },
   },
