@@ -52,7 +52,7 @@ function signin({ providers }) {
             }
 
             //if no error, redirect to home page
-            router.push('/');
+            router.push('/explore');
         } catch (err) {
             console.error('Error: ', err);
         }
@@ -156,7 +156,7 @@ function signin({ providers }) {
                                         id="remember-me"
                                         name="remember-me"
                                         type="checkbox"
-                                        className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                                        className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                                     />
                                     <label
                                         htmlFor="remember-me"

@@ -1,6 +1,4 @@
-import Image from 'next/image';
 import React from 'react';
-import { FaBookmark } from 'react-icons/fa';
 import {
     FiAlertTriangle,
     FiBookmark,
@@ -8,11 +6,11 @@ import {
     FiMessageCircle,
     FiMoreHorizontal,
     FiSend,
-    FiShare,
     FiShare2,
     FiThumbsUp,
 } from 'react-icons/fi';
-import { MdAccountCircle, MdThumbUp } from 'react-icons/md';
+import moment from 'moment';
+import { faker } from '@faker-js/faker';
 
 function ModalToggle() {
     return (
@@ -51,25 +49,39 @@ function ModalToggle() {
 }
 
 function Post() {
-    const userName = '';
-    const postTime = '';
-    const postLocation = '';
-    const isBookmarked = true;
-    const isLiked = true;
+    const fake = {
+        author: {
+            name: faker.name.findName(),
+            avatar: faker.image.avatar(),
+        },
+        post: {
+            time: moment(faker.date.recent(), 'YYYYMMDD').fromNow(),
+            location: faker.address.city(),
+            title: faker.name.title(),
+            image: `https://api.lorem.space/image/album?w=1500&h=1500&r=${Math.random()}`,
+            content: faker.lorem.lines(3),
+            isBookmarked: Math.random() > 0.5,
+        },
+    };
     return (
         <>
-            <div className="bg-white rounded-2xl w-screen sm:w-96 p-4 space-y-4 mb-4">
+            <div className="bg-white rounded-2xl w-full pb-full flex flex-col p-4 space-y-4 mb-4">
                 <div className="flex flex-row justify-between">
                     <div className="flex flex-row space-x-2">
-                        <div className="h-10 w-10 rounded-full text-primary text-5xl flex items-center justify-center">
-                            <MdAccountCircle />
+                        <div className="h-10 w-10 text-primary text-5xl flex items-center justify-center">
+                            <img
+                                src={fake.author.avatar}
+                                className="rounded-full"
+                            />
                         </div>
                         <div className="flex flex-col">
                             <span className="font-bold">
-                                {userName || 'John Doe'}
+                                {fake.author.name || 'John Doe'}
                             </span>
                             <span className="text-xs">
-                                {postTime + postLocation || '4h · Pasay City'}
+                                {[fake.post.time, fake.post.location].join(
+                                    ' · '
+                                ) || '4h · Pasay City'}
                             </span>
                         </div>
                     </div>
@@ -80,27 +92,21 @@ function Post() {
                     </div>
                 </div>
                 <div className="flex flex-col">
-                    <span className="text-xl font-bold">Post Title</span>
-                    <p className="text-sm text-gray-700 truncate overflow-hidden max-h-6">
-                        Chase the pig around the house cats are the world so
-                        lasers are tiny mice chase little red dot someday it
-                        will be mine! for bawl under human beds. Eat prawns
-                        daintily with a claw then lick paws clean wash down
-                        prawns with a lap of carnation milk then retire to the
-                        warmest spot on the couch to claw at the fabric before
-                        taking a catnap pee in the shoe for love and coo around
+                    <span className="text-xl font-bold">{fake.post.title}</span>
+                    <p className="text-sm text-gray-700 break-all line-clamp-3">
+                        {fake.post.content}
                     </p>
                 </div>
-                <div className="h-72 w-full sm:h-72 sm:w-full bg-slate-500 relative rounded-3xl overflow-clip">
-                    <Image
-                        src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+                <div className="grow w-full sm:w-full bg-slate-500 relative rounded-3xl overflow-clip">
+                    <img
+                        src={fake.post.image}
                         layout="fill"
                         objectFit="cover"
                     />
                 </div>
                 <div className="flex flex-row space-x-4 text-2xl p-2 text-gray-700">
                     <label class="swap swap-rotate">
-                        <input type="checkbox" value={isBookmarked} />
+                        <input type="checkbox" value={fake.post.isBookmarked} />
                         <FiThumbsUp className="swap-on text-white fill-primary stroke-1" />
                         <FiThumbsUp className="swap-off" />
                     </label>
@@ -108,7 +114,7 @@ function Post() {
                     <FiSend />
                     <div className="flex-auto"></div>
                     <label class="swap swap-flip">
-                        <input type="checkbox" value={isBookmarked} />
+                        <input type="checkbox" value={fake.post.isBookmarked} />
                         <FiBookmark className="swap-on text-primary fill-current" />
                         <FiBookmark className="swap-off" />
                     </label>

@@ -10,7 +10,7 @@ import {
 
 function Sidebar({ active }) {
     return (
-        <div className="sticky top-[72px] hidden xl:flex xl:flex-col xl:w-4/12 space-y-2">
+        <div className="sticky h-fit top-[72px] hidden xl:flex xl:flex-col xl:w-4/12 space-y-2">
             <div>
                 <Link href="/explore">
                     <button
