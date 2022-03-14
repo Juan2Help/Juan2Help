@@ -9,7 +9,7 @@ import {
 
 function Causes() {
     return (
-        <div className="flex flex-col space-y-2">
+        <div className="flex md:hidden flex-col space-y-2">
             <span className="text-lg font-bold">Causes</span>
             <div className="flex flex-row justify-between">
                 <div className="flex flex-col items-center justify-center space-y-1">
