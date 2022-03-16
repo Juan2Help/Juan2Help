@@ -32,7 +32,7 @@ function TopOrganizers() {
                     <FiArrowRight className="inline" />
                 </div>
             </div>
-            <div className="flex flex-row space-x-4 max-w-full overflow-x-auto pb-2">
+            <div className="flex flex-row space-x-4 max-w-full overflow-x-auto pb-2 scrollbar-none">
                 <OrganizerTile name="Save Our Seas" />
                 <OrganizerTile name="Philippine Red Cross" />
                 <OrganizerTile name="Philippine Animal Welfare Society" />
@@ -131,7 +131,7 @@ function Initiative() {
 
 function InitiativeCarousel() {
     return (
-        <div className="flex flex-row space-x-4 overflow-x-scroll pb-2">
+        <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 scrollbar-none">
             <Initiative />
             <Initiative />
             <Initiative />

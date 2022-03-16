@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
-import Participants from '../components/add-initiative/Participant';
-import { Input, TextArea, Date } from '../components/Input';
-import Button from '../components/Button';
-import Causes from '../components/Causes';
+import Participants from '../../components/add-initiative/Participant';
+import { Input, TextArea, Date } from '../../components/Input';
+import Button from '../../components/Button';
 
-function AddInitiative() {
+function edit() {
     return (
         <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
+            <Head>
+                <title>Edit Initiative</title>
+            </Head>
             <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
                 <Link href="/explore">
                     <FiArrowLeft />
@@ -63,4 +65,4 @@ function AddInitiative() {
     );
 }
 
-export default AddInitiative;
+export default edit;

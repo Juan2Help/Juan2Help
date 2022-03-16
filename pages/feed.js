@@ -23,7 +23,7 @@ function MyFeed() {
 
 function Feed() {
     return (
-        <div className="bg-base-100 w-full min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
+        <div className="w-full min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
             <Head>
                 <title>Welcome Home!</title>
             </Head>
