@@ -21,8 +21,10 @@ async function handler(req, res) {
       res.status(422).json({ message: "Invalid Data", type: "1" });
       return;
     }
-    //Connect with databas
-    const client = await ConnectDB().db();
+    //Connect with database
+    const client = await ConnectDB();
+
+    const db = client.db();
 
     //Check existing
     const checkExisting = await db
@@ -43,6 +45,8 @@ async function handler(req, res) {
       email,
       password: await hash(password, 12),
       mobileNumber,
+      isModerator: false,
+      isAdmin: false,
     });
     //Send success response
     res.status(201).json({ message: "User created", ...status });

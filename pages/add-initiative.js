@@ -56,7 +56,7 @@ function AddInitiative() {
   };
 
   return (
-    <ProtectedRoute session={session}>
+    <ProtectedRoute session={session} modOnly={true}>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
           <Link href="/explore">

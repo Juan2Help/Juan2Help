@@ -13,6 +13,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 
 function Explore() {
   const { data: session } = useSession();
+  console.log(session);
   return (
     <ProtectedRoute session={session}>
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
