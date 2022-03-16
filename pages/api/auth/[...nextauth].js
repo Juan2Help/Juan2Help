@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { ConnectDB } from "../../../config/connectDB";
+import { authGoogle } from "../../../config/authGoogle";
 
 export default NextAuth({
   //Configure JWT
@@ -63,7 +64,8 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: ({ token, user, account }) => {
+      if (account?.provider === "google") token.provider = "google";
       if (user) token.id = user.id;
 
       return token;
@@ -71,15 +73,21 @@ export default NextAuth({
     async session({ session, token }) {
       if (token) {
         session.id = token.id;
+
+        if (token.provider === "google") {
+          session.user = await authGoogle(session.user);
+        }
       }
 
       if (session) {
-        session.user.username = session.user.name
+        session.user.username = session.user?.name
           .split(" ")
           .join("")
           .toLocaleLowerCase();
         session.user.uid = token.sub;
       }
+
+      console.log(session);
       return session;
     },
   },

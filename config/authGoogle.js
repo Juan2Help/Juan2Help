@@ -1,0 +1,53 @@
+import { ConnectDB } from "./connectDB";
+import { hash } from "bcryptjs";
+
+export async function authGoogle(details) {
+  //connect to database using mongoclient
+  console.log("AUTH GOOGLE");
+  const client = await ConnectDB();
+  //Get all the users
+  const users = await client.db("juan2help").collection("users");
+  //Find user with the email
+
+  let user = await users.findOne({
+    email: details.email,
+  });
+
+  //Not found - send error res
+  if (!user) {
+    try {
+      await registerGoogle(details, client);
+      // try searching for the email again
+      user = await users.findOne({
+        email: details.email,
+      });
+    } catch (err) {
+      client.close();
+      throw new Error(err);
+    }
+  }
+  client.close();
+  return user;
+}
+
+// function to register google account to db
+async function registerGoogle(details, client) {
+  const { name, email } = details;
+  const users = await client.db("juan2help").collection("users");
+
+  //Hash password and insert data into DB
+  try {
+    const status = await users.insertOne({
+      name,
+      email,
+      password: await hash("fromgoogleHashedpass", 12),
+      mobileNumber: 0,
+      isModerator: false,
+      isAdmin: false,
+      NGOname: "",
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+  //Send success response
+}
