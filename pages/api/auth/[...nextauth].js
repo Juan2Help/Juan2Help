@@ -64,9 +64,10 @@ export default NextAuth({
     signIn: "/auth/signin",
   },
   callbacks: {
-    jwt: ({ token, user, account }) => {
+    async jwt({ token, user, account }) {
       if (account?.provider === "google") {
         token.provider = "google";
+        token.user = await authGoogle(user);
       }
       if (user) token.id = user.id;
 
@@ -77,7 +78,7 @@ export default NextAuth({
         session.id = token.id;
 
         if (token.provider === "google") {
-          session.user = await authGoogle(session.user);
+          session.user = token.user;
         }
       }
 
@@ -89,7 +90,7 @@ export default NextAuth({
         session.user.uid = token.sub;
       }
 
-      console.log(session);
+      console.log("Supplying", session);
       return session;
     },
   },

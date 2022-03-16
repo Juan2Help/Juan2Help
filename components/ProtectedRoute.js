@@ -1,18 +1,20 @@
 import React from "react";
 import { signIn } from "next-auth/react";
 import Button from "./Button";
-import { useRouter } from "next/router";
 
-function ProtectedRoute({ children, session, modOnly, ...rest }) {
-  const router = useRouter();
-  if (modOnly && !session?.user?.isModerator) {
+function ProtectedRoute({ children, session, modOnly, router }) {
+  const goBack = () => {
     router.push("/explore");
+  };
+
+  if (modOnly && !session?.user?.isModerator) {
     return (
       <>
         <div className="min-h-screen flex items-center justify-center">
           <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
-              <div>"Redirecting..."</div>
+              <div>"You have no permission to perform the action."</div>
+              <Button text={"Go back"} onClick={() => goBack()} />
             </div>
           </div>
         </div>
