@@ -9,11 +9,18 @@ import {
 import Sidebar from "../../components/Sidebar";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 function manage() {
   const { data: session } = useSession();
   const [handledInitiatives, setHandledInitiatives] = useState([]);
-  const [currentModal, setCurrentModal] = useState("");
+  const [selectedInitiative, setSelectedInitiative] = useState("");
+  const [newData, setNewData] = useState(false);
+
+  let test = "";
+
+  const router = useRouter();
+
   useEffect(() => {
     const fetchData = async () => {
       const req = await fetch("/api/handled-initiatives", {
@@ -30,11 +37,37 @@ function manage() {
       setHandledInitiatives(fetchedInitiatives);
     };
     console.log(session);
-    if (session) fetchData();
-  }, session);
+    if (session?.user?.isModerator) fetchData();
+  }, [session, newData]);
 
   const onClickHandler = (e) => {
-    setCurrentModal(e.currentTarget.id);
+    setSelectedInitiative(e.currentTarget.id);
+    console.log(e.currentTarget.id);
+    console.log(selectedInitiative);
+  };
+
+  const editHandler = (e) => {
+    router.push(`/initiative/edit/${selectedInitiative}`);
+  };
+
+  const deleteHandler = async (e) => {
+    try {
+      const req = await fetch("/api/delete-initiative", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: session.user.email,
+          id: selectedInitiative,
+        }),
+      });
+      const body = await req.json();
+      setNewData(true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -57,7 +90,7 @@ function manage() {
         </div>
       </div>
       <Navbar />
-      <ModalToggle />
+      <ModalToggle editHandler={editHandler} deleteHandler={deleteHandler} />
     </div>
   );
 }

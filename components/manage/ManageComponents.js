@@ -22,10 +22,10 @@ function ModalToggle({ editHandler, deleteHandler }) {
             </div>
           </div>
           <ul class="bg-base-100 w-full space-y-4 mt-4">
-            <li>
+            <li onClick={editHandler}>
               <a>Edit</a>
             </li>
-            <li>
+            <li onClick={deleteHandler}>
               <a>Delete</a>
             </li>
           </ul>
