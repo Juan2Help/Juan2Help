@@ -48,7 +48,7 @@ function SuggestedPerson() {
 
 function Suggestions() {
     return (
-        <div className="w-full space-y-6">
+        <div className="w-full space-y-6 xl:ml-10">
             <div className="flex flex-row items-center justify-between">
                 <span className="text-gray-400 text-md font-bold">
                     Suggestions for you
