@@ -36,7 +36,9 @@ function Header() {
                         </div>
                     </div>
                     <div className="text-primary text-4xl">
-                        <MdAccountCircle />
+                        <Link href="/initiative/manage">
+                            <MdAccountCircle />
+                        </Link>
                     </div>
                 </div>
             </div>

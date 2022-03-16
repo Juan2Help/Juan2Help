@@ -10,7 +10,7 @@ import {
 
 function Sidebar({ active }) {
     return (
-        <div className="sticky h-fit top-[72px] hidden xl:flex xl:flex-col xl:w-4/12 space-y-2">
+        <div className="sticky h-fit top-[72px] hidden md:flex md:flex-col xl:flex xl:flex-col xl:w-4/12 space-y-2">
             <div>
                 <Link href="/explore">
                     <button
@@ -20,7 +20,7 @@ function Sidebar({ active }) {
                         }`}
                     >
                         <FiCompass className="text-3xl" />
-                        Explore
+                        <span className="hidden xl:inline">Explore</span>
                     </button>
                 </Link>
             </div>
@@ -33,7 +33,7 @@ function Sidebar({ active }) {
                         }`}
                     >
                         <FiCopy className="text-3xl" />
-                        Feed
+                        <span className="hidden xl:inline">Feed</span>
                     </button>
                 </Link>
             </div>
@@ -46,7 +46,7 @@ function Sidebar({ active }) {
                         }`}
                     >
                         <FiSearch className="text-3xl" />
-                        Search
+                        <span className="hidden xl:inline">Search</span>
                     </button>
                 </Link>
             </div>
@@ -59,7 +59,7 @@ function Sidebar({ active }) {
                         }`}
                     >
                         <FiCalendar className="text-3xl" />
-                        Schedule
+                        <span className="hidden xl:inline">Schedule</span>
                     </button>
                 </Link>
             </div>
@@ -72,7 +72,7 @@ function Sidebar({ active }) {
                         }`}
                     >
                         <FiBookmark className="text-3xl" />
-                        Bookmarks
+                        <span className="hidden xl:inline">Bookmarks</span>
                     </button>
                 </Link>
             </div>
