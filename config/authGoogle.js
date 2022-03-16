@@ -27,7 +27,16 @@ export async function authGoogle(details) {
     }
   }
   client.close();
-  return user;
+
+  // return name, email, and id
+  return {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    isModerator: user.isModerator,
+    isAdmin: user.isAdmin,
+    NGOname: user.NGOname,
+  };
 }
 
 // function to register google account to db

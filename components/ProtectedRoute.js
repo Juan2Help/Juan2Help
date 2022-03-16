@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 function ProtectedRoute({ children, session, modOnly, ...rest }) {
   const router = useRouter();
-  if (modOnly && session?.user?.isModerator === false) {
+  if (modOnly && !session?.user?.isModerator) {
     router.push("/explore");
     return (
       <>

@@ -6,16 +6,21 @@ import Button from "../components/Button";
 import { useSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 function AddInitiative() {
   const { data: session } = useSession();
   const [initiativeData, setInitiativeData] = useState({});
+  const router = useRouter();
 
   // submit initiative data to api
   const handleSubmit = async (e) => {
     //prevent default
     e.preventDefault();
 
+    // add user email and NGO to initiative data
+    initiativeData.publisher = session.user.email;
+    initiativeData.NGOname = session.user.NGOname;
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/add-initiative", {
       method: "POST",

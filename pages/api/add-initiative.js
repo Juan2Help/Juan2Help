@@ -13,6 +13,8 @@ async function handler(req, res) {
       startDate,
       endDate,
       causeType,
+      publisher,
+      NGOname,
     } = req.body;
 
     const conn = await ConnectDB();
@@ -28,6 +30,8 @@ async function handler(req, res) {
       startDate,
       endDate,
       causeType,
+      publisher,
+      NGOname,
     });
 
     // send the response status 200

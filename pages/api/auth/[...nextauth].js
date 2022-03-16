@@ -65,7 +65,9 @@ export default NextAuth({
   },
   callbacks: {
     jwt: ({ token, user, account }) => {
-      if (account?.provider === "google") token.provider = "google";
+      if (account?.provider === "google") {
+        token.provider = "google";
+      }
       if (user) token.id = user.id;
 
       return token;
