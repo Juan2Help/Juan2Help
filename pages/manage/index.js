@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../components/ProtectedRoute";
+import Button from "../../components/Button";
 
 function index() {
   const { data: session } = useSession();
@@ -161,6 +162,13 @@ function index() {
                       moderators={handledModerators}
                     />
                   </div>
+                  <div className="divider text-xs text-gray-400">END</div>
+                  <Button
+                    onClick={() => {
+                      router.push("/manage/edit-admin");
+                    }}
+                    text="Edit Organization Details"
+                  />
                 </>
               )}
             </div>

@@ -4,17 +4,24 @@ import { ObjectId } from "mongodb";
 async function handler(req, res) {
   //Only POST mothod is accepted
   if (req.method === "POST") {
-    // destructure the request body
-    console.log("REQUEST", req.body);
-    const { NGOid, email, role, id } = req.body;
+    console.log(req.body);
+    const { name, description, NGOid, email } = req.body;
+
+    // validate name, description, moderator
+    if (!name || !description || !NGOid || !email) {
+      res
+        .status(400)
+        .json({ message: "Missing name, description, or moderator" });
+      return;
+    }
 
     const conn = await ConnectDB();
     const db = conn.db();
-
-    const user = db.collection("users");
+    const organizations = db.collection("organizations");
+    const users = db.collection("users");
 
     // check if user is a moderator
-    const isModerator = await user.findOne({
+    const isModerator = await users.findOne({
       email,
       NGOid: ObjectId(NGOid),
       role: 4,
@@ -27,14 +34,15 @@ async function handler(req, res) {
       return;
     }
 
-    // update user info
-    const userInfo = await user.updateOne(
-      { _id: ObjectId(id) },
-      { $set: { NGOid: ObjectId(NGOid), role: role } }
+    //edit organization data
+    const organization = await organizations.updateOne(
+      { _id: ObjectId(NGOid) },
+      { $set: { name, description } }
     );
 
+    console.log("SUCCESS!");
     // send the response status 200
-    res.status(200).json({ message: "Moderator added successfully." });
+    res.status(200).json({ message: "Organization data edited successfully." });
     conn.close();
   } else {
     //Response for other than POST method
