@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React } from "react";
 import {
   FiCalendar,
   FiLink,
@@ -7,10 +7,10 @@ import {
   FiMapPin,
   FiPlusCircle,
   FiEdit3,
-} from 'react-icons/fi';
-import faker from '@faker-js/faker';
-import moment from 'moment';
-import Link from 'next/link';
+} from "react-icons/fi";
+import faker from "@faker-js/faker";
+import moment from "moment";
+import Link from "next/link";
 
 function InitiativeModal({ editHandler, deleteHandler }) {
   return (
@@ -46,7 +46,7 @@ function InitiativeModal({ editHandler, deleteHandler }) {
 function InitiativeTile({ initiative, id, onClickHandler }) {
   const { title, startDate } = initiative;
   const details = {
-    date: moment(startDate).format('ddd, DD MMM YYYY').toUpperCase(),
+    date: moment(startDate).format("ddd, DD MMM YYYY").toUpperCase(),
     title: title,
   };
   return (
@@ -199,7 +199,7 @@ function ModeratorModal({ editHandler, deleteHandler }) {
   );
 }
 
-function NGODetails({ router }) {
+function NGODetails({ router, details, session }) {
   return (
     <>
       <div className="w-full flex flex-row items-center gap-4">
@@ -214,19 +214,23 @@ function NGODetails({ router }) {
         </div>
         <div className="w-3/4 flex flex-col gap-2">
           <div className="flex flex-col">
-            <span className="text-lg font-bold">NGO NAME</span>
+            <span className="text-lg font-bold">
+              {session && details?.name ? `${details.name}` : "NGO NAME"}
+            </span>
             <span className="text-xs text-gray-400 truncate">
-              The NGO description goes here.
+              {session && details?.description
+                ? `${details.description}`
+                : "The NGO description goes here."}
             </span>
           </div>
           <div
             className="text-xs flex items-center flex-row gap-2"
             onClick={() => {
-              router.push('/manage/edit-admin');
+              router.push("/manage/edit-admin");
             }}
           >
             <FiEdit3 />
-            <span className="font-bold">Edit details</span>
+            <span className="font-bold hover:cursor-pointer">Edit details</span>
           </div>
         </div>
       </div>

@@ -1,27 +1,28 @@
-import Head from 'next/head';
-import { React } from 'react';
-import Header from '../../components/Header';
-import Navbar from '../../components/Navbar';
+import Head from "next/head";
+import { React } from "react";
+import Header from "../../components/Header";
+import Navbar from "../../components/Navbar";
 import {
   InitiativeList,
   ModeratorList,
   InitiativeModal,
   ModeratorModal,
   NGODetails,
-} from '../../components/manage/ManageComponents';
-import Sidebar from '../../components/Sidebar';
-import { useSession } from 'next-auth/react';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import ProtectedRoute from '../../components/ProtectedRoute';
-import Button from '../../components/Button';
+} from "../../components/manage/ManageComponents";
+import Sidebar from "../../components/Sidebar";
+import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import Button from "../../components/Button";
 
 function index() {
   const { data: session } = useSession();
   const [handledInitiatives, setHandledInitiatives] = useState([]);
   const [handledModerators, setHandledModerators] = useState([]);
-  const [selectedInitiative, setSelectedInitiative] = useState('');
-  const [selectedModerator, setSelectedModerator] = useState('');
+  const [organizationDetails, setOrganizationDetails] = useState({});
+  const [selectedInitiative, setSelectedInitiative] = useState("");
+  const [selectedModerator, setSelectedModerator] = useState("");
   const [newData, setNewData] = useState(false);
 
   const router = useRouter();
@@ -29,11 +30,11 @@ function index() {
   // DATA FETCHING
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch('/api/handled-initiatives', {
-        method: 'POST',
+      const req = await fetch("/api/handled-initiatives", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -52,11 +53,11 @@ function index() {
   //fetch data for moderator list
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch('/api/organizations/moderator-list', {
-        method: 'POST',
+      const req = await fetch("/api/organizations/moderator-list", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           NGOid: session.user.NGOid,
@@ -65,13 +66,35 @@ function index() {
       });
       const fetchedModerators = await req.json();
       setHandledModerators(fetchedModerators);
-      console.log('FETCHED MODS:', fetchedModerators);
     };
 
     if (session?.user?.role >= 2) fetchData();
     // log fetchedModerators
-    console.log(handledModerators);
   }, [session, newData]);
+
+  //fetch data for organization details
+  useEffect(() => {
+    const fetchData = async () => {
+      const req = await fetch("/api/organizations/get-details", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          NGOid: session.user.NGOid,
+          email: session.user.email,
+        }),
+      });
+      const fetchedOrganizationDetails = await req.json();
+      setOrganizationDetails(fetchedOrganizationDetails);
+      console.log("FETCHED ORG DETAILS:", fetchedOrganizationDetails);
+    };
+
+    if (session?.user?.role >= 2) fetchData();
+    // log fetchedModerators
+    console.log(organizationDetails);
+  }, [session]);
 
   // END OF DATA FETCHING
 
@@ -92,11 +115,11 @@ function index() {
 
   const deleteInitiativeHandler = async (e) => {
     try {
-      const req = await fetch('/api/delete-initiative', {
-        method: 'POST',
+      const req = await fetch("/api/delete-initiative", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -116,11 +139,11 @@ function index() {
 
   const deleteModeratorHandler = async (e) => {
     try {
-      const req = await fetch('/api/organizations/delete-moderator', {
-        method: 'POST',
+      const req = await fetch("/api/organizations/delete-moderator", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -138,7 +161,7 @@ function index() {
   // END OF HANDLER FUNCTIONS
 
   return (
-    <ProtectedRoute session={session} authority={2}>
+    <ProtectedRoute session={session} authority={2} router={router}>
       <div className="flex flex-col min-h-screen justify-between overflow-clip">
         <div className="flex flex-col items-center">
           <Head>
@@ -148,7 +171,11 @@ function index() {
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
-              <NGODetails router={router} />
+              <NGODetails
+                router={router}
+                session={session}
+                details={organizationDetails}
+              />
               <span className="text-lg font-bold">Active Initiatives</span>
               <InitiativeList
                 initiatives={handledInitiatives}
