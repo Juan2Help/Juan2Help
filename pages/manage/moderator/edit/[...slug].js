@@ -1,12 +1,12 @@
 import Link from 'next/link';
 import { FiArrowLeft } from 'react-icons/fi';
-import { Input } from '../../../components/Input';
+import { Input } from '../../../../components/Input';
 import Head from 'next/head';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import ProtectedRoute from '../../../components/ProtectedRoute';
-import ConfirmAction from '../../../components/manage/ConfirmAction';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
+import ConfirmAction from '../../../../components/manage/ConfirmAction';
 
 function add() {
     const { data: session } = useSession();
@@ -62,7 +62,7 @@ function add() {
     return (
         <ProtectedRoute session={session} modOnly={true} router={router}>
             <Head>
-                <title>Edit Moderator</title>
+                <title>Add Moderator</title>
             </Head>
             <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
                 <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
