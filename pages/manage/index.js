@@ -5,7 +5,8 @@ import Navbar from '../../components/Navbar';
 import {
     InitiativeList,
     ModeratorList,
-    ModalToggle,
+    InitiativeModal,
+    ModeratorModal,
 } from '../../components/manage/ManageComponents';
 import Sidebar from '../../components/Sidebar';
 import { useSession } from 'next-auth/react';
@@ -48,7 +49,7 @@ function index() {
     };
 
     const editHandler = (e) => {
-        router.push(`/initiative/edit/${selectedInitiative}`);
+        router.push(`/manage/initiative/edit/${selectedInitiative}`);
     };
 
     const deleteHandler = async (e) => {
@@ -99,7 +100,11 @@ function index() {
                 </div>
             </div>
             <Navbar />
-            <ModalToggle
+            <InitiativeModal
+                editHandler={editHandler}
+                deleteHandler={deleteHandler}
+            />
+            <ModeratorModal
                 editHandler={editHandler}
                 deleteHandler={deleteHandler}
             />

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
-import Participants from "../../../components/add-initiative/Participant";
-import { Input, TextArea, Date } from "../../../components/Input";
-import Button from "../../../components/Button";
+import Participants from "../../../../components/add-initiative/Participant";
+import { Input, TextArea, Date } from "../../../../components/Input";
+import Button from "../../../../components/Button";
 import { useSession } from "next-auth/react";
-import ProtectedRoute from "../../../components/ProtectedRoute";
+import ProtectedRoute from "../../../../components/ProtectedRoute";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
@@ -34,7 +34,7 @@ function edit() {
     });
     if (response.ok) {
       //redirect to login
-      router.push("/initiative/manage");
+      router.push("/manage");
     } else {
       const error = await response.json();
       console.log("error", error);

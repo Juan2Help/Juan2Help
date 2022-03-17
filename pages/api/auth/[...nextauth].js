@@ -52,7 +52,14 @@ export default NextAuth({
         }
         //Else send success response
         client.close();
-        return user;
+        return {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          isModerator: user.isModerator,
+          isAdmin: user.isAdmin,
+          NGOname: user.NGOname,
+        };
       },
     }),
     GoogleProvider({
@@ -65,21 +72,21 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, user, account }) {
+      if (user) {
+        token.id = user.id;
+        token.user = user;
+      }
       if (account?.provider === "google") {
         token.provider = "google";
         token.user = await authGoogle(user);
       }
-      if (user) token.id = user.id;
 
       return token;
     },
     async session({ session, token }) {
       if (token) {
         session.id = token.id;
-
-        if (token.provider === "google") {
-          session.user = token.user;
-        }
+        session.user = token.user;
       }
 
       if (session) {
