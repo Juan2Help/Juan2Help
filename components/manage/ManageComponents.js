@@ -1,6 +1,11 @@
 import { React } from 'react';
-import { FiCalendar, FiLink, FiShare2, FiAlertTriangle } from 'react-icons/fi';
-import Image from 'next/image';
+import {
+    FiCalendar,
+    FiLink,
+    FiShare2,
+    FiAlertTriangle,
+    FiMapPin,
+} from 'react-icons/fi';
 import faker from '@faker-js/faker';
 import moment from 'moment';
 
@@ -90,4 +95,57 @@ function InitiativeList() {
     );
 }
 
-export { InitiativeList, ModalToggle };
+function ModeratorTile() {
+    const fake = {
+        moderator: {
+            name: faker.name.findName(),
+            avatar: faker.image.avatar(),
+            location: faker.address.city(),
+            level: Math.floor(Math.random() * 4) + 1,
+        },
+    };
+    return (
+        <div className="w-full rounded-xl">
+            <div className="w-full bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4">
+                <div className="h-full w-full relative rounded-xl overflow-clip">
+                    <div className="rounded-xl w-full pb-full flex justify-center items-center overflow-clip">
+                        <img
+                            className="min-w-full min-h-full"
+                            src={fake.moderator.avatar}
+                            layout="fill"
+                            objectFit="cover"
+                        />
+                    </div>
+                    <div className="flex flex-col justify-center pt-2 pb-4 px-4 truncate space-y-2 overflow-clip">
+                        <div>
+                            <span className="font-bold text-sm">
+                                {fake.moderator.name}
+                            </span>
+                            <div className="text-xs text-gray-400 flex flex-row space-x-2 items-center">
+                                <FiMapPin />
+                                <span>{fake.moderator.location}</span>
+                            </div>
+                        </div>
+                        <span class="badge badge-sm badge-primary">
+                            {`Level ${fake.moderator.level}`}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function ModeratorList() {
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <ModeratorTile />
+            <ModeratorTile />
+            <ModeratorTile />
+            <ModeratorTile />
+            <ModeratorTile />
+        </div>
+    );
+}
+
+export { InitiativeList, ModalToggle, ModeratorList };
