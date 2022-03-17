@@ -45,9 +45,8 @@ async function handler(req, res) {
       email,
       password: await hash(password, 12),
       mobileNumber,
-      isModerator: false,
-      isAdmin: false,
-      NGOname: "",
+      role: 1,
+      NGOid: "0",
     });
     //Send success response
     res.status(201).json({ message: "User created", ...status });
