@@ -80,7 +80,7 @@ function Body() {
     );
 }
 
-function initiative() {
+function index() {
     return (
         <div className="flex relative flex-col min-h-screen">
             <Header />
@@ -89,4 +89,4 @@ function initiative() {
     );
 }
 
-export default initiative;
+export default index;

@@ -4,6 +4,7 @@ import Header from '../../components/Header';
 import Navbar from '../../components/Navbar';
 import {
     InitiativeList,
+    ModeratorList,
     ModalToggle,
 } from '../../components/manage/ManageComponents';
 import Sidebar from '../../components/Sidebar';
@@ -11,7 +12,7 @@ import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
-function manage() {
+function index() {
     const { data: session } = useSession();
     const [handledInitiatives, setHandledInitiatives] = useState([]);
     const [selectedInitiative, setSelectedInitiative] = useState('');
@@ -106,4 +107,4 @@ function manage() {
     );
 }
 
-export default manage;
+export default index;
