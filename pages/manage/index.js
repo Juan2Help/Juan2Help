@@ -1,26 +1,27 @@
-import Head from "next/head";
-import { React } from "react";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
+import Head from 'next/head';
+import { React } from 'react';
+import Header from '../../components/Header';
+import Navbar from '../../components/Navbar';
 import {
   InitiativeList,
   ModeratorList,
   InitiativeModal,
   ModeratorModal,
-} from "../../components/manage/ManageComponents";
-import Sidebar from "../../components/Sidebar";
-import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../components/ProtectedRoute";
-import Button from "../../components/Button";
+  NGODetails,
+} from '../../components/manage/ManageComponents';
+import Sidebar from '../../components/Sidebar';
+import { useSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import Button from '../../components/Button';
 
 function index() {
   const { data: session } = useSession();
   const [handledInitiatives, setHandledInitiatives] = useState([]);
   const [handledModerators, setHandledModerators] = useState([]);
-  const [selectedInitiative, setSelectedInitiative] = useState("");
-  const [selectedModerator, setSelectedModerator] = useState("");
+  const [selectedInitiative, setSelectedInitiative] = useState('');
+  const [selectedModerator, setSelectedModerator] = useState('');
   const [newData, setNewData] = useState(false);
 
   const router = useRouter();
@@ -28,11 +29,11 @@ function index() {
   // DATA FETCHING
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch("/api/handled-initiatives", {
-        method: "POST",
+      const req = await fetch('/api/handled-initiatives', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -51,11 +52,11 @@ function index() {
   //fetch data for moderator list
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch("/api/organizations/moderator-list", {
-        method: "POST",
+      const req = await fetch('/api/organizations/moderator-list', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           NGOid: session.user.NGOid,
@@ -64,7 +65,7 @@ function index() {
       });
       const fetchedModerators = await req.json();
       setHandledModerators(fetchedModerators);
-      console.log("FETCHED MODS:", fetchedModerators);
+      console.log('FETCHED MODS:', fetchedModerators);
     };
 
     if (session?.user?.role >= 2) fetchData();
@@ -91,11 +92,11 @@ function index() {
 
   const deleteInitiativeHandler = async (e) => {
     try {
-      const req = await fetch("/api/delete-initiative", {
-        method: "POST",
+      const req = await fetch('/api/delete-initiative', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -115,11 +116,11 @@ function index() {
 
   const deleteModeratorHandler = async (e) => {
     try {
-      const req = await fetch("/api/organizations/delete-moderator", {
-        method: "POST",
+      const req = await fetch('/api/organizations/delete-moderator', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -147,6 +148,7 @@ function index() {
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
+              <NGODetails router={router} />
               <span className="text-lg font-bold">Active Initiatives</span>
               <InitiativeList
                 initiatives={handledInitiatives}
@@ -155,7 +157,7 @@ function index() {
               <div className="divider text-xs text-gray-400">END</div>
               {session?.user?.role >= 4 && (
                 <>
-                  <div className="fle xlfex-col space-y-2">
+                  <div className="flex flex-col space-y-2">
                     <span className="text-lg font-bold">Moderator List</span>
                     <ModeratorList
                       onClickHandler={onClickModeratorHandler}
@@ -163,12 +165,6 @@ function index() {
                     />
                   </div>
                   <div className="divider text-xs text-gray-400">END</div>
-                  <Button
-                    onClick={() => {
-                      router.push("/manage/edit-admin");
-                    }}
-                    text="Edit Organization Details"
-                  />
                 </>
               )}
             </div>
