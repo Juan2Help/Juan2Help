@@ -11,7 +11,7 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 
 function add() {
   const { data: session } = useSession();
-  const [organizationData, setOrganizationData] = useState({});
+  const [initiativeData, setInitiativeData] = useState({});
   const router = useRouter();
 
   // submit initiative data to api
@@ -44,6 +44,10 @@ function add() {
     return;
   };
 
+  const getParticipants = (participants) => {
+    setInitiativeData({ ...initiativeData, participants });
+  };
+
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
@@ -57,7 +61,7 @@ function add() {
     setInitiativeData({ ...initiativeData, [name]: value });
   };
   return (
-    <ProtectedRoute session={session} modOnly={true} router={router}>
+    <ProtectedRoute session={session} authority={2} router={router}>
       <Head>
         <title>Add Initiative</title>
       </Head>
@@ -66,13 +70,13 @@ function add() {
           <Link href="/explore">
             <FiArrowLeft />
           </Link>
-          <span className="font-bold">New Organization</span>
+          <span className="font-bold">New Initiative</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-4">
             <Input
-              id="name"
-              name="name"
+              id="title"
+              name="title"
               type="text"
               required
               placeholder="Initiative Title"
@@ -89,7 +93,41 @@ function add() {
               onChange={handleChange}
             />
           </div>
-          <Button text="Create" />
+          <Date handleChange={handleChange} />
+          <Input
+            id="location"
+            name="location"
+            type="text"
+            placeholder="Location"
+            handleChange={handleChange}
+          />
+          <div className="space-y-2">
+            <span className="font-bold text-md">Select cause</span>
+            <select
+              class="select select-bordered w-full bg-white"
+              onChange={handleChange}
+              name="causeType"
+            >
+              <option disabled selected>
+                Select cause
+              </option>
+              <option value="Food">Food</option>
+              <option value="Medicine">Medicine</option>
+              <option value="Nature">Nature</option>
+              <option value="Teach">Teach</option>
+            </select>
+          </div>
+          <Participants getParticipants={getParticipants} />
+          <label class="label cursor-pointer">
+            <span class="font-bold text-md">Publish initiative</span>
+            <input
+              type="checkbox"
+              class="toggle toggle-primary"
+              name="publish"
+              onChange={handleChange}
+            />
+          </label>
+          <Button text="Deploy" />
         </form>
       </div>
     </ProtectedRoute>

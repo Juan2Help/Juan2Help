@@ -56,9 +56,8 @@ export default NextAuth({
           _id: user._id,
           name: user.name,
           email: user.email,
-          isModerator: user.isModerator,
-          isAdmin: user.isAdmin,
-          NGOname: user.NGOname,
+          role: user.role,
+          NGOid: user.NGOid,
         };
       },
     }),

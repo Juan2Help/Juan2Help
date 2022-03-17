@@ -2,12 +2,12 @@ import React from "react";
 import { signIn } from "next-auth/react";
 import Button from "./Button";
 
-function ProtectedRoute({ children, session, modOnly, router }) {
+function ProtectedRoute({ children, session, authority = 1, router }) {
   const goBack = () => {
     router.push("/explore");
   };
 
-  if (modOnly && !session?.user?.isModerator) {
+  if (session?.user?.role < authority) {
     return (
       <>
         <div className="min-h-screen flex items-center justify-center">
