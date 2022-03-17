@@ -1,37 +1,22 @@
 import { ConnectDB } from "../../config/connectDB";
+import { ObjectId } from "mongodb";
 
 async function handler(req, res) {
   //Only POST mothod is accepted
   if (req.method === "POST") {
     // log the request body
-    console.log(req.body);
-    const {
-      title,
-      description,
-      participants,
-      publish,
-      startDate,
-      endDate,
-      causeType,
-      publisher,
-      NGOname,
-    } = req.body;
+    const { email, id } = req.body;
+    console.log("REQUEST", email, id);
 
     const conn = await ConnectDB();
     const db = conn.db();
+
     const initiatives = db.collection("initiatives");
 
-    // create a new initiative
-    const initiative = await initiatives.insertOne({
-      title,
-      description,
-      participants,
-      publish,
-      startDate,
-      endDate,
-      causeType,
-      publisher,
-      NGOname,
+    // delete initiative the given with id and publisher
+    const initiative = await initiatives.findOne({
+      _id: ObjectId(id),
+      publisher: email,
     });
 
     // send the response status 200

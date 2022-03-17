@@ -1,4 +1,5 @@
 import { ConnectDB } from "../../config/connectDB";
+import { ObjectId } from "mongodb";
 
 async function handler(req, res) {
   //Only POST mothod is accepted
@@ -13,26 +14,32 @@ async function handler(req, res) {
       startDate,
       endDate,
       causeType,
-      publisher,
-      NGOname,
+      email,
+      id,
     } = req.body;
 
     const conn = await ConnectDB();
     const db = conn.db();
     const initiatives = db.collection("initiatives");
 
-    // create a new initiative
-    const initiative = await initiatives.insertOne({
-      title,
-      description,
-      participants,
-      publish,
-      startDate,
-      endDate,
-      causeType,
-      publisher,
-      NGOname,
-    });
+    // update initiative
+    const initiative = await initiatives.updateOne(
+      {
+        _id: ObjectId(id),
+        publisher: email,
+      },
+      {
+        $set: {
+          title,
+          description,
+          participants,
+          publish,
+          startDate,
+          endDate,
+          causeType,
+        },
+      }
+    );
 
     // send the response status 200
     res.status(200).json(initiative);

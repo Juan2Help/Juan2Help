@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
-import Participants from "../../components/add-initiative/Participant";
-import { Input, TextArea, Date } from "../../components/Input";
-import Button from "../../components/Button";
-import Head from "next/head";
+import Participants from "../../../components/add-initiative/Participant";
+import { Input, TextArea, Date } from "../../../components/Input";
+import Button from "../../../components/Button";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import ProtectedRoute from "../../../components/ProtectedRoute";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import ProtectedRoute from "../../components/ProtectedRoute";
 
-function add() {
+function edit() {
   const { data: session } = useSession();
   const [initiativeData, setInitiativeData] = useState({});
   const router = useRouter();
@@ -18,20 +17,21 @@ function add() {
   const handleSubmit = async (e) => {
     //prevent default
     e.preventDefault();
+    // add initiative id and session user email to data
+    const data = {
+      ...initiativeData,
+      id: router.query.slug[0],
+      email: session.user.email,
+    };
 
-    // add user email and NGO to initiative data
-    initiativeData.publisher = session.user.email;
-    initiativeData.NGOname = session.user.NGOname;
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/add-initiative", {
+    const response = await fetch("/api/edit-initiative", {
       method: "POST",
-      body: JSON.stringify(initiativeData),
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
     });
-
-    //check if response is ok
     if (response.ok) {
       //redirect to login
       router.push("/initiative/manage");
@@ -40,7 +40,6 @@ function add() {
       console.log("error", error);
       setErrorState({ error: true, message: error.message });
     }
-
     return;
   };
 
@@ -60,17 +59,15 @@ function add() {
     }
     setInitiativeData({ ...initiativeData, [name]: value });
   };
+
   return (
-    <ProtectedRoute session={session} modOnly={true} router={router}>
-      <Head>
-        <title>Add Initiative</title>
-      </Head>
+    <ProtectedRoute session={session} modOnly={true}>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
           <Link href="/explore">
             <FiArrowLeft />
           </Link>
-          <span className="font-bold">New Initiative</span>
+          <span className="font-bold">Edit Initiative</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-4">
@@ -134,4 +131,4 @@ function add() {
   );
 }
 
-export default add;
+export default edit;
