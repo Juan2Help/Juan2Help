@@ -1,4 +1,4 @@
-import { React } from "react";
+import { React } from 'react';
 import {
   FiCalendar,
   FiLink,
@@ -6,10 +6,11 @@ import {
   FiAlertTriangle,
   FiMapPin,
   FiPlusCircle,
-} from "react-icons/fi";
-import faker from "@faker-js/faker";
-import moment from "moment";
-import Link from "next/link";
+  FiEdit3,
+} from 'react-icons/fi';
+import faker from '@faker-js/faker';
+import moment from 'moment';
+import Link from 'next/link';
 
 function InitiativeModal({ editHandler, deleteHandler }) {
   return (
@@ -45,7 +46,7 @@ function InitiativeModal({ editHandler, deleteHandler }) {
 function InitiativeTile({ initiative, id, onClickHandler }) {
   const { title, startDate } = initiative;
   const details = {
-    date: moment(startDate).format("ddd, DD MMM YYYY").toUpperCase(),
+    date: moment(startDate).format('ddd, DD MMM YYYY').toUpperCase(),
     title: title,
   };
   return (
@@ -198,4 +199,46 @@ function ModeratorModal({ editHandler, deleteHandler }) {
   );
 }
 
-export { InitiativeList, InitiativeModal, ModeratorModal, ModeratorList };
+function NGODetails({ router }) {
+  return (
+    <>
+      <div className="w-full flex flex-row items-center gap-4">
+        <div className="w-1/4">
+          <div className="w-full pb-full">
+            <img
+              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+              className="rounded-full"
+              objectFit="cover"
+            />
+          </div>
+        </div>
+        <div className="w-3/4 flex flex-col gap-2">
+          <div className="flex flex-col">
+            <span className="text-lg font-bold">NGO NAME</span>
+            <span className="text-xs text-gray-400 truncate">
+              The NGO description goes here.
+            </span>
+          </div>
+          <div
+            className="text-xs flex items-center flex-row gap-2"
+            onClick={() => {
+              router.push('/manage/edit-admin');
+            }}
+          >
+            <FiEdit3 />
+            <span className="font-bold">Edit details</span>
+          </div>
+        </div>
+      </div>
+      <hr />
+    </>
+  );
+}
+
+export {
+  InitiativeList,
+  InitiativeModal,
+  ModeratorModal,
+  ModeratorList,
+  NGODetails,
+};
