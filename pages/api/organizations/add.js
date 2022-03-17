@@ -45,6 +45,7 @@ async function handler(req, res) {
 
     // send the response status 200
     res.status(200).json(organization);
+    conn.close();
   } else {
     //Response for other than POST method
     res.status(500).json({ message: "Why you here, fam?" });

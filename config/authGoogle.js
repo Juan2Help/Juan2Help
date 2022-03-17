@@ -50,9 +50,8 @@ async function registerGoogle(details, client) {
       email,
       password: await hash("fromgoogleHashedpass", 12),
       mobileNumber: 0,
-      isModerator: false,
-      isAdmin: false,
-      NGOname: "",
+      role: 1,
+      NGOid: "0",
     });
   } catch (err) {
     throw new Error(err);
