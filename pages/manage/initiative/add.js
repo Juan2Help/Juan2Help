@@ -11,7 +11,7 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 
 function add() {
   const { data: session } = useSession();
-  const [initiativeData, setInitiativeData] = useState({});
+  const [organizationData, setOrganizationData] = useState({});
   const router = useRouter();
 
   // submit initiative data to api
@@ -44,10 +44,6 @@ function add() {
     return;
   };
 
-  const getParticipants = (participants) => {
-    setInitiativeData({ ...initiativeData, participants });
-  };
-
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
@@ -70,13 +66,13 @@ function add() {
           <Link href="/explore">
             <FiArrowLeft />
           </Link>
-          <span className="font-bold">New Initiative</span>
+          <span className="font-bold">New Organization</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-4">
             <Input
-              id="title"
-              name="title"
+              id="name"
+              name="name"
               type="text"
               required
               placeholder="Initiative Title"
@@ -93,41 +89,7 @@ function add() {
               onChange={handleChange}
             />
           </div>
-          <Date handleChange={handleChange} />
-          <Input
-            id="location"
-            name="location"
-            type="text"
-            placeholder="Location"
-            handleChange={handleChange}
-          />
-          <div className="space-y-2">
-            <span className="font-bold text-md">Select cause</span>
-            <select
-              class="select select-bordered w-full bg-white"
-              onChange={handleChange}
-              name="causeType"
-            >
-              <option disabled selected>
-                Select cause
-              </option>
-              <option value="Food">Food</option>
-              <option value="Medicine">Medicine</option>
-              <option value="Nature">Nature</option>
-              <option value="Teach">Teach</option>
-            </select>
-          </div>
-          <Participants getParticipants={getParticipants} />
-          <label class="label cursor-pointer">
-            <span class="font-bold text-md">Publish initiative</span>
-            <input
-              type="checkbox"
-              class="toggle toggle-primary"
-              name="publish"
-              onChange={handleChange}
-            />
-          </label>
-          <Button text="Deploy" />
+          <Button text="Create" />
         </form>
       </div>
     </ProtectedRoute>

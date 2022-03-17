@@ -47,6 +47,7 @@ async function handler(req, res) {
       mobileNumber,
       isModerator: false,
       isAdmin: false,
+      NGOname: "",
     });
     //Send success response
     res.status(201).json({ message: "User created", ...status });
