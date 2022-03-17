@@ -5,9 +5,11 @@ import {
     FiShare2,
     FiAlertTriangle,
     FiMapPin,
+    FiPlusCircle,
 } from 'react-icons/fi';
 import faker from '@faker-js/faker';
 import moment from 'moment';
+import Link from 'next/link';
 
 function ModalToggle({ editHandler, deleteHandler }) {
     return (
@@ -131,6 +133,19 @@ function ModeratorTile() {
     );
 }
 
+function AddModeratorTile() {
+    return (
+        <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-200 text-gray-300">
+            <Link href="/manage/moderator/add">
+                <div className="flex flex-col items-center space-y-2">
+                    <FiPlusCircle className="text-2xl" />
+                    <span>Add a moderator</span>
+                </div>
+            </Link>
+        </div>
+    );
+}
+
 function ModeratorList() {
     return (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -139,6 +154,7 @@ function ModeratorList() {
             <ModeratorTile />
             <ModeratorTile />
             <ModeratorTile />
+            <AddModeratorTile />
         </div>
     );
 }

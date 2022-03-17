@@ -33,7 +33,7 @@ function Navbar({ active }) {
                     <FiCopy className="text-2xl" />
                 </div>
             </Link>
-            <Link href="/initiative/add">
+            <Link href="/manage/initiative/add">
                 <div className="text-white p-4 rounded-full bg-purple-700">
                     <FiPlus className="text-2xl" />
                 </div>
