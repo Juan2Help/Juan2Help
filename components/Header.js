@@ -1,8 +1,10 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { FiBell, FiMessageCircle } from "react-icons/fi";
-import { MdManageSearch, MdOutlineManageAccounts } from "react-icons/md";
+import { MdManageSearch} from "react-icons/md";
+import {IoMdSettings} from "react-icons/io";
 import { GoSignOut } from "react-icons/go";
+import { FaUserCircle } from "react-icons/fa"
 import { useSession, signOut } from "next-auth/react";
 import { faker } from "@faker-js/faker";
 import { useEffect } from "react/cjs/react.production.min";
@@ -56,36 +58,41 @@ function Header({ session }) {
                   <h2 className="font-bold">{session?.user?.name}</h2>
                 </div>
                 <div>
-                  <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                    <MdOutlineManageAccounts className="text-lg" />
-                    <Link href="/explore">
+                  <Link href="/explore">
+                    <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                      <FaUserCircle className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left pl-2">
-                        Account Settings
+                        Your Profile
                       </span>
-                    </Link>
-                  </div>
-                  {session?.user?.role >= 2 && (
-                    <>
-                      <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                        <MdManageSearch className="text-lg" />
+                    </div>
+                  </Link>
+                  <Link href="/settings">
+                    <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                      <IoMdSettings className="text-lg" />
+                      <span className=" text-gray-700 text-sm text-left pl-2">
+                        Settings
+                      </span>
+                    </div>
+                  </Link>
+                    {session?.user?.role >= 2 && (
+                      <>
                         <Link href="/manage">
-                          <span className=" text-gray-700 text-sm text-left pl-2">
-                            Manage Initiatives
-                          </span>
+                          <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                            <MdManageSearch className="text-lg" />
+                            <span className=" text-gray-700 text-sm text-left pl-2">
+                              Manage Initiatives
+                            </span>
+                          </div>
                         </Link>
-                      </div>
-                    </>
-                  )}
-                  <div
-                    className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300"
-                    onClick={() => signOut()}
-                  >
-                    <GoSignOut className="text-lg pt-1px" />
-                    <span className=" text-gray-700 text-sm text-left pl-2">
-                      Sign out
-                    </span>
+                      </>
+                    )}
+                    <div className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300" onClick={() => signOut()}>
+                      <GoSignOut className="text-lg pt-1px" />
+                      <span className=" text-gray-700 text-sm text-left pl-2">
+                        Sign out
+                      </span>
+                    </div>
                   </div>
-                </div>
               </div>
             )}
           </div>
