@@ -1,15 +1,17 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
 import ConfirmAction from "../../../../components/manage/ConfirmAction";
 import Button from "../../../../components/Button";
+import { GrantAccess } from "../../../../middleware/ProtectedRoute";
 
-function add() {
-  const { data: session } = useSession();
+function EditModerator({ sessionFromProp }) {
+  const session = sessionFromProp;
+
   const [moderatorData, setModeratorData] = useState({});
   const router = useRouter();
 
@@ -87,4 +89,14 @@ function add() {
   );
 }
 
-export default add;
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
+}
+
+export default EditModerator;

@@ -4,13 +4,14 @@ import Participants from "../../../components/add-initiative/Participant";
 import { Input, TextArea, Date } from "../../../components/Input";
 import Button from "../../../components/Button";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../../components/ProtectedRoute";
+import { GrantAccess } from "../../../middleware/ProtectedRoute";
 
-function add() {
-  const { data: session } = useSession();
+function add({ sessionFromProp }) {
+  const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState({});
   const router = useRouter();
 
@@ -21,7 +22,7 @@ function add() {
 
     // add user email and NGO to initiative data
     initiativeData.publisher = session.user.email;
-    initiativeData.NGOname = session.user.NGOname;
+    initiativeData.NGOid = session.user.NGOid;
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/add-initiative", {
       method: "POST",
@@ -134,4 +135,13 @@ function add() {
   );
 }
 
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
+}
 export default add;

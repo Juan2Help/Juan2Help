@@ -3,13 +3,14 @@ import { FiArrowLeft } from "react-icons/fi";
 import Participants from "../../../../components/add-initiative/Participant";
 import { Input, TextArea, Date } from "../../../../components/Input";
 import Button from "../../../../components/Button";
-import { useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/router";
+import { GrantAccess } from "../../../../middleware/ProtectedRoute";
 
-function edit() {
-  const { data: session } = useSession();
+function edit({ sessionFromProp }) {
+  const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState({});
   const router = useRouter();
 
@@ -129,6 +130,16 @@ function edit() {
       </div>
     </ProtectedRoute>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
 }
 
 export default edit;

@@ -5,7 +5,8 @@ import Post from "../components/feed/Post";
 import Sidebar from "../components/Sidebar";
 import Suggestions from "../components/feed/Suggestions";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { GrantAccess } from "../middleware/ProtectedRoute";
 
 function MyFeed() {
   return (
@@ -23,15 +24,16 @@ function MyFeed() {
   );
 }
 
-function Feed() {
-  const { data: session } = useSession();
+function Feed({ sessionFromProp }) {
+  const session = sessionFromProp;
+
   return (
-    <ProtectedRoute session={session}>
+    <>
       <div className="w-full min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
         <Head>
           <title>Welcome Home!</title>
         </Head>
-        <Header />
+        <Header session={session} />
         <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
           <Sidebar active="feed" />
           <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-3/5 flex flex-col space-y-6">
@@ -44,8 +46,17 @@ function Feed() {
         <Navbar active="feed" />
         <input type="checkbox" id="my-modal-4" class="modal-toggle" />
       </div>
-    </ProtectedRoute>
+    </>
   );
+}
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
 }
 
 export default Feed;

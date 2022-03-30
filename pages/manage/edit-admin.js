@@ -2,13 +2,15 @@ import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
 import { Input, TextArea } from "../../components/Input";
 import Button from "../../components/Button";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { GrantAccess } from "../../middleware/ProtectedRoute";
 
-function edit() {
-  const { data: session } = useSession();
+function edit({ sessionFromProp }) {
+  const session = sessionFromProp;
+
   const [organizationDetails, setOrganizationDetails] = useState({});
   const router = useRouter();
 
@@ -83,6 +85,16 @@ function edit() {
       </div>
     </ProtectedRoute>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
 }
 
 export default edit;

@@ -10,14 +10,16 @@ import {
   NGODetails,
 } from "../../components/manage/ManageComponents";
 import Sidebar from "../../components/Sidebar";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import Button from "../../components/Button";
+import { GrantAccess } from "../../middleware/ProtectedRoute";
 
-function index() {
-  const { data: session } = useSession();
+function index({ sessionFromProp }) {
+  const session = sessionFromProp;
+
   const [handledInitiatives, setHandledInitiatives] = useState([]);
   const [handledModerators, setHandledModerators] = useState([]);
   const [organizationDetails, setOrganizationDetails] = useState({});
@@ -167,7 +169,7 @@ function index() {
           <Head>
             <title>Manage Initiatives</title>
           </Head>
-          <Header />
+          <Header session={session} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
@@ -209,6 +211,16 @@ function index() {
       </div>
     </ProtectedRoute>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  GrantAccess(context, session);
+  return {
+    props: {
+      sessionFromProp: session,
+    },
+  };
 }
 
 export default index;

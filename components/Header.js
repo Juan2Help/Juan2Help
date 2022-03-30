@@ -7,11 +7,10 @@ import { useSession, signOut } from "next-auth/react";
 import { faker } from "@faker-js/faker";
 import { useEffect } from "react/cjs/react.production.min";
 
-function Header() {
+function Header({ session }) {
   const hasMessage = false;
   const hasNotification = true;
   const [isOpen, setOpenState] = useState(false);
-  const { data: session } = useSession();
 
   return (
     <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
