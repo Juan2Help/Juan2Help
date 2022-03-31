@@ -39,7 +39,9 @@ async function handler(req, res) {
     conn.close();
   } else {
     //Response for other than POST method
-    res.status(500).json({ message: "Why you here, fam?" });
+    res
+      .status(500)
+      .json({ message: `Why you here, fam? Method: ${req.method}` });
   }
 }
 

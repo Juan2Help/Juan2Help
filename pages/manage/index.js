@@ -14,15 +14,14 @@ import { getSession, useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../components/ProtectedRoute";
-import Button from "../../components/Button";
 import { GrantAccess } from "../../middleware/ProtectedRoute";
+import { fetchNGODetails } from "../../middleware/helper";
 
-function index({ sessionFromProp }) {
+function index({ sessionFromProp, organizationDetails }) {
   const session = sessionFromProp;
 
   const [handledInitiatives, setHandledInitiatives] = useState([]);
   const [handledModerators, setHandledModerators] = useState([]);
-  const [organizationDetails, setOrganizationDetails] = useState({});
   const [selectedInitiative, setSelectedInitiative] = useState("");
   const [selectedModerator, setSelectedModerator] = useState("");
   const [newData, setNewData] = useState(false);
@@ -73,30 +72,6 @@ function index({ sessionFromProp }) {
     if (session?.user?.role >= 2) fetchData();
     // log fetchedModerators
   }, [session, newData]);
-
-  //fetch data for organization details
-  useEffect(() => {
-    const fetchData = async () => {
-      const req = await fetch("/api/organizations/get-details", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          NGOid: session.user.NGOid,
-          email: session.user.email,
-        }),
-      });
-      const fetchedOrganizationDetails = await req.json();
-      setOrganizationDetails(fetchedOrganizationDetails);
-      console.log("FETCHED ORG DETAILS:", fetchedOrganizationDetails);
-    };
-
-    if (session?.user?.role >= 2) fetchData();
-    // log fetchedModerators
-    console.log(organizationDetails);
-  }, [session]);
 
   // END OF DATA FETCHING
 
@@ -219,6 +194,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
+      organizationDetails: await fetchNGODetails(session),
     },
   };
 }

@@ -25,8 +25,6 @@ export default NextAuth({
           email: credentials.email,
         });
 
-        console.log(user);
-
         //Not found - send error res
         if (!user) {
           client.close();
@@ -37,6 +35,17 @@ export default NextAuth({
             })
           );
         }
+
+        if (!user.verified) {
+          client.close();
+          throw new Error(
+            JSON.stringify({
+              message: "Email has not been verified.",
+              type: "email",
+            })
+          );
+        }
+
         //Check hashed password with DB password
         console.log(`Comparing ${credentials.password} ${user.password}`);
         const checkPassword = await compare(

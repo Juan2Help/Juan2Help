@@ -1,5 +1,7 @@
 import { hash } from "bcryptjs";
 import { ConnectDB } from "../../../config/connectDB";
+import sendVerificationEmail from "../../../middleware/Registration";
+import crypto from "crypto";
 
 // error types: 1 - invalid data, 2 - duplicate user, 3 - internal server error
 
@@ -32,12 +34,15 @@ async function handler(req, res) {
       .findOne({ email: email });
     //Send error response if duplicate user is found
     if (checkExisting) {
-      res.status(422).json({ message: "2" });
+      res.status(422).json({ message: "User already exists" });
       client.close();
       return;
     }
 
     const name = `${firstName} ${lastName}`;
+
+    // generate 32 byte verification token using crypto
+    const token = crypto.randomBytes(32).toString("hex");
 
     //Hash password and insert data into DB
     const status = await db.collection("users").insertOne({
@@ -47,7 +52,20 @@ async function handler(req, res) {
       mobileNumber,
       role: 1,
       NGOid: "0",
+      token,
+      verified: false,
     });
+
+    // Send verification email
+    const verificationEmail = await sendVerificationEmail(email, name, token);
+
+    if (!verificationEmail) {
+      res.status(500).json({ message: "Email unreachable." });
+      await db.collection("users").deleteOne({ _id: status.insertedId });
+      client.close();
+      return;
+    }
+
     //Send success response
     res.status(201).json({ message: "User created", ...status });
     //Close DB connection

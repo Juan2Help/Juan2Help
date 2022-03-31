@@ -30,7 +30,7 @@ async function handler(req, res) {
     // update user info
     const userInfo = await user.updateOne(
       { _id: ObjectId(id) },
-      { $set: { NGOid: ObjectId(NGOid), role: role } }
+      { $set: { NGOid: ObjectId(NGOid), role: Number(role) } }
     );
 
     // send the response status 200
