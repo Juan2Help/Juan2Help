@@ -54,13 +54,14 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
     <ProtectedRoute session={session} authority={4}>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/explore">
-            <FiArrowLeft />
+          <Link href="/manage">
+            <FiArrowLeft className="cursor-pointer"/>
           </Link>
           <span className="font-bold">Edit Partner Organization Details</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col space-y-2">
+            <span className="font-semibold">Organization Name</span>
             <Input
               id="name"
               name="name"
@@ -70,6 +71,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               className="min-h-96"
               defaultValue={organizationDetailsProp?.name}
             />
+            <span className="font-semibold">Organization Details</span>
             <TextArea
               id="description"
               name="description"
