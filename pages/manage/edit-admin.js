@@ -2,13 +2,14 @@ import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
 import { Input, TextArea } from "../../components/Input";
 import Button from "../../components/Button";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { GrantAccess } from "../../middleware/ProtectedRoute";
+import { fetchNGODetails } from "../../middleware/helper";
 
-function edit({ sessionFromProp }) {
+function edit({ sessionFromProp, organizationDetailsProp }) {
   const session = sessionFromProp;
 
   const [organizationDetails, setOrganizationDetails] = useState({});
@@ -67,7 +68,7 @@ function edit({ sessionFromProp }) {
               required
               placeholder="Organization Name"
               className="min-h-96"
-              onChange={handleChange}
+              value={organizationDetailsProp?.name}
             />
             <TextArea
               id="description"
@@ -77,6 +78,7 @@ function edit({ sessionFromProp }) {
               required
               placeholder="Organization Description"
               onChange={handleChange}
+              value={organizationDetailsProp?.description}
             />
           </div>
 
@@ -93,6 +95,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
+      organizationDetailsProp: await fetchNGODetails(session),
     },
   };
 }
