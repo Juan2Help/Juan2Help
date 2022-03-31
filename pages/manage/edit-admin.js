@@ -68,7 +68,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               required
               placeholder="Organization Name"
               className="min-h-96"
-              value={organizationDetailsProp?.name}
+              defaultValue={organizationDetailsProp?.name}
             />
             <TextArea
               id="description"
@@ -78,7 +78,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               required
               placeholder="Organization Description"
               onChange={handleChange}
-              value={organizationDetailsProp?.description}
+              defaultValue={organizationDetailsProp?.description}
             />
           </div>
 

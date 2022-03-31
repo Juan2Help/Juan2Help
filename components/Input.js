@@ -9,7 +9,7 @@ function Input({
   placeholder,
   hasError,
   onChange,
-  value,
+  defaultValue,
 }) {
   const fail =
     "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full px-4 py-3 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10";
@@ -35,7 +35,7 @@ function Input({
           isClicked = !isClicked;
         }}
         onChange={onChange}
-        value={value}
+        defaultValue={defaultValue}
       />
     </div>
   );
@@ -50,7 +50,7 @@ function TextArea({
   hasError,
   rows,
   onChange,
-  value,
+  defaultValue,
 }) {
   const fail =
     "resize-none bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10";
@@ -70,7 +70,7 @@ function TextArea({
         rows={rows}
         className={!isClicked ? variant : nofail}
         onChange={onChange}
-        value={value}
+        defaultValue={defaultValue}
       />
     </div>
   );
