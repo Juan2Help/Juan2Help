@@ -58,7 +58,7 @@ function Header({ session }) {
                   <h2 className="font-bold">{session?.user?.name}</h2>
                 </div>
                 <div>
-                  <Link href="/explore">
+                  <Link href="/profile">
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <FaUserCircle className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left pl-2">
