@@ -6,7 +6,7 @@ import Sidebar from "../components/Sidebar";
 import Suggestions from "../components/feed/Suggestions";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { getSession, useSession } from "next-auth/react";
-import { GrantAccess } from "../middleware/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 
 function MyFeed() {
   return (
@@ -51,7 +51,7 @@ function Feed({ sessionFromProp }) {
 }
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
   return {
     props: {
       sessionFromProp: session,

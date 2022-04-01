@@ -1,10 +1,10 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { FiBell, FiMessageCircle } from "react-icons/fi";
-import { MdManageSearch} from "react-icons/md";
-import {IoMdSettings} from "react-icons/io";
+import { MdManageSearch } from "react-icons/md";
+import { IoMdSettings } from "react-icons/io";
 import { GoSignOut } from "react-icons/go";
-import { FaUserCircle } from "react-icons/fa"
+import { FaUserCircle } from "react-icons/fa";
 import { useSession, signOut } from "next-auth/react";
 import { faker } from "@faker-js/faker";
 import { useEffect } from "react/cjs/react.production.min";
@@ -26,8 +26,8 @@ function Header({ session }) {
           <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
             <div className="indicator flex">
               {hasMessage && (
-                <div class="indicator-item badge-xs badge-secondary badge">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+                <div className="indicator-item badge-xs badge-secondary badge">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
                 </div>
               )}
               <FiMessageCircle />
@@ -36,8 +36,8 @@ function Header({ session }) {
           <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
             <div className="indicator">
               {hasNotification && (
-                <div class="indicator-item badge-xs badge-secondary badge">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+                <div className="indicator-item badge-xs badge-secondary badge">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
                 </div>
               )}
               <FiBell />
@@ -51,7 +51,7 @@ function Header({ session }) {
               <img className="rounded-full" src={faker.image.avatar()} />
             </button>
             {isOpen && (
-              <div class="object-left-bottom absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-100">
+              <div className="object-left-bottom absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-100">
                 <div className="text-gray-700 block px-4 py-2 text-sm text-left">
                   You are logged in as
                   <br />
@@ -74,25 +74,34 @@ function Header({ session }) {
                       </span>
                     </div>
                   </Link>
-                    {session?.user?.role >= 2 && (
-                      <>
-                        <Link href="/manage">
-                          <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                            <MdManageSearch className="text-lg" />
-                            <span className=" text-gray-700 text-sm text-left pl-2">
-                              Manage Initiatives
-                            </span>
-                          </div>
-                        </Link>
-                      </>
-                    )}
-                    <div className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300" onClick={() => signOut()}>
-                      <GoSignOut className="text-lg pt-1px" />
-                      <span className=" text-gray-700 text-sm text-left pl-2">
-                        Sign out
-                      </span>
-                    </div>
+                  {session?.user?.role >= 2 && (
+                    <>
+                      <Link
+                        href={
+                          session?.user?.role === 8
+                            ? "/manage/admin"
+                            : "/manage"
+                        }
+                      >
+                        <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                          <MdManageSearch className="text-lg" />
+                          <span className=" text-gray-700 text-sm text-left pl-2">
+                            Manage Initiatives
+                          </span>
+                        </div>
+                      </Link>
+                    </>
+                  )}
+                  <div
+                    className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300"
+                    onClick={() => signOut()}
+                  >
+                    <GoSignOut className="text-lg pt-1px" />
+                    <span className=" text-gray-700 text-sm text-left pl-2">
+                      Sign out
+                    </span>
                   </div>
+                </div>
               </div>
             )}
           </div>

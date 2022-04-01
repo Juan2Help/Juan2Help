@@ -1,3 +1,4 @@
+import { getSession } from "next-auth/react";
 import { ConnectDB } from "../../../config/connectDB";
 
 async function handler(req, res) {
@@ -11,6 +12,17 @@ async function handler(req, res) {
       res
         .status(400)
         .json({ message: "Missing name, description, or moderator" });
+      return;
+    }
+
+    // get current session
+    const session = await getSession({ req });
+
+    // check if current session does not exist or if the user is not an admin
+    if (!session || session?.user?.role != 8) {
+      res.status(403).json({
+        message: "You do not enough permission to access this page",
+      });
       return;
     }
 
@@ -40,7 +52,7 @@ async function handler(req, res) {
     // if successful, add the organization to the user
     const user = await users.updateOne(
       { email: moderator },
-      { $set: { NGOid: organization.insertedId } }
+      { $set: { NGOid: organization.insertedId, role: 4 } }
     );
 
     // send the response status 200

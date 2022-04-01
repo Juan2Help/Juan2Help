@@ -1,4 +1,4 @@
-export async function fetchNGODetails(session) {
+export async function fetchNGODetails(session, admin = false, NGOid = null) {
   const fetchData = async () => {
     const req = await fetch(
       `${process.env.NEXTAUTH_URL}api/organizations/get-details`,
@@ -9,7 +9,7 @@ export async function fetchNGODetails(session) {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          NGOid: session.user.NGOid,
+          NGOid: admin ? NGOid : session?.user?.NGOid,
           email: session.user.email,
         }),
       }
@@ -21,4 +21,21 @@ export async function fetchNGODetails(session) {
 
   if (session?.user?.role >= 2) return fetchData();
   return {};
+}
+
+export async function fetchOrganizationList() {
+  const req = await fetch(
+    `${process.env.NEXTAUTH_URL}api/organizations/get-organization-list`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+  );
+
+  const fetchedOrganizations = await req.json();
+  console.log("FETCHED ORGANIZATIONS:", fetchedOrganizations);
+  return fetchedOrganizations;
 }

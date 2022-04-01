@@ -1,15 +1,14 @@
 import Link from "next/link";
 import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../components/Input";
-import Button from "../../components/Button";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../../components/ProtectedRoute";
+import { Input, TextArea } from "../../../components/Input";
+import Button from "../../../components/Button";
+import { getSession, useSession } from "next-auth/react";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { GrantAccess } from "../../middleware/ProtectedRoute";
-import { fetchNGODetails } from "../../middleware/helper";
+import { GrantAccess } from "../../../middleware/ProtectedRoute";
 
-function edit({ sessionFromProp, organizationDetailsProp }) {
+function add({ sessionFromProp }) {
   const session = sessionFromProp;
 
   const [organizationDetails, setOrganizationDetails] = useState({});
@@ -22,12 +21,10 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
     // add initiative id and session user email to data
     const data = {
       ...organizationDetails,
-      email: session.user.email,
-      NGOid: session.user.NGOid,
     };
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/edit-details", {
+    const response = await fetch("/api/organizations/add-organization", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
@@ -36,7 +33,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
     });
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push("/manage/admin");
     } else {
       const error = await response.json();
       console.log("error", error);
@@ -51,17 +48,16 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
   };
 
   return (
-    <ProtectedRoute session={session} authority={4}>
+    <>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer"/>
+          <Link href="/explore">
+            <FiArrowLeft />
           </Link>
-          <span className="font-bold">Edit Partner Organization Details</span>
+          <span className="font-bold">Add Partner Organization</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col space-y-2">
-            <span className="font-semibold">Organization Name</span>
+          <div className="flex flex-col space-y-4">
             <Input
               id="name"
               name="name"
@@ -69,9 +65,8 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               required
               placeholder="Organization Name"
               className="min-h-96"
-              defaultValue={organizationDetailsProp?.name}
+              onChange={handleChange}
             />
-            <span className="font-semibold">Organization Details</span>
             <TextArea
               id="description"
               name="description"
@@ -80,26 +75,33 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               required
               placeholder="Organization Description"
               onChange={handleChange}
-              defaultValue={organizationDetailsProp?.description}
+            />
+            <Input
+              id="moderator"
+              name="moderator"
+              type="text"
+              required
+              placeholder="Moderator Email"
+              className="min-h-96"
+              onChange={handleChange}
             />
           </div>
 
           <Button text="Deploy" />
         </form>
       </div>
-    </ProtectedRoute>
+    </>
   );
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  GrantAccess(context, session, 8);
   return {
     props: {
       sessionFromProp: session,
-      organizationDetailsProp: await fetchNGODetails(session),
     },
   };
 }
 
-export default edit;
+export default add;

@@ -11,6 +11,7 @@ import {
 import faker from "@faker-js/faker";
 import moment from "moment";
 import Link from "next/link";
+import Button from "../Button";
 
 function InitiativeModal({ editHandler, deleteHandler }) {
   return (
@@ -139,7 +140,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
   );
 }
 
-function ModeratorList({ moderators, onClickHandler }) {
+function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <>
@@ -150,15 +151,15 @@ function ModeratorList({ moderators, onClickHandler }) {
           />
         ))}
       </>
-      <AddModeratorTile />
+      <AddModeratorTile id={id} admin={admin} />
     </div>
   );
 }
 
-function AddModeratorTile() {
+function AddModeratorTile({ admin = false, id = "" }) {
   return (
     <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-200 text-gray-300">
-      <Link href="/manage/moderator/add">
+      <Link href={`/manage/moderator/add/${admin ? id : ""}`}>
         <div className="flex flex-col items-center space-y-2">
           <FiPlusCircle className="text-2xl" />
           <span>Add a moderator</span>
@@ -173,7 +174,7 @@ function ModeratorModal({ editHandler, deleteHandler }) {
     <>
       <input type="checkbox" id="moderator-modal" class="modal-toggle" />
       <label for="moderator-modal" class="modal cursor-pointer">
-        <label class="modal-box relative" for="">
+        <label className="modal-box relative" for="">
           <div className="flex flex-row justify-around pb-4">
             <div className="btn btn-outline btn-circle text-xl">
               <FiLink />
@@ -199,16 +200,18 @@ function ModeratorModal({ editHandler, deleteHandler }) {
   );
 }
 
-function NGODetails({ router, details, session }) {
+function NGODetails({ router, details, session, override = false }) {
   return (
     <>
-      <div className="w-full flex flex-row items-center gap-4">
-        <div className="w-1/4">
+      {override && (
+        <span className="text-lg font-bold">Organization Details</span>
+      )}
+      <div className={`w-full flex flex-row items-center gap-4`}>
+        <div className={override ? "w-1/5" : "w-1/4"}>
           <div className="w-full pb-full">
             <img
               src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
               className="rounded-full"
-              objectFit="cover"
             />
           </div>
         </div>
@@ -223,19 +226,84 @@ function NGODetails({ router, details, session }) {
                 : "The NGO description goes here."}
             </span>
           </div>
-          <div
-            className="text-xs flex items-center flex-row gap-2"
-            onClick={() => {
-              router.push("/manage/edit-admin");
-            }}
-          >
-            <FiEdit3 />
-            <span className="font-bold hover:cursor-pointer">Edit details</span>
-          </div>
+          {(override || session?.user?.role <= 4) && (
+            <div
+              className="text-xs flex items-center flex-row gap-2"
+              onClick={() => {
+                router.push(`/manage/edit-admin/${details.id}`);
+              }}
+            >
+              <FiEdit3 />
+              <span className="font-bold hover:cursor-pointer">
+                Edit details
+              </span>
+            </div>
+          )}
         </div>
       </div>
       <hr />
     </>
+  );
+}
+
+function OrganizationTile({ organization, id, onClickHandler }) {
+  const { name, description } = organization;
+  const details = {
+    description,
+    name,
+  };
+  return (
+    <label for="initiative-modal" name="tile" key={id}>
+      <div
+        className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4"
+        id={id}
+        onClick={onClickHandler}
+      >
+        <div className="h-full min-w-[4rem] w-2/12 relative rounded-xl overflow-clip">
+          <div className="w-full pb-full">
+            <img
+              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+              layout="fill"
+              objectFit="cover"
+            />
+          </div>
+        </div>
+        <div className="flex flex-col space-y-1 grow">
+          <div className="font-bold truncate w-11/12">{details.name}</div>
+          <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
+            <span>{details.description}</span>
+          </div>
+        </div>
+      </div>
+    </label>
+  );
+}
+
+function AddOrganizationTile() {
+  return (
+    <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-200 text-gray-300">
+      <Link href="/manage/organization/add">
+        <div className="flex flex-col items-center space-y-2">
+          <FiPlusCircle className="text-2xl" />
+          <span>Add an organization</span>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+function OrganizationList({ organizations, onClickHandler }) {
+  return (
+    <div className="flex flex-col space-y-2">
+      {organizations?.map((organization) => (
+        <OrganizationTile
+          organization={organization}
+          id={organization.id}
+          onClickHandler={onClickHandler}
+        />
+      ))}
+      <AddOrganizationTile />
+    </div>
   );
 }
 
@@ -245,4 +313,6 @@ export {
   ModeratorModal,
   ModeratorList,
   NGODetails,
+  OrganizationTile,
+  OrganizationList,
 };

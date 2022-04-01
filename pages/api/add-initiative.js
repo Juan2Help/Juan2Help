@@ -15,6 +15,7 @@ async function handler(req, res) {
       causeType,
       publisher,
       NGOid,
+      location,
     } = req.body;
 
     const conn = await ConnectDB();
@@ -32,6 +33,7 @@ async function handler(req, res) {
       causeType,
       publisher,
       NGOid,
+      location,
     });
 
     // send the response status 200

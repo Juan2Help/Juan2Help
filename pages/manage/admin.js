@@ -1,107 +1,208 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../components/Input";
-import Button from "../../components/Button";
-import { getSession, useSession } from "next-auth/react";
-import ProtectedRoute from "../../components/ProtectedRoute";
-import { useState } from "react";
+import Head from "next/head";
+import { React } from "react";
+import Header from "../../components/Header";
+import Navbar from "../../components/Navbar";
+import {
+  ModeratorList,
+  ModeratorModal,
+  NGODetails,
+  OrganizationList,
+} from "../../components/manage/ManageComponents";
+import Sidebar from "../../components/Sidebar";
+import { getSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { GrantAccess } from "../../middleware/ProtectedRoute";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
+import { fetchOrganizationList } from "../../middleware/helper";
+import Button from "../../components/Button";
 
-function edit({ sessionFromProp }) {
+function admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
   const session = sessionFromProp;
 
-  const [organizationDetails, setOrganizationDetails] = useState({});
+  const [handledModerators, setHandledModerators] = useState([]);
+  const [selectedOrganization, setSelectedOrganization] = useState({});
+  const [selectedModerator, setSelectedModerator] = useState("");
+  const [newData, setNewData] = useState(false);
+
   const router = useRouter();
 
-  // submit initiative data to api
-  const handleSubmit = async (e) => {
-    //prevent default
-    e.preventDefault();
-    // add initiative id and session user email to data
-    const data = {
-      ...organizationDetails,
-    };
+  console.log("Handled Orgs:", handledOrganizations);
 
-    // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/add", {
+  //fetch data for moderator list
+  const fetchModeratorData = async () => {
+    const req = await fetch("/api/organizations/moderator-list", {
       method: "POST",
-      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
+        Accept: "application/json",
       },
+      body: JSON.stringify({
+        NGOid: selectedOrganization.id,
+      }),
     });
-    if (response.ok) {
-      //redirect to login
-      router.push("/manage");
-    } else {
-      const error = await response.json();
-      console.log("error", error);
-    }
-    return;
+    const fetchedModerators = await req.json();
+    setHandledModerators(fetchedModerators);
   };
 
-  const handleChange = (e) => {
-    // Grab values from form and create local state
-    const { name, value } = e.target;
-    setOrganizationDetails({ ...organizationDetails, [name]: value });
+  // HANDLER FUNCTIONS
+  const onClickOrganizationHandler = (e) => {
+    setSelectedOrganization(
+      handledOrganizations.find((org) => org.id === e.currentTarget.id)
+    );
+    setHandledModerators([]);
   };
+
+  const onClickModeratorHandler = (e) => {
+    setSelectedModerator(e.currentTarget.id);
+  };
+
+  const editOrganizationHandler = (e) => {
+    router.push(`/manage/Organization/edit/${selectedOrganization}`);
+  };
+
+  const deleteOrganizationHandler = async (e) => {
+    try {
+      const req = await fetch("/api/organizations/delete-organization", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          NGOid: selectedOrganization.id,
+        }),
+      });
+      const body = await req.json();
+      setNewData(true);
+    } catch (error) {
+      console.log(error);
+    }
+
+    window.location.reload(false);
+    handledOrganizations.filter((org) => org.id !== selectedOrganization.id);
+    setSelectedOrganization({});
+  };
+
+  const editModeratorHandler = (e) => {
+    router.push(`/manage/moderator/edit/${selectedModerator}`);
+  };
+
+  const deleteModeratorHandler = async (e) => {
+    try {
+      const req = await fetch("/api/organizations/delete-moderator", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          id: selectedModerator,
+          NGOid: selectedOrganization.id,
+        }),
+      });
+      const body = await req.json();
+      setNewData(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // END OF HANDLER FUNCTIONS
 
   return (
-    <>
-      <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
-        <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/explore">
-            <FiArrowLeft />
-          </Link>
-          <span className="font-bold">Add Partner Organization</span>
-        </div>
-        <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
-          <div className="flex flex-col space-y-4">
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              required
-              placeholder="Organization Name"
-              className="min-h-96"
-              onChange={handleChange}
-            />
-            <TextArea
-              id="description"
-              name="description"
-              type="text"
-              rows="7"
-              required
-              placeholder="Organization Description"
-              onChange={handleChange}
-            />
-            <Input
-              id="moderator"
-              name="moderator"
-              type="text"
-              required
-              placeholder="Moderator Email"
-              className="min-h-96"
-              onChange={handleChange}
-            />
-          </div>
+    <ProtectedRoute session={session} authority={2} router={router}>
+      <div className="flex flex-col min-h-screen justify-between overflow-clip">
+        <div className="flex flex-col items-center">
+          <Head>
+            <title>Admin Dashboard</title>
+          </Head>
+          <Header session={session} />
+          <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
+            <Sidebar active="explore" />
+            <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
+              <NGODetails
+                router={router}
+                session={session}
+                details={organizationDetails}
+              />
+              <span className="text-lg font-bold">Active Organizations</span>
+              <OrganizationList
+                organizations={handledOrganizations}
+                onClickHandler={onClickOrganizationHandler}
+              />
+              <div className="divider text-xs text-gray-400">END</div>
+              {Object.keys(selectedOrganization).length != 0 ? (
+                <>
+                  <NGODetails
+                    router={router}
+                    session={session}
+                    details={selectedOrganization}
+                    override={true}
+                    onClickHandler={fetchModeratorData}
+                  />
 
-          <Button text="Deploy" />
-        </form>
+                  <>
+                    <div className="flex flex-row gap-10">
+                      <Button
+                        onClick={fetchModeratorData}
+                        text="Load Moderators"
+                      />
+                      <Button
+                        onClick={deleteOrganizationHandler}
+                        text="Delete Organization"
+                      />
+                    </div>
+                  </>
+
+                  <div className="flex flex-col space-y-2">
+                    <span className="text-lg font-bold">Moderator List</span>
+                    <ModeratorList
+                      onClickHandler={onClickModeratorHandler}
+                      moderators={handledModerators}
+                      admin={true}
+                      id={selectedOrganization.id}
+                    />
+                  </div>
+                  <div className="divider text-xs text-gray-400">END</div>
+                </>
+              ) : (
+                <>
+                  <div className="flex flex-col space-y-2 text-center">
+                    <span className="text-lg text-gray-500">
+                      Please Select an Organization
+                    </span>
+                  </div>
+                  <div className="divider text-xs text-gray-400">END</div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <Navbar />
+        <ModeratorModal
+          editHandler={editModeratorHandler}
+          deleteHandler={deleteModeratorHandler}
+          admin={true}
+        />
       </div>
-    </>
+    </ProtectedRoute>
   );
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session, 8)) return redirectToLogin(context);
   return {
     props: {
       sessionFromProp: session,
+      organizationDetails: {
+        name: "Juan 2 Help Admin",
+        description: "Administrator of Juan 2 Help",
+      },
+      handledOrganizations: await fetchOrganizationList(),
     },
   };
 }
 
-export default edit;
+export default admin;

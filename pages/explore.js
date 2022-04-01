@@ -10,7 +10,7 @@ import {
 } from "../components/explore/ExploreComponents";
 import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
-import { GrantAccess } from "../middleware/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 
 function Explore({ sessionFromProp }) {
   const session = sessionFromProp;
@@ -41,7 +41,7 @@ function Explore({ sessionFromProp }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
   return {
     props: {
       sessionFromProp: session,

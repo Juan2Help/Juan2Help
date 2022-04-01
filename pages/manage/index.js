@@ -10,11 +10,11 @@ import {
   NGODetails,
 } from "../../components/manage/ManageComponents";
 import Sidebar from "../../components/Sidebar";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../components/ProtectedRoute";
-import { GrantAccess } from "../../middleware/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
 import { fetchNGODetails } from "../../middleware/helper";
 
 function index({ sessionFromProp, organizationDetails }) {
@@ -45,7 +45,7 @@ function index({ sessionFromProp, organizationDetails }) {
       setHandledInitiatives(fetchedInitiatives);
     };
     console.log(session);
-    if (session?.user?.role >= 2) fetchData();
+    if (4 >= session?.user?.role >= 2) fetchData();
 
     // log fetchedInitiatives
     console.log(handledInitiatives);
@@ -69,7 +69,7 @@ function index({ sessionFromProp, organizationDetails }) {
       setHandledModerators(fetchedModerators);
     };
 
-    if (session?.user?.role >= 2) fetchData();
+    if (4 >= session?.user?.role >= 2) fetchData();
     // log fetchedModerators
   }, [session, newData]);
 
@@ -190,7 +190,9 @@ function index({ sessionFromProp, organizationDetails }) {
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
+  if (session?.user?.role === 8)
+    return context.res.writeHead(302, { Location: "/manage/admin" });
   return {
     props: {
       sessionFromProp: session,
