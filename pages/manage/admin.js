@@ -1,12 +1,12 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../components/Input";
-import Button from "../../components/Button";
-import { getSession, useSession } from "next-auth/react";
-import ProtectedRoute from "../../components/ProtectedRoute";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { GrantAccess } from "../../middleware/ProtectedRoute";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input, TextArea } from '../../components/Input';
+import Button from '../../components/Button';
+import { getSession, useSession } from 'next-auth/react';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { GrantAccess } from '../../middleware/ProtectedRoute';
 
 function edit({ sessionFromProp }) {
   const session = sessionFromProp;
@@ -24,19 +24,19 @@ function edit({ sessionFromProp }) {
     };
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/add", {
-      method: "POST",
+    const response = await fetch('/api/organizations/add', {
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
     return;
   };

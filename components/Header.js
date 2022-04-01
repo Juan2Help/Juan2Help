@@ -1,13 +1,13 @@
-import Link from "next/link";
-import React, { useState } from "react";
-import { FiBell, FiMessageCircle } from "react-icons/fi";
-import { MdManageSearch} from "react-icons/md";
-import {IoMdSettings} from "react-icons/io";
-import { GoSignOut } from "react-icons/go";
-import { FaUserCircle } from "react-icons/fa"
-import { useSession, signOut } from "next-auth/react";
-import { faker } from "@faker-js/faker";
-import { useEffect } from "react/cjs/react.production.min";
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { FiBell, FiMessageCircle } from 'react-icons/fi';
+import { MdManageSearch } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
+import { GoSignOut } from 'react-icons/go';
+import { FaUserCircle } from 'react-icons/fa';
+import { useSession, signOut } from 'next-auth/react';
+import { faker } from '@faker-js/faker';
+import { useEffect } from 'react/cjs/react.production.min';
 
 function Header({ session }) {
   const hasMessage = false;
@@ -58,7 +58,7 @@ function Header({ session }) {
                   <h2 className="font-bold">{session?.user?.name}</h2>
                 </div>
                 <div>
-                  <Link href="/explore">
+                  <Link href="/profile">
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <FaUserCircle className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left pl-2">
@@ -74,25 +74,28 @@ function Header({ session }) {
                       </span>
                     </div>
                   </Link>
-                    {session?.user?.role >= 2 && (
-                      <>
-                        <Link href="/manage">
-                          <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                            <MdManageSearch className="text-lg" />
-                            <span className=" text-gray-700 text-sm text-left pl-2">
-                              Manage Initiatives
-                            </span>
-                          </div>
-                        </Link>
-                      </>
-                    )}
-                    <div className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300" onClick={() => signOut()}>
-                      <GoSignOut className="text-lg pt-1px" />
-                      <span className=" text-gray-700 text-sm text-left pl-2">
-                        Sign out
-                      </span>
-                    </div>
+                  {session?.user?.role >= 2 && (
+                    <>
+                      <Link href="/manage">
+                        <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                          <MdManageSearch className="text-lg" />
+                          <span className=" text-gray-700 text-sm text-left pl-2">
+                            Manage Initiatives
+                          </span>
+                        </div>
+                      </Link>
+                    </>
+                  )}
+                  <div
+                    className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300"
+                    onClick={() => signOut()}
+                  >
+                    <GoSignOut className="text-lg pt-1px" />
+                    <span className=" text-gray-700 text-sm text-left pl-2">
+                      Sign out
+                    </span>
                   </div>
+                </div>
               </div>
             )}
           </div>
