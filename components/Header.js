@@ -58,7 +58,7 @@ function Header({ session }) {
                   <h2 className="font-bold">{session?.user?.name}</h2>
                 </div>
                 <div>
-                  <Link href="/profile">
+                  <Link href={`/u/${session?.user?._id}`}>
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <FaUserCircle className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left pl-2">
@@ -66,7 +66,7 @@ function Header({ session }) {
                       </span>
                     </div>
                   </Link>
-                  <Link href="/settings">
+                  <Link href="/">
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <IoMdSettings className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left pl-2">
@@ -86,7 +86,8 @@ function Header({ session }) {
                         <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                           <MdManageSearch className="text-lg" />
                           <span className=" text-gray-700 text-sm text-left pl-2">
-                            Manage Initiatives
+                            Manage{" "}
+                            {session?.user.role === 8 ? "App" : "Initiatives"}
                           </span>
                         </div>
                       </Link>

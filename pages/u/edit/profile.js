@@ -1,25 +1,64 @@
-import Link from 'next/link';
-import { getSession } from 'next-auth/react';
-import Head from 'next/head';
-import { FiArrowLeft } from 'react-icons/fi';
-import { Input, TextArea } from '../../../components/Input';
-import Button from '../../../components/Button';
-import ProtectedRoute from '../../../components/ProtectedRoute';
-import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import Link from "next/link";
+import { getSession } from "next-auth/react";
+import Head from "next/head";
+import { FiArrowLeft } from "react-icons/fi";
+import { Input, TextArea } from "../../../components/Input";
+import Button from "../../../components/Button";
+import ProtectedRoute from "../../../components/ProtectedRoute";
+import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { fetchUserDetails } from "../../../middleware/helper";
 
-function profile({ sessionFromProp }) {
+function profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
 
-  const handleSubmit = async (e) => {};
+  const [accountDetails, setAccountDetails] = useState(userDetails);
+  const router = useRouter();
+
+  // submit initiative data to api
+  const handleSubmit = async (e) => {
+    //prevent default
+    e.preventDefault();
+    // add initiative id and session user email to data
+    const data = {
+      ...accountDetails,
+    };
+
+    console.log(data);
+
+    // send a POST request to the api to create a new initiative
+    const response = await fetch("/api/user/update-account", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (response.ok) {
+      //redirect to login
+      router.push(`/u/${session.user._id}`);
+    } else {
+      const error = await response.json();
+      console.log("error", error);
+    }
+    return;
+  };
+
+  const handleChange = (e) => {
+    // Grab values from form and create local state
+    const { name, value } = e.target;
+    setAccountDetails({ ...accountDetails, [name]: value });
+  };
 
   return (
-    <ProtectedRoute session={session} authority={4}>
+    <ProtectedRoute session={session} authority={1}>
       <Head>
         <title>Edit Profile</title>
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href={`/u/${session?.user?.username}`}>
+          <Link href={`/u/${session?.user?._id}`}>
             <FiArrowLeft className="cursor-pointer" />
           </Link>
           <span className="font-bold">Edit Profile</span>
@@ -34,7 +73,8 @@ function profile({ sessionFromProp }) {
               required
               placeholder="Name"
               className="min-h-96"
-              defaultValue={session?.user?.name}
+              defaultValue={userDetails.name}
+              onChange={handleChange}
             />
             <span className="font-semibold">Bio</span>
             <TextArea
@@ -43,7 +83,8 @@ function profile({ sessionFromProp }) {
               type="text"
               rows="3"
               placeholder="Bio"
-              defaultValue={session?.user?.bio}
+              defaultValue={userDetails.bio}
+              onChange={handleChange}
             />
             <span className="font-semibold">Location</span>
             <Input
@@ -53,16 +94,18 @@ function profile({ sessionFromProp }) {
               required
               placeholder="Location"
               className="min-h-96"
-              defaultValue={session?.user?.location}
+              defaultValue={userDetails.location}
+              onChange={handleChange}
             />
             <span className="font-semibold">Phone Number</span>
             <Input
               id="phone"
-              name="phone"
+              name="mobileNumber"
               type="text"
               placeholder="Phone"
               className="min-h-96"
-              defaultValue={session?.user?.phone}
+              defaultValue={userDetails.mobileNumber}
+              onChange={handleChange}
             />
             <span className="font-semibold">Birthday</span>
             <Input
@@ -70,7 +113,8 @@ function profile({ sessionFromProp }) {
               type="date"
               name="birthday"
               placeholder="Birthday"
-              defaultValue={session?.user?.birthday}
+              defaultValue={userDetails.birthday}
+              onChange={handleChange}
             />
             <span className="font-semibold">Hobbies</span>
             <TextArea
@@ -79,7 +123,8 @@ function profile({ sessionFromProp }) {
               type="text"
               rows="3"
               placeholder="Hobbies"
-              defaultValue={session?.user?.bio}
+              defaultValue={userDetails.bio}
+              onChange={handleChange}
             />
           </div>
 
@@ -96,6 +141,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
+      userDetails: await fetchUserDetails(session),
     },
   };
 }

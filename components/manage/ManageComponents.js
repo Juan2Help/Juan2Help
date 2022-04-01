@@ -230,7 +230,9 @@ function NGODetails({ router, details, session, override = false }) {
             <div
               className="text-xs flex items-center flex-row gap-2"
               onClick={() => {
-                router.push(`/manage/edit-admin/${details.id}`);
+                router.push(
+                  `/manage/edit-admin/${override ? details?.id : ""}`
+                );
               }}
             >
               <FiEdit3 />

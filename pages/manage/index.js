@@ -45,7 +45,7 @@ function index({ sessionFromProp, organizationDetails }) {
       setHandledInitiatives(fetchedInitiatives);
     };
     console.log(session);
-    if (4 >= session?.user?.role >= 2) fetchData();
+    if (session?.user?.role >= 2) fetchData();
 
     // log fetchedInitiatives
     console.log(handledInitiatives);
@@ -69,7 +69,7 @@ function index({ sessionFromProp, organizationDetails }) {
       setHandledModerators(fetchedModerators);
     };
 
-    if (4 >= session?.user?.role >= 2) fetchData();
+    if (session?.user?.role === 4) fetchData();
     // log fetchedModerators
   }, [session, newData]);
 

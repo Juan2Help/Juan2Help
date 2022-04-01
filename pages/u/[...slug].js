@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { React, useState } from 'react';
-import { faker } from '@faker-js/faker';
+import Head from "next/head";
+import Link from "next/link";
+import { React, useState } from "react";
+import { faker } from "@faker-js/faker";
 import {
   FiChevronLeft,
   FiMoreVertical,
@@ -10,12 +10,13 @@ import {
   FiMapPin,
   FiPhone,
   FiCalendar,
-} from 'react-icons/fi';
-import { getSession } from 'next-auth/react';
-import ProtectedRoute from '../../components/ProtectedRoute';
-import { GrantAccess } from '../../middleware/ProtectedRoute';
+} from "react-icons/fi";
+import { getSession } from "next-auth/react";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import { GrantAccess } from "../../middleware/ProtectedRoute";
+import { fetchUserDetails } from "../../middleware/helper";
 
-function profile({ sessionFromProp }) {
+function profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
   const [isOpen, setOpenState] = useState(false);
 
@@ -46,7 +47,7 @@ function profile({ sessionFromProp }) {
                       </span>
                     </div>
                   </Link>
-                  <Link href="/settings">
+                  {/* <Link href="/settings">
                     <div className="flex py-2 px-4 hover:bg-purple-300 cursor-pointer">
                       <Link href="/u/edit/account">
                         <span className=" text-gray-700 text-sm text-left">
@@ -54,7 +55,7 @@ function profile({ sessionFromProp }) {
                         </span>
                       </Link>
                     </div>
-                  </Link>
+                  </Link> */}
                 </div>
               )}
             </div>
@@ -66,12 +67,12 @@ function profile({ sessionFromProp }) {
                 />
               </div>
               <div className="w-full p-2 flex flex-col text-center justify-center">
-                <h2 className="font-bold text-3xl">{session?.user?.name}</h2>
+                <h2 className="font-bold text-3xl">{userDetails?.name}</h2>
                 <h3 className="text-gray-400 text-sm">
-                  {'@' + session?.user?.username}
+                  {"@" + session?.user?.username}
                 </h3>
                 <h3 className="text-neutral text-sm p-2">
-                  {session?.user?.bio || 'This user has no bio.'}
+                  {userDetails?.bio || "This user has no bio."}
                 </h3>
                 <hr className="mt-2" />
               </div>
@@ -79,23 +80,23 @@ function profile({ sessionFromProp }) {
                 <ul>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiAtSign />
-                    <span>{session.user.username}</span>
+                    <span>{session?.user?.username}</span>
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiMail />
-                    <span>{session.user.email}</span>
+                    <span>{userDetails?.email}</span>
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiMapPin />
-                    <span>{session.user.location}</span>
+                    <span>{userDetails?.location}</span>
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiPhone />
-                    <span>{session.user.phone}</span>
+                    <span>{userDetails?.mobileNumber}</span>
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiCalendar />
-                    <span>{session.user.birthday}</span>
+                    <span>{userDetails?.birthday}</span>
                   </li>
                 </ul>
               </div>
@@ -113,6 +114,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
+      userDetails: await fetchUserDetails(session),
     },
   };
 }

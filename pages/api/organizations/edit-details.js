@@ -34,7 +34,7 @@ async function handler(req, res) {
 
     if (session?.user?.role === 4) {
       // check if user is a moderator
-      const isModerator = await user.findOne({
+      const isModerator = await users.findOne({
         email: session?.user?.email,
         NGOid: ObjectId(NGOid),
         role: 4,

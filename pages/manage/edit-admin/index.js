@@ -15,7 +15,9 @@ import { fetchNGODetails } from "../../../middleware/helper";
 function edit({ sessionFromProp, organizationDetailsProp }) {
   const session = sessionFromProp;
 
-  const [organizationDetails, setOrganizationDetails] = useState({});
+  const [organizationDetails, setOrganizationDetails] = useState({
+    fetchNGODetails,
+  });
   const router = useRouter();
 
   // submit initiative data to api
@@ -28,6 +30,8 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
       email: session.user.email,
       NGOid: session.user.NGOid,
     };
+
+    console.log("data", data);
 
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/organizations/edit-details", {
@@ -73,6 +77,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               placeholder="Organization Name"
               className="min-h-96"
               defaultValue={organizationDetailsProp?.name}
+              onChange={handleChange}
             />
             <span className="font-semibold">Organization Details</span>
             <TextArea

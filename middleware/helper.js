@@ -39,3 +39,19 @@ export async function fetchOrganizationList() {
   console.log("FETCHED ORGANIZATIONS:", fetchedOrganizations);
   return fetchedOrganizations;
 }
+
+export async function fetchUserDetails(session) {
+  const req = await fetch(`${process.env.NEXTAUTH_URL}api/user/get-user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      email: session.user.email,
+    }),
+  });
+  const fetchedUserDetails = await req.json();
+  console.log("FETCHED USER DETAILS:", fetchedUserDetails);
+  return fetchedUserDetails;
+}

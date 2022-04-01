@@ -102,7 +102,7 @@ function admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
         }),
       });
       const body = await req.json();
-      setNewData(true);
+      fetchModeratorData();
     } catch (error) {
       console.log(error);
     }
