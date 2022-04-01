@@ -147,18 +147,21 @@ function index({ sessionFromProp, organizationDetails }) {
           <Header session={session} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
-            <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
+            <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12">
               <NGODetails
                 router={router}
                 session={session}
                 details={organizationDetails}
               />
-              <span className="text-lg font-bold">Active Initiatives</span>
-              <InitiativeList
-                initiatives={handledInitiatives}
-                onClickHandler={onClickInitiativeHandler}
-              />
-              <div className="divider text-xs text-gray-400">END</div>
+              <div className="divider text-xs text-gray-400"></div>
+              <div className="flex flex-col space-y-2 mb-10">
+                <span className="text-lg font-bold">Active Initiatives</span>
+                <InitiativeList
+                  initiatives={handledInitiatives}
+                  onClickHandler={onClickInitiativeHandler}
+                />
+              </div>
+              {session?.user?.role <= 2 && (<div className="divider text-xs text-gray-400">END</div>)}
               {session?.user?.role >= 4 && (
                 <>
                   <div className="flex flex-col space-y-2">

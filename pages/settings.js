@@ -10,7 +10,6 @@ function Settings({ sessionFromProp }) {
   const session = sessionFromProp;
 
   return (
-    <ProtectedRoute session={session}>
       <ProtectedRoute session={session}>
         <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
           <div className="flex flex-col items-center">
@@ -26,7 +25,6 @@ function Settings({ sessionFromProp }) {
         </div>
         <Navbar active="explore" />
       </ProtectedRoute>
-    </ProtectedRoute>
   );
 }
 

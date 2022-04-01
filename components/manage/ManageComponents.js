@@ -30,11 +30,11 @@ function InitiativeModal({ editHandler, deleteHandler }) {
               <FiAlertTriangle />
             </div>
           </div>
-          <ul class="bg-base-100 w-full space-y-4 mt-4">
-            <li onClick={editHandler}>
+          <ul class="bg-base-100 w-full mt-4">
+            <li onClick={editHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
               <a>Edit</a>
             </li>
-            <li onClick={deleteHandler}>
+            <li onClick={deleteHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
               <a>Delete</a>
             </li>
           </ul>
@@ -45,15 +45,18 @@ function InitiativeModal({ editHandler, deleteHandler }) {
 }
 
 function InitiativeTile({ initiative, id, onClickHandler }) {
-  const { title, startDate } = initiative;
+  console.log(initiative);
+  const { title, startDate, description, location } = initiative;
   const details = {
     date: moment(startDate).format("ddd, DD MMM YYYY").toUpperCase(),
     title: title,
+    description: description,
+    location: location,
   };
   return (
     <label for="initiative-modal" name="tile" key={id}>
       <div
-        className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4"
+        className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600"
         id={id}
         onClick={onClickHandler}
       >
@@ -68,9 +71,14 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
         </div>
         <div className="flex flex-col space-y-1 grow">
           <div className="font-bold truncate w-11/12">{details.title}</div>
+          <p className="font-medium truncate w-11/12 text-gray-400 max-w-2xl">{details.description}</p>
           <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
             <FiCalendar />
             <span>{details.date}</span>
+          </div>
+          <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
+            <FiMapPin />
+            <span>Location</span>
           </div>
         </div>
       </div>
@@ -80,7 +88,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
 
 function InitiativeList({ initiatives, onClickHandler }) {
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-3">
       {initiatives?.map((initiative) => (
         <InitiativeTile
           initiative={initiative}
@@ -88,6 +96,21 @@ function InitiativeList({ initiatives, onClickHandler }) {
           onClickHandler={onClickHandler}
         />
       ))}
+      <AddInitiativeTile/>
+    </div>
+  );
+}
+
+function AddInitiativeTile() {
+  return (
+    <div className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600">
+      <Link href="/manage/initiative/add">
+        <div className="flex flex-col items-center">
+          <FiPlusCircle className="text-2xl" />
+          <span>Create new initiative</span>
+        </div>
+      </Link>
     </div>
   );
 }
@@ -109,7 +132,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
         id={details.moderator.id}
         onClick={onClickHandler}
       >
-        <div className="w-full bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4">
+        <div className="w-full bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
           <div className="h-full w-full relative rounded-xl overflow-clip">
             <div className="rounded-xl w-full pb-full flex justify-center items-center overflow-clip">
               <img
@@ -158,7 +181,8 @@ function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
 
 function AddModeratorTile({ admin = false, id = "" }) {
   return (
-    <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-200 text-gray-300">
+    <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600">
       <Link href={`/manage/moderator/add/${admin ? id : ""}`}>
         <div className="flex flex-col items-center space-y-2">
           <FiPlusCircle className="text-2xl" />
@@ -186,11 +210,11 @@ function ModeratorModal({ editHandler, deleteHandler }) {
               <FiAlertTriangle />
             </div>
           </div>
-          <ul class="bg-base-100 w-full space-y-4 mt-4">
-            <li onClick={editHandler}>
+          <ul class="bg-base-100 w-full mt-4">
+            <li onClick={editHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
               <a>Edit</a>
             </li>
-            <li onClick={deleteHandler}>
+            <li onClick={deleteHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
               <a>Delete</a>
             </li>
           </ul>
@@ -243,7 +267,6 @@ function NGODetails({ router, details, session, override = false }) {
           )}
         </div>
       </div>
-      <hr />
     </>
   );
 }

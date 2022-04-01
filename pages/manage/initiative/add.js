@@ -68,8 +68,8 @@ function add({ sessionFromProp }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/explore">
-            <FiArrowLeft />
+          <Link href="/manage">
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
           </Link>
           <span className="font-bold">New Initiative</span>
         </div>
@@ -100,7 +100,7 @@ function add({ sessionFromProp }) {
             name="location"
             type="text"
             placeholder="Location"
-            handleChange={handleChange}
+            onChange={handleChange}
           />
           <div className="space-y-2">
             <span className="font-bold text-md">Select cause</span>

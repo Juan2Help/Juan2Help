@@ -62,13 +62,13 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
           <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer" />
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
           </Link>
           <span className="font-bold">Edit Partner Organization Details</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
           <div className="flex flex-col space-y-2">
-            <span className="font-semibold">Organization Name</span>
+            <span className="font-bold">Organization Name</span>
             <Input
               id="name"
               name="name"
@@ -79,7 +79,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
               defaultValue={organizationDetailsProp?.name}
               onChange={handleChange}
             />
-            <span className="font-semibold">Organization Details</span>
+            <span className="font-bold">Organization Details</span>
             <TextArea
               id="description"
               name="description"
