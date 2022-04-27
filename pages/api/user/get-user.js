@@ -8,12 +8,19 @@ async function handler(req, res) {
     // log the request body
 
     const { email } = req.body;
-    console.log("email", email);
     const conn = await ConnectDB();
     const db = conn.db();
     const users = db.collection("users");
 
-    // get sessio
+    // get session
+    const session = await getSession({ req });
+
+    // if user is not logged in
+    if (!session) {
+      res.status(401).json({ message: "You are not logged in" });
+      conn.close();
+      return;
+    }
 
     // update initiative
     const user = await users.findOne({

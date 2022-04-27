@@ -24,9 +24,9 @@ async function handler(req, res) {
       return;
     }
     //Connect with database
-    const client = await ConnectDB();
+    const conn = await ConnectDB();
 
-    const db = client.db();
+    const db = conn.db();
 
     //Check existing
     const checkExisting = await db
@@ -35,7 +35,7 @@ async function handler(req, res) {
     //Send error response if duplicate user is found
     if (checkExisting) {
       res.status(422).json({ message: "User already exists" });
-      client.close();
+      conn.close();
       return;
     }
 
@@ -62,14 +62,14 @@ async function handler(req, res) {
     if (!verificationEmail) {
       res.status(500).json({ message: "Email unreachable." });
       await db.collection("users").deleteOne({ _id: status.insertedId });
-      client.close();
+      conn.close();
       return;
     }
 
     //Send success response
     res.status(201).json({ message: "User created", ...status });
     //Close DB connection
-    client.close();
+    conn.close();
   } else {
     //Response for other than POST method
     res.status(500).json({ message: "3" });
