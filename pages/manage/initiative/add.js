@@ -21,7 +21,6 @@ function add({ sessionFromProp }) {
     e.preventDefault();
 
     // add user email and NGO to initiative data
-    initiativeData.publisher = session.user.email;
     initiativeData.NGOid = session.user.NGOid;
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/add-initiative", {
@@ -39,7 +38,6 @@ function add({ sessionFromProp }) {
     } else {
       const error = await response.json();
       console.log("error", error);
-      setErrorState({ error: true, message: error.message });
     }
 
     return;
@@ -69,7 +67,7 @@ function add({ sessionFromProp }) {
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
           <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">New Initiative</span>
         </div>

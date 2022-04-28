@@ -1,17 +1,22 @@
-import { faker } from '@faker-js/faker';
-import moment from 'moment';
-import { getSession, useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { React } from 'react';
+import { faker } from "@faker-js/faker";
+import moment from "moment";
+import { getSession, useSession } from "next-auth/react";
+import Image from "next/image";
+import { React } from "react";
 import {
   FiArrowLeft,
   FiMoreHorizontal,
   FiBookmark,
   FiClock,
   FiMapPin,
-} from 'react-icons/fi';
-import { GrantAccess } from '../../../middleware/ProtectedRoute';
-import Link from 'next/link';
+} from "react-icons/fi";
+import {
+  GrantAccess,
+  redirectToLogin,
+} from "../../../middleware/ProtectedRoute";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Button from "../../../components/Button";
 
 function Header() {
   return (
@@ -37,34 +42,50 @@ function Header() {
   );
 }
 
-function Body({ session }) {
+function Body({ session, initiativeData }) {
   const fake = {
     author: {
-      name: faker.name.findName(),
+      name: initiativeData?.publisherName,
       avatar: faker.image.avatar(),
     },
     initiative: {
-      date: moment(faker.date.soon(10, 'MON, 14 MAR 2022'))
-        .format('DD MMM YYYY')
+      date: moment(initiativeData?.startDate)
+        .format("ddd, DD MMM YYYY")
         .toUpperCase(),
       time: {
-        start: moment(faker.time.recent(10, '12:00')).format('HH:mm'),
-        end: moment(faker.time.recent(10, '12:00')).format('HH:mm'),
+        start: moment(faker.time.recent(10, "12:00")).format("HH:mm"),
+        end: moment(faker.time.recent(10, "12:00")).format("HH:mm"),
       },
       location: {
-        city: faker.address.city(),
+        city: initiativeData?.location,
         address: faker.address.streetAddress(),
       },
       participants: {
         start: faker.random.number({ min: 1, max: 100 }),
         end: faker.random.number({ min: 1, max: 1000 }),
-        current: faker.random.number({ min: 100, max: 1000 }),
+        current: Number(initiative?.participants),
       },
-      title: faker.name.title(),
-      description: faker.lorem.lines(8),
+      title: initiativeData?.title,
+      description: initiativeData?.description,
       isBookmarked: Math.random() > 0.5,
     },
   };
+
+  const router = useRouter();
+  const initiativeId = router.query.initiative;
+
+  console.log(initiativeId);
+
+  const handleJoin = async () => {
+    const req = await fetch(`/api/initiatives/join-initiative`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(initiativeId),
+    });
+  };
+
   return (
     <div className="p-4 flex flex-col mt-40 gap-4">
       {/* TITLE */}
@@ -124,9 +145,7 @@ function Body({ session }) {
           <div className="text-xl font-bold">Participants</div>
           {session?.user?.role > 2 && (
             <div className="text-sm font-bold text-primary">
-              <Link href="/initiatives/:initiative_id/participants">
-                View all
-              </Link>
+              <Link href={`/i/${initiativeId}/registrants`}>View all</Link>
             </div>
           )}
         </div>
@@ -153,29 +172,48 @@ function Body({ session }) {
         </div>
       </div>
       {/* Join */}
-      <button class="btn btn-primary btn-block font-bold text-white">
+      <button
+        onClick={handleJoin}
+        class="btn btn-primary btn-block font-bold text-white"
+      >
         Join
       </button>
     </div>
   );
 }
 
-function initiative({ sessionFromProp }) {
+function initiative({ sessionFromProp, initiativeData }) {
   const session = sessionFromProp;
   return (
     <div className="flex relative flex-col min-h-screen">
       <Header session={session} />
-      <Body session={session} />
+      <Body session={session} initiativeData={initiativeData} />
     </div>
   );
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
+  const initiativeId = context.params.initiative;
+  console.log("initiativeId", initiativeId);
+
+  const req = await fetch(`${process.env.NEXTAUTH_URL}/api/get-initiative`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id: initiativeId,
+    }),
+  });
+
+  const initiativeData = await req.json();
+
   return {
     props: {
       sessionFromProp: session,
+      initiativeData,
     },
   };
 }

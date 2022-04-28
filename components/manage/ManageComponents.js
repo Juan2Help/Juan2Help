@@ -13,7 +13,7 @@ import moment from "moment";
 import Link from "next/link";
 import Button from "../Button";
 
-function InitiativeModal({ editHandler, deleteHandler }) {
+function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
   return (
     <>
       <input type="checkbox" id="initiative-modal" class="modal-toggle" />
@@ -31,10 +31,22 @@ function InitiativeModal({ editHandler, deleteHandler }) {
             </div>
           </div>
           <ul class="bg-base-100 w-full mt-4">
-            <li onClick={editHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
+            <li
+              onClick={manageHandler}
+              className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
+            >
+              <a>Manage</a>
+            </li>
+            <li
+              onClick={editHandler}
+              className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
+            >
               <a>Edit</a>
             </li>
-            <li onClick={deleteHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
+            <li
+              onClick={deleteHandler}
+              className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
+            >
               <a>Delete</a>
             </li>
           </ul>
@@ -71,7 +83,9 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
         </div>
         <div className="flex flex-col space-y-1 grow">
           <div className="font-bold truncate w-11/12">{details.title}</div>
-          <p className="font-medium truncate w-11/12 text-gray-400 max-w-2xl">{details.description}</p>
+          <p className="font-medium truncate w-11/12 text-gray-400 max-w-2xl">
+            {details.description}
+          </p>
           <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
             <FiCalendar />
             <span>{details.date}</span>
@@ -96,15 +110,17 @@ function InitiativeList({ initiatives, onClickHandler }) {
           onClickHandler={onClickHandler}
         />
       ))}
-      <AddInitiativeTile/>
+      <AddInitiativeTile />
     </div>
   );
 }
 
 function AddInitiativeTile() {
   return (
-    <div className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
-                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600">
+    <div
+      className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
+    >
       <Link href="/manage/initiative/add">
         <div className="flex flex-col items-center">
           <FiPlusCircle className="text-2xl" />
@@ -181,8 +197,10 @@ function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
 
 function AddModeratorTile({ admin = false, id = "" }) {
   return (
-    <div className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
-                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600">
+    <div
+      className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
+    >
       <Link href={`/manage/moderator/add/${admin ? id : ""}`}>
         <div className="flex flex-col items-center space-y-2">
           <FiPlusCircle className="text-2xl" />
@@ -211,10 +229,16 @@ function ModeratorModal({ editHandler, deleteHandler }) {
             </div>
           </div>
           <ul class="bg-base-100 w-full mt-4">
-            <li onClick={editHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
+            <li
+              onClick={editHandler}
+              className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
+            >
               <a>Edit</a>
             </li>
-            <li onClick={deleteHandler} className = "hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md">
+            <li
+              onClick={deleteHandler}
+              className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
+            >
               <a>Delete</a>
             </li>
           </ul>

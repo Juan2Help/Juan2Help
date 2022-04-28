@@ -90,6 +90,10 @@ function index({ sessionFromProp, organizationDetails }) {
     router.push(`/manage/initiative/edit/${selectedInitiative}`);
   };
 
+  const manageInitiativeHandler = (e) => {
+    router.push(`/i/${selectedInitiative}`);
+  };
+
   const deleteInitiativeHandler = async (e) => {
     try {
       const req = await fetch("/api/delete-initiative", {
@@ -161,7 +165,9 @@ function index({ sessionFromProp, organizationDetails }) {
                   onClickHandler={onClickInitiativeHandler}
                 />
               </div>
-              {session?.user?.role <= 2 && (<div className="divider text-xs text-gray-400">END</div>)}
+              {session?.user?.role <= 2 && (
+                <div className="divider text-xs text-gray-400">END</div>
+              )}
               {session?.user?.role >= 4 && (
                 <>
                   <div className="flex flex-col space-y-2">
@@ -181,6 +187,7 @@ function index({ sessionFromProp, organizationDetails }) {
         <InitiativeModal
           editHandler={editInitiativeHandler}
           deleteHandler={deleteInitiativeHandler}
+          manageHandler={manageInitiativeHandler}
         />
         <ModeratorModal
           editHandler={editModeratorHandler}

@@ -26,6 +26,8 @@ async function handler(req, res) {
         return getAllInitiatives(req, res, session.user);
       case "2":
         return getFilteredInitiatives(req, res, session.user);
+      case "3":
+        return getActiveInitiatives(req, res, session.user);
       default:
         return res.status(500).json({ message: "Invalid type" });
     }
@@ -38,7 +40,7 @@ async function handler(req, res) {
 
     const count = await initiatives.countDocuments();
     // send the response status 200
-    res.status(200).json({ count: Math.ceil(count / INITIATIVES_PER_PAGE) });
+    res.status(200).json({ pages: Math.ceil(count / INITIATIVES_PER_PAGE) });
   } else {
     //Response for other than POST method
     res.status(500).json({ message: "Why you here, fam?" });
@@ -72,6 +74,35 @@ const getAllInitiatives = async (req, res, user) => {
 const getFilteredInitiatives = async (req, res, user) => {
   // get the current page from the request body
   const { page, filter } = req.body;
+
+  // connect to the database
+  const conn = await ConnectDB();
+  const db = conn.db();
+
+  const initiatives = db.collection("initiatives");
+
+  // grab all filtered initiatives using filter and skip page*INITIATIVES_PER_PAGE
+  const filteredInitiatives = await initiatives
+    .find({
+      $or: [
+        { title: { $regex: filter, $options: "i" } },
+        { description: { $regex: filter, $options: "i" } },
+        { tags: { $regex: filter, $options: "i" } },
+        { location: { $regex: filter, $options: "i" } },
+      ],
+    })
+    .skip((page - 1) * INITIATIVES_PER_PAGE)
+    .limit(INITIATIVES_PER_PAGE)
+    .toArray();
+
+  // send the response status 200
+  res.status(200).json(allInitiatives);
+  conn.close();
+};
+
+const getActiveInitiatives = async (req, res, user) => {
+  // get the current page from the request body
+  const { page } = req.body;
 
   // connect to the database
   const conn = await ConnectDB();

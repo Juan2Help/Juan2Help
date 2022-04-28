@@ -4,6 +4,7 @@ import { getSession } from "next-auth/react";
 
 async function handler(req, res) {
   //Only POST mothod is accepted
+  console.log(req.method);
   if (req.method === "POST") {
     // check if user is logged in
     const session = await getSession({ req });
@@ -33,7 +34,7 @@ async function handler(req, res) {
     });
 
     // check if user is already a member of the initiative
-    if (initiative.members.includes(user._id)) {
+    if (initiative?.members.includes(user._id)) {
       res
         .status(400)
         .json({ message: "You are already a member of this initiative" });
@@ -46,8 +47,8 @@ async function handler(req, res) {
         _id: ObjectId(initiativeId),
       },
       {
-        $addToSet: {
-          registrants: user._id,
+        $push: {
+          registrants: session.user._id,
         },
       }
     );
@@ -58,18 +59,20 @@ async function handler(req, res) {
         _id: ObjectId(session.user._id),
       },
       {
-        $addToSet: {
+        $push: {
           applications: ObjectId(initiativeId),
         },
       }
     );
+
+    console.log("JOINED INITIATIVE", initiativeUpdate, userUpdate);
 
     // send the response status 200
     res.status(200).json(initiativeUpdate);
     conn.close();
   } else {
     //Response for other than POST method
-    res.status(500).json({ message: "Why you here, fam?" });
+    res.status(500).json({ message: "Why you here, famz?" });
   }
 }
 

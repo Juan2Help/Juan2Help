@@ -1,10 +1,17 @@
+import { getSession } from "next-auth/react";
 import { ConnectDB } from "../../config/connectDB";
 
 async function handler(req, res) {
   //Only POST mothod is accepted
   if (req.method === "POST") {
-    // log the request body
-    console.log(req.body);
+    const session = await getSession({ req });
+
+    // if not session tell them they do not have access
+    if (!session?.user) {
+      res.status(401).json({ message: "You do not have access" });
+      return;
+    }
+
     const {
       title,
       description,
@@ -13,7 +20,6 @@ async function handler(req, res) {
       startDate,
       endDate,
       causeType,
-      publisher,
       NGOid,
       location,
     } = req.body;
@@ -31,7 +37,8 @@ async function handler(req, res) {
       startDate,
       endDate,
       causeType,
-      publisher,
+      publisher: session.user?.email,
+      publisherName: session.user?.name,
       NGOid,
       location,
     });

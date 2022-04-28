@@ -34,11 +34,9 @@ async function handler(req, res) {
       });
       // if not a moderator, return error
       if (!isModerator) {
-        res
-          .status(400)
-          .json({
-            message: "User does not have enough rights for this action.",
-          });
+        res.status(400).json({
+          message: "User does not have enough rights for this action.",
+        });
         return;
       }
     }

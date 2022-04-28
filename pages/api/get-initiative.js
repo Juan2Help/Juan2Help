@@ -13,10 +13,9 @@ async function handler(req, res) {
 
     const initiatives = db.collection("initiatives");
 
-    // get initiative the given with id and publisher
+    // get initiative the given with id
     const initiative = await initiatives.findOne({
       _id: ObjectId(id),
-      publisher: email,
     });
 
     // send the response status 200
