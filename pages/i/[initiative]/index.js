@@ -178,6 +178,9 @@ function Body({ session, initiativeData }) {
       >
         Join
       </button>
+      <button class="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700">
+        Leave
+      </button>
     </div>
   );
 }

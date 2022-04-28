@@ -93,6 +93,32 @@ function add({ sessionFromProp }) {
             />
           </div>
           <Date handleChange={handleChange} />
+          <div className="grid grid-flow-row grid-cols-2 gap-4">
+            <div className="flex-1 space-y-2">
+              <span className="font-bold text-md">Start Time</span>
+              <Input
+                id="start_time"
+                name="start_time"
+                type="time"
+                required
+                placeholder="Start Time"
+                className="min-h-96"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex-1 space-y-2">
+              <span className="font-bold text-md">End Time</span>
+              <Input
+                id="end_time"
+                name="end_time"
+                type="time"
+                required
+                placeholder="End Time"
+                className="min-h-96"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
           <Input
             id="location"
             name="location"

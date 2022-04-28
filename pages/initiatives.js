@@ -5,37 +5,16 @@ import Sidebar from "../components/Sidebar";
 import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
-import { Input, SearchBar } from "../components/Input";
-import {
-  Featured,
-  Initiative,
-  TopOrganizers,
-} from "../components/explore/ExploreComponents";
+import { SearchBar } from "../components/Input";
+import { Featured, Initiative } from "../components/explore/ExploreComponents";
 import { FiFilter } from "react-icons/fi";
-import { AiFillBackward, AiFillForward } from "react-icons/ai";
-import { useState, useEffect } from "react";
+import { GoPlus, GoCheck } from "react-icons/go";
+import { useState } from "react";
 
-function PageButton({ text, type, isGoogleSignIn, onClick, direction }) {
-  return (
-    <>
-      <button
-        type={type}
-        className={`group relative w-1/8 flex justify-center items-center py-3 px-4 border border-transparent text-sm font-semibold rounded-md my-2 ${
-          "bg-primary text-white " +
-          "hover:bg-primary hover:ring-2 hover:ring-offset-2 hover:ring-primary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-        }`}
-        onClick={onClick}
-      >
-        {direction === "-1" && <AiFillBackward />}
-        {direction === "1" && <AiFillForward className="bottom-[0.5px]" />}
-      </button>
-    </>
-  );
-}
-
-function InitiativesPage({ sessionFromProp, numberOfPages }) {
+function InitiativesPage({ sessionFromProp }) {
   const session = sessionFromProp;
-  const [totalPages, setTotalPages] = useState(numberOfPages);
+  const [Tab, setTab] = useState(0);
+
   const [currentPageActive, setCurrentPageActive] = useState(1);
   const [activeInitiatives, setActiveInitiatives] = useState([]);
   const [newInitiatives, setNewInitiatives] = useState([]);
@@ -75,7 +54,6 @@ function InitiativesPage({ sessionFromProp, numberOfPages }) {
   }, [currentPageActive]);
 
   print(activeInitiatives);
-
   return (
     <ProtectedRoute session={session}>
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
@@ -87,52 +65,65 @@ function InitiativesPage({ sessionFromProp, numberOfPages }) {
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="initiatives" />
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
-              <Featured />
-              <div className="space-y-2">
-                <div className="flex justify-between w-full">
-                  <span className="text-xl font-bold w-1/8 py-2">
-                    {" "}
-                    Active Initiatives{" "}
-                  </span>
-                  <div className="flex flex-row justify-between items-center space-x-3 w-2/5">
-                    <SearchBar />
-                    <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
+              <div className="flex flex-row w-full h-14 items-center">
+                <button
+                  class={
+                    Tab
+                      ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300"
+                      : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700"
+                  }
+                  onClick={() => setTab(0)}
+                >
+                  <div className="flex flex-row items-center space-x-2 ">
+                    <GoCheck />
+                    <span>Active Initiatives</span>
                   </div>
-                </div>
-                <hr />
-              </div>
-              <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-              </div>
-              <div className="flex justify-between">
-                <PageButton direction="-1" />
-                <PageButton direction="1" />
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between w-full">
-                  <span className="text-xl font-bold w-1/8 py-2">
-                    Find New Initiatives
-                  </span>
-                  <div className="flex flex-row justify-between items-center space-x-3 w-2/5">
-                    <SearchBar />
-                    <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
+                </button>
+                <button
+                  class={
+                    !Tab
+                      ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300"
+                      : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700"
+                  }
+                  onClick={() => setTab(1)}
+                >
+                  <div className="flex flex-row items-center space-x-2">
+                    <GoPlus />
+                    <span>Join New Initiatives</span>
                   </div>
+                </button>
+              </div>
+              {/*Search bar and filter*/}
+              <div className="flex justify-between w-full">
+                <div className="flex flex-row w-full justify-between items-center space-x-3">
+                  <SearchBar />
+                  <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
                 </div>
-                <hr />
               </div>
-              <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-                <Initiative />
-              </div>
+              {!Tab && (
+                <>
+                  <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                  </div>
+                </>
+              )}
+              {Tab && (
+                <>
+                  <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                    <Initiative />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

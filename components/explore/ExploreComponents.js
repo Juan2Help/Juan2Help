@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import faker from "@faker-js/faker";
 import Image from "next/image";
 import React from "react";
@@ -5,6 +6,15 @@ import moment from "moment";
 import { FiArrowRight, FiBookmark, FiMapPin } from "react-icons/fi";
 import { MdOutlineLocalFireDepartment } from "react-icons/md";
 
+=======
+import faker from '@faker-js/faker';
+import Image from 'next/image';
+import React from 'react';
+import moment from 'moment';
+import { FiArrowRight, FiBookmark, FiMapPin } from 'react-icons/fi';
+import { MdOutlineLocalFireDepartment } from 'react-icons/md';
+import Link from 'next/link';
+>>>>>>> 597491b26ca0e80f594c455c4a209654cd7691d8
 function OrganizerTile({ name }) {
   return (
     <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center space-y-2">
@@ -49,92 +59,97 @@ function TopOrganizers() {
   );
 }
 
-function Initiative({ initiativeData }) {
-  const fake = {
-    author: {
-      name: initiativeData.publisherName,
-      avatar: faker.image.avatar(),
-    },
-    initiative: {
-      date: moment(initiativeData.startDate)
-        .format("ddd, DD MMM YYYY")
-        .toUpperCase(),
-      location: initiativeData.location,
-      title: initiativeData.title,
-      content: initiativeData.description,
-      participants: initiativeData.participants,
-      isBookmarked: Math.random() > 0.5,
-    },
-  };
-  return (
-    <div className="rounded-xl bg-white w-72 overflow-hidden flex-none">
-      <div className="h-36 w-full sm:w-96 bg-slate-500 relative">
-        <Image
-          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-          layout="fill"
-          objectFit="cover"
-        />
-      </div>
-      <div className="flex flex-col p-4 space-y-2">
-        <div className="flex flex-col">
-          <span className="text-xs font-bold text-gray-400">
-            {fake.initiative.date}
-          </span>
-          <span className="text-md font-bold truncate h-fit">
-            {fake.initiative.title.toUpperCase()}
-          </span>
-          <div className="text-gray-300 text-xs font-bold flex flex-row space-x-2 items-center">
-            <FiMapPin />
-            <span>{fake.initiative.location}</span>
-          </div>
-        </div>
-        <div className="flex flex-row items-center space-x-2">
-          <span className="text-sm font-medium text-gray-300">
-            {fake.initiative.participants} joined
-          </span>
-          <div class="avatar-group -space-x-5">
-            <div class="avatar">
-              <div class="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
+function Initiative({initiativeData}) {
+    const fake = {
+      author: {
+        name: initiativeData.publisherName,
+        avatar: faker.image.avatar(),
+      },
+      initiative: {
+        date: moment(initiativeData.startDate)
+          .format("ddd, DD MMM YYYY")
+          .toUpperCase(),
+        location: initiativeData.location,
+        title: initiativeData.title,
+        content: initiativeData.description,
+        participants: initiativeData.participants,
+        isBookmarked: Math.random() > 0.5,
+      },
+    };
+    return (
+        <Link href="/i/TESTDIR">
+            <div className="rounded-xl bg-white w-72 overflow-hidden flex-none cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+                <div className="h-36 w-full sm:w-96 bg-slate-500 relative">
+                    <Image
+                        src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+                        layout="fill"
+                        objectFit="cover"
+                    />
+                </div>
+                <div className="flex flex-col p-4 space-y-2">
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold text-gray-400">
+                            {fake.initiative.date}
+                        </span>
+                        <span className="text-md font-bold truncate h-fit">
+                            {fake.initiative.title.toUpperCase()}
+                        </span>
+                        <div className="text-gray-300 text-xs font-bold flex flex-row space-x-2 items-center">
+                            <FiMapPin />
+                            <span>{fake.initiative.location}</span>
+                        </div>
+                    </div>
+                    <div className="flex flex-row items-center space-x-2">
+                        <span className="text-sm font-medium text-gray-300">
+                            {fake.initiative.participants} joined
+                        </span>
+                        <div class="avatar-group -space-x-5">
+                            <div class="avatar">
+                                <div class="w-8">
+                                    <img src={faker.image.avatar()} />
+                                </div>
+                            </div>
+                            <div class="avatar">
+                                <div class="w-8">
+                                    <img src={faker.image.avatar()} />
+                                </div>
+                            </div>
+                            <div class="avatar">
+                                <div class="w-8">
+                                    <img src={faker.image.avatar()} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex-auto"></div>
+                        <label class="swap swap-flip">
+                            <input
+                                type="checkbox"
+                                value={fake.initiative.isBookmarked}
+                            />
+                            <FiBookmark className="swap-on text-primary fill-current" />
+                            <FiBookmark className="swap-off" />
+                        </label>
+                    </div>
+                    <progress
+                        class="progress w-full progress-primary"
+                        value={fake.initiative.participants}
+                        max="100"
+                    ></progress>
+                </div>
             </div>
-            <div class="avatar">
-              <div class="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
-            </div>
-            <div class="avatar">
-              <div class="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
-            </div>
-          </div>
-          <div className="flex-auto"></div>
-          <label class="swap swap-flip">
-            <input type="checkbox" value={fake.initiative.isBookmarked} />
-            <FiBookmark className="swap-on text-primary fill-current" />
-            <FiBookmark className="swap-off" />
-          </label>
-        </div>
-        <progress
-          class="progress w-full progress-primary"
-          value={fake.initiative.participants}
-          max="100"
-        ></progress>
-      </div>
-    </div>
-  );
+        </Link>
+    );
 }
 
 function InitiativeCarousel() {
-  return (
-    <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 scrollbar-none">
-      <Initiative />
-      <Initiative />
-      <Initiative />
-      <Initiative />
-    </div>
-  );
+    return (
+        <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 scrollbar-none p-1">
+            <Initiative />
+            <Initiative />
+            <Initiative />
+            <Initiative />
+        </div>
+    );
 }
 
 function Nearby() {
