@@ -25,7 +25,6 @@ function InitiativesPage({ sessionFromProp }) {
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="initiatives" />
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
-                <Featured />
                 <div className = "flex flex-row w-full h-14 items-center" >
                   <button class = {Tab ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300" : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700" } onClick={() => setTab(0)}>
                     <div className = "flex flex-row items-center space-x-2 ">
@@ -36,7 +35,7 @@ function InitiativesPage({ sessionFromProp }) {
                   <button class = {!Tab ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300" : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700" } onClick={() => setTab(1)}>
                     <div className = "flex flex-row items-center space-x-2">
                       <GoPlus/>
-                      <span>Find Initiatives</span>
+                      <span>Join New Initiatives</span>
                     </div>
                   </button >
                 </div>
@@ -49,8 +48,6 @@ function InitiativesPage({ sessionFromProp }) {
                 </div>
                 {!Tab && (
                   <>
-                    <span className="text-xl font-bold text-center"> Active Initiatives </span>
-                    <hr />
                     <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                         <Initiative />
                         <Initiative />
@@ -63,8 +60,6 @@ function InitiativesPage({ sessionFromProp }) {
                 )}
                 {Tab && (
                   <>
-                    <span className="text-xl font-bold text-center"> Find Initiatives </span>
-                    <hr />
                     <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                         <Initiative />
                         <Initiative />
