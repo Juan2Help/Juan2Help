@@ -179,4 +179,4 @@ function Featured() {
     );
 }
 
-export { Featured, Initiatives, Nearby, InitiativeCarousel, TopOrganizers };
+export { Featured, Initiatives, Nearby, InitiativeCarousel, TopOrganizers, Initiative };

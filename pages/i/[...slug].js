@@ -11,11 +11,12 @@ import {
   FiMapPin,
 } from 'react-icons/fi';
 import { GrantAccess } from '../../middleware/ProtectedRoute';
+import Link from "next/link";
 
 function Header() {
   return (
     <>
-      <div className="absolute h-56 w-full sm:w-96 bg-slate-500">
+      <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
         <Image
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
           layout="fill"
@@ -24,7 +25,9 @@ function Header() {
       </div>
       <div className="-top-20 sticky flex flex-row justify-between p-4">
         <div className="p-2 rounded-full bg-purple-100">
-          <FiArrowLeft />
+          <Link href="/initiatives">
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+          </Link>
         </div>
         <div className="p-2 rounded-full bg-purple-100">
           <FiMoreHorizontal />

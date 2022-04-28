@@ -1,4 +1,5 @@
 import React from "react";
+import {MdSearch} from "react-icons/md";
 
 function Input({
   id,
@@ -91,4 +92,16 @@ function Date({ handleChange }) {
   );
 }
 
-export { Input, TextArea, Date };
+function SearchBar({ handleChange }){
+  return(
+    <div className = "w-full flex flex-row rounded-md border border-gray-300 hover:border-purple-700 bg-white">
+      <div className = "relative px-2 pt-2.5">
+        <MdSearch className="text-2xl text-gray-600"/>
+      </div>
+      <div className = "w-full">
+        <input className = "relative block w-full py-3 placeholder-gray-400 text-gray-900 font-medium rounded-md sm:text-sm focus:outline-none" type="text" name="searchbar" placeholder = "Search" onChange={handleChange} />
+      </div>
+    </div>
+  );
+}
+export { Input, TextArea, Date, SearchBar};

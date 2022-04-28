@@ -7,7 +7,7 @@ import {
     FiCopy,
     FiSearch,
 } from 'react-icons/fi';
-
+import {RiHandHeartLine} from "react-icons/ri"
 function Sidebar({ active }) {
     return (
         <div className="sticky h-fit top-[72px] hidden md:flex md:flex-col xl:flex xl:flex-col xl:w-4/12 space-y-2">
@@ -38,15 +38,15 @@ function Sidebar({ active }) {
                 </Link>
             </div>
             <div>
-                <Link href="/search">
+                <Link href="/initiatives">
                     <button
                         className={`relative rounded-xl btn btn-lg btn-ghost gap-4 capitalize ${
-                            active == 'search' &&
+                            active == 'initiatives' &&
                             `font-bold text-purple-700 after:content-[''] after:bg-purple-700 after:left-1.5 after:h-1/3 after:w-1 after:rounded-full after:absolute`
                         }`}
                     >
-                        <FiSearch className="text-3xl" />
-                        <span className="hidden xl:inline">Search</span>
+                        <RiHandHeartLine className="text-3xl" />
+                        <span className="hidden xl:inline">Initiatives</span>
                     </button>
                 </Link>
             </div>
