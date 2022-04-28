@@ -1,14 +1,14 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import Participants from "../../../components/add-initiative/Participant";
-import { Input, TextArea, Date } from "../../../components/Input";
-import Button from "../../../components/Button";
-import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import Participants from '../../../components/add-initiative/Participant';
+import { Input, TextArea, Date } from '../../../components/Input';
+import Button from '../../../components/Button';
+import Head from 'next/head';
+import { getSession, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
 
 function add({ sessionFromProp }) {
   const session = sessionFromProp;
@@ -24,21 +24,21 @@ function add({ sessionFromProp }) {
     initiativeData.publisher = session.user.email;
     initiativeData.NGOid = session.user.NGOid;
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/add-initiative", {
-      method: "POST",
+    const response = await fetch('/api/add-initiative', {
+      method: 'POST',
       body: JSON.stringify(initiativeData),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
       setErrorState({ error: true, message: error.message });
     }
 
@@ -52,10 +52,10 @@ function add({ sessionFromProp }) {
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
-    if (name === "publish") {
+    if (name === 'publish') {
       setInitiativeData({
         ...initiativeData,
-        [name]: value === "on",
+        [name]: value === 'on',
       });
       return;
     }
@@ -69,7 +69,7 @@ function add({ sessionFromProp }) {
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
           <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">New Initiative</span>
         </div>
@@ -95,6 +95,32 @@ function add({ sessionFromProp }) {
             />
           </div>
           <Date handleChange={handleChange} />
+          <div className="grid grid-flow-row grid-cols-2 gap-4">
+            <div className="flex-1 space-y-2">
+              <span className="font-bold text-md">Start Time</span>
+              <Input
+                id="start_time"
+                name="start_time"
+                type="time"
+                required
+                placeholder="Start Time"
+                className="min-h-96"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="flex-1 space-y-2">
+              <span className="font-bold text-md">End Time</span>
+              <Input
+                id="end_time"
+                name="end_time"
+                type="time"
+                required
+                placeholder="End Time"
+                className="min-h-96"
+                onChange={handleChange}
+              />
+            </div>
+          </div>
           <Input
             id="location"
             name="location"
