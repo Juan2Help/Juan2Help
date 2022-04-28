@@ -10,8 +10,8 @@ import {
   FiClock,
   FiMapPin,
 } from 'react-icons/fi';
-import { GrantAccess } from '../../middleware/ProtectedRoute';
-import Link from "next/link";
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import Link from 'next/link';
 
 function Header() {
   return (
@@ -26,7 +26,7 @@ function Header() {
       <div className="-top-20 sticky flex flex-row justify-between p-4">
         <div className="p-2 rounded-full bg-purple-100">
           <Link href="/initiatives">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
         </div>
         <div className="p-2 rounded-full bg-purple-100">
@@ -37,7 +37,7 @@ function Header() {
   );
 }
 
-function Body() {
+function Body({ session }) {
   const fake = {
     author: {
       name: faker.name.findName(),
@@ -120,7 +120,16 @@ function Body() {
       </div>
       {/* Participants */}
       <div className="flex flex-col gap-2">
-        <div className="text-xl font-bold">Participants</div>
+        <div className="flex flex-row justify-between items-center">
+          <div className="text-xl font-bold">Participants</div>
+          {session?.user?.role > 2 && (
+            <div className="text-sm font-bold text-primary">
+              <Link href="/initiatives/:initiative_id/participants">
+                View all
+              </Link>
+            </div>
+          )}
+        </div>
         <div>
           <progress
             class="progress progress-primary w-full"
@@ -156,7 +165,7 @@ function initiative({ sessionFromProp }) {
   return (
     <div className="flex relative flex-col min-h-screen">
       <Header session={session} />
-      <Body />
+      <Body session={session} />
     </div>
   );
 }
