@@ -13,7 +13,7 @@ async function handler(req, res) {
 
     const initiatives = db.collection("initiatives");
 
-    // delete initiative the given with id and publisher
+    // get initiative the given with id and publisher
     const initiative = await initiatives.findOne({
       _id: ObjectId(id),
       publisher: email,
