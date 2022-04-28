@@ -13,7 +13,7 @@ import { useState } from "react";
 
 function InitiativesPage({ sessionFromProp }) {
   const session = sessionFromProp;
-  const [OnActive, setOpenState] = useState(false);
+  const [Tab, setTab] = useState(0);
   return (
     <ProtectedRoute session={session}>
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
@@ -26,14 +26,14 @@ function InitiativesPage({ sessionFromProp }) {
             <Sidebar active="initiatives" />
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
                 <Featured />
-                <div className = "flex flex-row w-full h-14 font-semibold items-center" >
-                  <button class = "flex items-center justify-center w-1/2 h-full border-b-2  border-gray-300 hover:bg-gray-200 rounded-tl-lg cursor-pointer  hover:border-gray-400 active:border-violet-700 active:border-b-4 active:text-violet-700 active"  onClick={() => setOpenState(!OnActive)}>
+                <div className = "flex flex-row w-full h-14 items-center" >
+                  <button class = {Tab ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300" : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700" } onClick={() => setTab(0)}>
                     <div className = "flex flex-row items-center space-x-2 ">
                       <GoCheck />
                       <span>Active Initiatives</span>
                     </div>
                   </button>
-                  <button class = "flex items-center justify-center w-1/2 h-full border-b-2 border-gray-300 hover:bg-gray-200 rounded-tl-lg cursor-pointer hover:border-gray-400 active:border-violet-700 active:border-b-4 active:text-violet-700"  onClick={() => setOpenState(!OnActive)}>
+                  <button class = {!Tab ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300" : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700" } onClick={() => setTab(1)}>
                     <div className = "flex flex-row items-center space-x-2">
                       <GoPlus/>
                       <span>Find Initiatives</span>
@@ -47,7 +47,7 @@ function InitiativesPage({ sessionFromProp }) {
                       <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500"/>
                     </div>
                 </div>
-                {OnActive && (
+                {!Tab && (
                   <>
                     <span className="text-xl font-bold text-center"> Active Initiatives </span>
                     <hr />
@@ -61,7 +61,7 @@ function InitiativesPage({ sessionFromProp }) {
                     </div>
                   </>
                 )}
-                {!OnActive && (
+                {Tab && (
                   <>
                     <span className="text-xl font-bold text-center"> Find Initiatives </span>
                     <hr />
