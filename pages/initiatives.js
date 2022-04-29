@@ -95,7 +95,7 @@ function InitiativesPage({
                   <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
                 </div>
               </div>
-              {!Tab && (
+              {Tab == 0 && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {activeInitiatives.map((initiative) => (
@@ -107,7 +107,7 @@ function InitiativesPage({
                   </div>
                 </>
               )}
-              {Tab && (
+              {Tab == 1 && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {newInitiatives.map((initiative) => (
