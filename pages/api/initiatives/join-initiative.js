@@ -33,14 +33,27 @@ async function handler(req, res) {
       _id: ObjectId(session.user._id),
     });
 
-    // check if user is already a member of the initiative
-    if (initiative?.members.includes(user._id)) {
+    // check if user is already a registering
+    if (initiative?.registrantsList?.includes(session.user._id)) {
       res
         .status(400)
         .json({ message: "You are already a member of this initiative" });
       conn.close();
       return;
     }
+
+    // check if user is already a participant
+
+    if (initiative?.participantsList?.includes(session.user._id)) {
+      res
+        .status(400)
+        .json({ message: "You are already a member of this initiative" });
+      conn.close();
+      return;
+    }
+
+    console.log(session.user._id);
+    console.log(initiativeId);
     // add the user to the initiative
     const initiativeUpdate = await initiatives.updateOne(
       {
@@ -48,7 +61,7 @@ async function handler(req, res) {
       },
       {
         $push: {
-          registrants: session.user._id,
+          registrantsList: session.user._id,
         },
       }
     );
@@ -60,12 +73,12 @@ async function handler(req, res) {
       },
       {
         $push: {
-          applications: ObjectId(initiativeId),
+          applications: initiativeId,
         },
       }
     );
 
-    console.log("JOINED INITIATIVE", initiativeUpdate, userUpdate);
+    console.log("JOINED INITIATIVE");
 
     // send the response status 200
     res.status(200).json(initiativeUpdate);

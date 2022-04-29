@@ -97,8 +97,8 @@ function add({ sessionFromProp }) {
             <div className="flex-1 space-y-2">
               <span className="font-bold text-md">Start Time</span>
               <Input
-                id="start_time"
-                name="start_time"
+                id="startTime"
+                name="startTime"
                 type="time"
                 required
                 placeholder="Start Time"
@@ -109,8 +109,8 @@ function add({ sessionFromProp }) {
             <div className="flex-1 space-y-2">
               <span className="font-bold text-md">End Time</span>
               <Input
-                id="end_time"
-                name="end_time"
+                id="endTime"
+                name="endTime"
                 type="time"
                 required
                 placeholder="End Time"

@@ -1,13 +1,16 @@
-import { React } from 'react';
-import { getSession } from 'next-auth/react';
-import { GrantAccess } from '../../../middleware/ProtectedRoute';
-import { FiArrowLeft } from 'react-icons/fi';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { faker } from '@faker-js/faker';
-import { FiLink, FiShare2, FiAlertTriangle } from 'react-icons/fi';
+import { React, useState, useEffect } from "react";
+import { getSession } from "next-auth/react";
+import {
+  GrantAccess,
+  redirectToLogin,
+} from "../../../middleware/ProtectedRoute";
+import { FiArrowLeft } from "react-icons/fi";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { faker } from "@faker-js/faker";
+import { FiLink, FiShare2, FiAlertTriangle } from "react-icons/fi";
 
-function ModalToggle() {
+function ModalToggle({ acceptHandler, rejectHandler, visitHandler }) {
   return (
     <>
       <input type="checkbox" id="registrant-options" class="modal-toggle" />
@@ -24,16 +27,19 @@ function ModalToggle() {
               <FiAlertTriangle />
             </div>
           </div>
-          <div className="flex flex-col space-y-4">
+          <div
+            className="flex flex-col space-y-4 hover:cursor-pointer"
+            onClick={visitHandler}
+          >
             <hr />
             <a>Visit profile</a>
             <hr />
           </div>
-          <ul class="bg-base-100 w-full space-y-4 mt-4">
-            <li>
+          <ul class="bg-base-100 w-full space-y-4 mt-4 hover:cursor-pointer">
+            <li onClick={acceptHandler}>
               <a>Accept</a>
             </li>
-            <li>
+            <li onClick={rejectHandler}>
               <a>Reject</a>
             </li>
           </ul>
@@ -54,27 +60,32 @@ function fakeUser() {
   return fake;
 }
 
-function Body() {
-  const participants_count = faker.random.number({ min: 1, max: 100 });
+function Body({ registrants, onClickHandler }) {
   const fake = {
     initiative: {
-      participants_count: participants_count,
-      participants: Array(participants_count)
-        .fill()
-        .map(() => fakeUser()),
+      participants: registrants,
     },
   };
-  console.log(participants_count);
+  console.log("registrants: ", registrants);
+
   return (
     <div className="px-4 flex flex-col gap-2">
       <hr />
-      {fake.initiative.participants.map((participant) => (
-        <label for="registrant-options" className="text-xl">
-          <div className="flex flex-col gap-2">
+      {fake.initiative?.participants?.map((participant) => (
+        <label
+          for="registrant-options"
+          className="text-xl"
+          key={participant._id}
+        >
+          <div
+            className="flex flex-col gap-2"
+            id={participant._id}
+            onClick={onClickHandler}
+          >
             <div className="flex flex-row gap-4 items-center">
               <div className="w-20 overflow-clip rounded-full">
                 <img
-                  src={participant.avatar}
+                  src={faker.internet.avatar()}
                   layout="fill"
                   objectFit="cover"
                   className="w-full pb-full"
@@ -86,8 +97,12 @@ function Body() {
                   <div className="text-sm text-slate-600">{`${participant.email}`}</div>
                 </div>
                 <div className="text-sm text-slate-600">
-                  <div>{`${participant.phone}`}</div>
-                  <div>{`${participant.city}`}</div>
+                  <div>{`${
+                    participant.phone ? participant.phone : "No contact"
+                  }`}</div>
+                  <div>{`${
+                    participant.city ? participant.city : "No location"
+                  } `}</div>
                 </div>
               </div>
             </div>
@@ -121,23 +136,104 @@ function Header() {
   );
 }
 
-function search({ sessionFromProp }) {
+function search({ sessionFromProp, registrants, initiativeId }) {
   const session = sessionFromProp;
+  const router = useRouter();
+
+  const [selectedRegistrant, setSelectedRegistrant] = useState(0);
+  const [registrantList, setRegistrantList] = useState(registrants);
+
+  const grabRegistrants = async () => {
+    const req = await fetch("/api/initiatives/get-registants", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: initiativeId,
+      }),
+    });
+
+    return setRegistrantList(await req.json());
+  };
+
+  const onClickHandler = (e) => {
+    setSelectedRegistrant(e.currentTarget.id);
+    console.log("selectedRegistrant: ", selectedRegistrant);
+  };
+
+  const acceptHandler = async () => {
+    const req = await fetch("/api/initiatives/approve-application", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        registrantId: selectedRegistrant,
+        initiativeId: initiativeId,
+      }),
+    });
+    grabRegistrants();
+  };
+
+  const rejectHandler = async () => {
+    const req = await fetch("/api/initiatives/reject-application", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        registrantId: selectedRegistrant,
+        initiativeId: initiativeId,
+      }),
+    });
+    grabRegistrants();
+  };
+
+  const visitHandler = () => {
+    router.push(`/u/${selectedRegistrant}`);
+  };
+
   return (
     <div className="flex relative flex-col min-h-screen">
       <Header />
-      <Body />
-      <ModalToggle />
+      <Body registrants={registrantList} onClickHandler={onClickHandler} />
+      <ModalToggle
+        acceptHandler={acceptHandler}
+        rejectHandler={rejectHandler}
+        visitHandler={visitHandler}
+      />
     </div>
   );
 }
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
-  GrantAccess(context, session);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
+  const initiativeId = context.params.initiative;
+  console.log("initiativeId", initiativeId);
+
+  const req = await fetch(
+    `${process.env.NEXTAUTH_URL}/api/initiatives/get-registants`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: initiativeId,
+      }),
+    }
+  );
+
+  const data = await req.json();
+  console.log("data: ", data);
+
   return {
     props: {
       sessionFromProp: session,
+      registrants: data,
+      initiativeId,
     },
   };
 }

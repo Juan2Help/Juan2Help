@@ -9,51 +9,18 @@ import { SearchBar } from "../components/Input";
 import { Featured, Initiative } from "../components/explore/ExploreComponents";
 import { FiFilter } from "react-icons/fi";
 import { GoPlus, GoCheck } from "react-icons/go";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-function InitiativesPage({ sessionFromProp }) {
+function InitiativesPage({ sessionFromProp, initiativeData }) {
   const session = sessionFromProp;
   const [Tab, setTab] = useState(0);
 
   const [currentPageActive, setCurrentPageActive] = useState(1);
-  const [activeInitiatives, setActiveInitiatives] = useState([]);
-  const [newInitiatives, setNewInitiatives] = useState([]);
+  const [activeInitiatives, setActiveInitiatives] = useState(initiativeData);
+  const [newInitiatives, setNewInitiatives] = useState(initiativeData);
 
-  const loadNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  console.log("activeInitiatives", activeInitiatives);
 
-  const loadPrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  useEffect(() => {
-    if (session) {
-      // send a post request to the server to get the new initiatives
-      const getActiveInitiatives = async () => {
-        const req = fetch("/api/initiatives/get-initiative", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            page: currentPageActive,
-            type: "3",
-          }),
-        });
-        const res = await req;
-        const data = await res.json();
-        setActiveInitiatives(data.initiatives);
-      };
-      getActiveInitiatives();
-    }
-  }, [currentPageActive]);
-
-  print(activeInitiatives);
   return (
     <ProtectedRoute session={session}>
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
@@ -103,24 +70,24 @@ function InitiativesPage({ sessionFromProp }) {
               {!Tab && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
+                    {activeInitiatives.map((initiative) => (
+                      <Initiative
+                        key={initiative.id}
+                        initiativeData={initiative}
+                      />
+                    ))}
                   </div>
                 </>
               )}
               {Tab && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
-                    <Initiative />
+                    {newInitiatives.map((initiative) => (
+                      <Initiative
+                        key={initiative.id}
+                        initiativeData={initiative}
+                      />
+                    ))}
                   </div>
                 </>
               )}
@@ -138,15 +105,30 @@ export async function getServerSideProps(context) {
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
   //grab total number of pages from /api/initiatives/get-initiatives
-  const res = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`
-  );
-  const { pages } = await res.json();
+  const getNewInitiatives = async () => {
+    const req = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          page: 1,
+          type: "1",
+        }),
+      }
+    );
+    const data = await req.json();
+    return data;
+  };
+
+  getNewInitiatives();
 
   return {
     props: {
       sessionFromProp: session,
-      numberOfPages: pages,
+      initiativeData: await getNewInitiatives(),
     },
   };
 }

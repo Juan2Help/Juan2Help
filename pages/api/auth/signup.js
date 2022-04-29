@@ -54,6 +54,8 @@ async function handler(req, res) {
       NGOid: "0",
       token,
       verified: false,
+      activeInitiatives: [],
+      applications: [],
     });
 
     // Send verification email

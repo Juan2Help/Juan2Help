@@ -22,6 +22,8 @@ async function handler(req, res) {
       causeType,
       NGOid,
       location,
+      startTime,
+      endTime,
     } = req.body;
 
     const conn = await ConnectDB();
@@ -41,6 +43,10 @@ async function handler(req, res) {
       publisherName: session.user?.name,
       NGOid,
       location,
+      startTime,
+      endTime,
+      registrantsList: Array(0),
+      participantsList: Array(0),
     });
 
     // send the response status 200

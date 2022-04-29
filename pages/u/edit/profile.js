@@ -141,7 +141,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
-      userDetails: await fetchUserDetails(session),
+      userDetails: await fetchUserDetails(session?.user?._id),
     },
   };
 }

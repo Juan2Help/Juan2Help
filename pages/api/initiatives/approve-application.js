@@ -7,7 +7,7 @@ async function handler(req, res) {
   if (req.method === "POST") {
     // check if user is logged in
     const session = await getSession({ req });
-    if (!session || !session.user.role < 2) {
+    if (!session || !session.user.role > 2) {
       res.status(401).json({
         message:
           "You are not logged in or you do not have rights to access this page.",
@@ -16,7 +16,7 @@ async function handler(req, res) {
     }
 
     // get the initiative id and user id from the request body
-    const { initiativeId, userId } = req.body;
+    const { registrantId, initiativeId } = req.body;
 
     // connect to the database
     const conn = await ConnectDB();
@@ -32,10 +32,10 @@ async function handler(req, res) {
       },
       {
         $addToSet: {
-          members: ObjectId(userId),
+          participantsList: registrantId,
         },
         $pull: {
-          registrants: ObjectId(userId),
+          registrantsList: registrantId,
         },
       }
     );
@@ -44,22 +44,24 @@ async function handler(req, res) {
     // and append the initiative to the activeInitiatives
     const userUpdate = await users.updateOne(
       {
-        _id: ObjectId(userId),
+        _id: ObjectId(registrantId),
       },
       {
         $addToSet: {
-          activeInitiatives: ObjectId(initiativeId),
+          activeInitiatives: initiativeId,
         },
         $pull: {
-          applications: ObjectId(initiativeId),
+          applications: initiativeId,
         },
       }
     );
 
+    console.log(`Application of ${registrantId} to ${initiativeId} approved`);
+
     // send the response status 200
     res
       .status(200)
-      .json(`Application of ${userId} to ${initiativeId} approved`);
+      .json(`Application of ${registrantId} to ${initiativeId} approved`);
     conn.close();
   } else {
     //Response for other than POST method

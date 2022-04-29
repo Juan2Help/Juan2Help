@@ -9,13 +9,6 @@ async function handler(req, res) {
   if (req.method === "POST") {
     // check if user is logged in
     const session = await getSession({ req });
-    if (!session || !session.user.role < 2) {
-      res.status(401).json({
-        message:
-          "You are not logged in or you do not have rights to access this page.",
-      });
-      return;
-    }
 
     const type = req.body.type;
 
@@ -23,11 +16,11 @@ async function handler(req, res) {
     // 2: getFilteredInitiatives
     switch (type) {
       case "1":
-        return getAllInitiatives(req, res, session.user);
+        return getAllInitiatives(req, res, session?.user);
       case "2":
-        return getFilteredInitiatives(req, res, session.user);
+        return getFilteredInitiatives(req, res, session?.user);
       case "3":
-        return getActiveInitiatives(req, res, session.user);
+        return getActiveInitiatives(req, res, session?.user);
       default:
         return res.status(500).json({ message: "Invalid type" });
     }
@@ -52,6 +45,8 @@ export default handler;
 const getAllInitiatives = async (req, res, user) => {
   // get the current page from the request body
   const { page } = req.body;
+
+  console.log("GETTING ALL INITIATIVES");
 
   // connect to the database
   const conn = await ConnectDB();

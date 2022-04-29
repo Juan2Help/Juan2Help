@@ -7,7 +7,7 @@ async function handler(req, res) {
   if (req.method === "POST") {
     // log the request body
 
-    const { email } = req.body;
+    const { id } = req.body;
     const conn = await ConnectDB();
     const db = conn.db();
     const users = db.collection("users");
@@ -16,15 +16,15 @@ async function handler(req, res) {
     const session = await getSession({ req });
 
     // if user is not logged in
-    if (!session) {
-      res.status(401).json({ message: "You are not logged in" });
-      conn.close();
-      return;
-    }
+    // if (!session) {
+    //   res.status(401).json({ message: "You are not logged in" });
+    //   conn.close();
+    //   return;
+    // }
 
     // update initiative
     const user = await users.findOne({
-      email: email,
+      _id: ObjectId(id),
     });
 
     // send the response status 200

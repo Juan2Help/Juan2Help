@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
-import { React } from "react";
+import { React, useState, useEffect } from "react";
 import {
   FiArrowLeft,
   FiMoreHorizontal,
@@ -43,6 +43,15 @@ function Header() {
 }
 
 function Body({ session, initiativeData }) {
+  console.log("initiativeData", initiativeData);
+  const [buttonToggle, setButtonToggle] = useState(false);
+
+  const hasJoined = initiativeData?.participantsList?.includes(
+    session.user._id
+  );
+
+  console.log("hasJoined", hasJoined);
+
   const fake = {
     author: {
       name: initiativeData?.publisherName,
@@ -53,8 +62,12 @@ function Body({ session, initiativeData }) {
         .format("ddd, DD MMM YYYY")
         .toUpperCase(),
       time: {
-        start: moment(faker.time.recent(10, "12:00")).format("HH:mm"),
-        end: moment(faker.time.recent(10, "12:00")).format("HH:mm"),
+        start: initiativeData?.startTime
+          ? initiativeData?.startTime
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
+        end: initiativeData?.endTime
+          ? initiativeData?.endTime
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
       },
       location: {
         city: initiativeData?.location,
@@ -71,19 +84,40 @@ function Body({ session, initiativeData }) {
     },
   };
 
-  const router = useRouter();
-  const initiativeId = router.query.initiative;
-
-  console.log(initiativeId);
-
   const handleJoin = async () => {
     const req = await fetch(`/api/initiatives/join-initiative`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(initiativeId),
+      body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
+    const res = await req.json();
+
+    if (res.ok) {
+      console.log("Joined initiative");
+    } else {
+      console.log("Failed to join initiative");
+    }
+    setButtonToggle(!buttonToggle);
+  };
+
+  const handleLeave = async () => {
+    const req = await fetch(`/api/initiatives/leave-initiative`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ initiativeId: initiativeData._id }),
+    });
+    const res = await req.json();
+
+    if (res.ok) {
+      console.log("Left initiative");
+    } else {
+      console.log("Failed to leave initiative");
+    }
+    setButtonToggle(!buttonToggle);
   };
 
   return (
@@ -145,7 +179,9 @@ function Body({ session, initiativeData }) {
           <div className="text-xl font-bold">Participants</div>
           {session?.user?.role > 2 && (
             <div className="text-sm font-bold text-primary">
-              <Link href={`/i/${initiativeId}/registrants`}>View all</Link>
+              <Link href={`/i/${initiativeData._id}/registrants`}>
+                View all
+              </Link>
             </div>
           )}
         </div>
@@ -172,15 +208,21 @@ function Body({ session, initiativeData }) {
         </div>
       </div>
       {/* Join */}
-      <button
-        onClick={handleJoin}
-        class="btn btn-primary btn-block font-bold text-white"
-      >
-        Join
-      </button>
-      <button class="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700">
-        Leave
-      </button>
+      {hasJoined ? (
+        <button
+          onClick={handleLeave}
+          class="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700"
+        >
+          Leave
+        </button>
+      ) : (
+        <button
+          onClick={handleJoin}
+          class="btn btn-primary btn-block font-bold text-white"
+        >
+          Join
+        </button>
+      )}
     </div>
   );
 }

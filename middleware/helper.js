@@ -40,7 +40,7 @@ export async function fetchOrganizationList() {
   return fetchedOrganizations;
 }
 
-export async function fetchUserDetails(session) {
+export async function fetchUserDetails(id) {
   const req = await fetch(`${process.env.NEXTAUTH_URL}api/user/get-user`, {
     method: "POST",
     headers: {
@@ -48,7 +48,7 @@ export async function fetchUserDetails(session) {
       Accept: "application/json",
     },
     body: JSON.stringify({
-      email: session.user.email,
+      id: id,
     }),
   });
   const fetchedUserDetails = await req.json();
