@@ -64,6 +64,7 @@ function Header({ initiativeData, session }) {
 function Body({ session, initiativeData }) {
   console.log("initiativeData", initiativeData);
   const [buttonToggle, setButtonToggle] = useState(false);
+  const router = useRouter();
 
   const hasApplied = initiativeData?.registrantsList?.includes(
     session.user._id
@@ -138,7 +139,8 @@ function Body({ session, initiativeData }) {
     } else {
       console.log("Failed to leave initiative");
     }
-    setButtonToggle(!buttonToggle);
+
+    router.reload(window.location.pathname);
   };
 
   return (

@@ -155,8 +155,9 @@ function search({
         id: initiativeId,
       }),
     });
-
-    return setRegistrantList(await req.json());
+    const { userEntries } = await req.json();
+    setRegistrantList(userEntries);
+    return;
   };
 
   const onClickHandler = (e) => {
