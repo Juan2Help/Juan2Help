@@ -16,21 +16,19 @@ async function handler(req, res) {
     const initiatives = db.collection("initiatives");
     const users = db.collection("users");
 
-    console.log("GRABBING LIST OF REGISTRANTS");
+    console.log("GRABBING LIST OF PARTICIPANTS");
     // grab registrants list from intiative
     const initiative = await initiatives.findOne({
       _id: ObjectId(id),
     });
-    const registrantsList = initiative.registrantsList.map((registrant) =>
-      ObjectId(registrant)
+    const participantsList = initiative.participantsList.map((participant) =>
+      ObjectId(participant)
     );
-
-    console.log("registrantsList", registrantsList);
 
     // grab user entries from users database corresponding to the registrants list
     const userEntries = await users
       .find({
-        _id: { $in: registrantsList },
+        _id: { $in: participantsList },
       })
       .toArray();
 

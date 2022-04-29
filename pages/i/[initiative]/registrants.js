@@ -114,10 +114,7 @@ function Body({ registrants, onClickHandler }) {
   );
 }
 
-function Header() {
-  const router = useRouter();
-  const { initiative } = router.query;
-
+function Header({ initiativeTitle }) {
   return (
     <div className="top-0 sticky flex flex-row items-center justify-between p-4 z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
       <div className="flex flex-row gap-2">
@@ -126,17 +123,22 @@ function Header() {
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
         </div>
-        <div className="font-bold text-xl">{`${initiative}`}</div>
+        <div className="font-bold text-xl">{`${initiativeTitle}`}</div>
       </div>
-      <div className="flex flex-row gap-3 justify-end text-primary">
+      {/* <div className="flex flex-row gap-3 justify-end text-primary">
         <div className="font-bold text-sm">Accept All</div>
         <div className="font-bold text-sm">Reject All</div>
-      </div>
+      </div> */}
     </div>
   );
 }
 
-function search({ sessionFromProp, registrants, initiativeId }) {
+function search({
+  sessionFromProp,
+  registrants,
+  initiativeId,
+  initiativeTitle,
+}) {
   const session = sessionFromProp;
   const router = useRouter();
 
@@ -196,7 +198,7 @@ function search({ sessionFromProp, registrants, initiativeId }) {
 
   return (
     <div className="flex relative flex-col min-h-screen">
-      <Header />
+      <Header initiativeTitle={initiativeTitle} />
       <Body registrants={registrantList} onClickHandler={onClickHandler} />
       <ModalToggle
         acceptHandler={acceptHandler}
@@ -226,13 +228,13 @@ export async function getServerSideProps(context) {
     }
   );
 
-  const data = await req.json();
-  console.log("data: ", data);
+  const { userEntries, title } = await req.json();
 
   return {
     props: {
       sessionFromProp: session,
-      registrants: data,
+      registrants: userEntries,
+      initiativeTitle: title,
       initiativeId,
     },
   };

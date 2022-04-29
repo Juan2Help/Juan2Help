@@ -1,24 +1,24 @@
-import { faker } from '@faker-js/faker';
-import moment from 'moment';
-import { getSession, useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { React, useState, useEffect } from 'react';
+import { faker } from "@faker-js/faker";
+import moment from "moment";
+import { getSession, useSession } from "next-auth/react";
+import Image from "next/image";
+import { React, useState, useEffect } from "react";
 import {
   FiArrowLeft,
   FiMoreHorizontal,
   FiBookmark,
   FiClock,
   FiMapPin,
-} from 'react-icons/fi';
+} from "react-icons/fi";
 import {
   GrantAccess,
   redirectToLogin,
-} from '../../../middleware/ProtectedRoute';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Button from '../../../components/Button';
+} from "../../../middleware/ProtectedRoute";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Button from "../../../components/Button";
 
-function Header() {
+function Header({ initiativeData, session }) {
   return (
     <>
       <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
@@ -34,40 +34,45 @@ function Header() {
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
         </div>
-        <div class="dropdown dropdown-end">
-          <label tabindex="0">
-            <div className="p-2 rounded-full bg-purple-100">
-              <FiMoreHorizontal />
-            </div>
-          </label>
-          <ul
-            tabindex="0"
-            class="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
-          >
-            <li>
-              <a>Edit initiative</a>
-            </li>
-            <li>
-              {/* <Link href={`/i/${initiativeData._id}/participants`}> */}
-              View registrants
-              {/* </Link> */}
-            </li>
-          </ul>
-        </div>
+        {session?.user?.role >= 2 && (
+          <div class="dropdown dropdown-end">
+            <label tabindex="0">
+              <div className="p-2 rounded-full bg-purple-100">
+                <FiMoreHorizontal />
+              </div>
+            </label>
+            <ul
+              tabindex="0"
+              class="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
+            >
+              <li>
+                <a>Edit initiative</a>
+              </li>
+              <li>
+                <Link href={`/i/${initiativeData._id}/registrants`}>
+                  View registrants
+                </Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </>
   );
 }
 
 function Body({ session, initiativeData }) {
-  console.log('initiativeData', initiativeData);
+  console.log("initiativeData", initiativeData);
   const [buttonToggle, setButtonToggle] = useState(false);
 
+  const hasApplied = initiativeData?.registrantsList?.includes(
+    session.user._id
+  );
   const hasJoined = initiativeData?.participantsList?.includes(
     session.user._id
   );
 
-  console.log('hasJoined', hasJoined);
+  console.log("hasJoined", hasJoined);
 
   const fake = {
     author: {
@@ -76,19 +81,18 @@ function Body({ session, initiativeData }) {
     },
     initiative: {
       date: moment(initiativeData?.startDate)
-        .format('ddd, DD MMM YYYY')
+        .format("ddd, DD MMM YYYY")
         .toUpperCase(),
       time: {
         start: initiativeData?.startTime
           ? initiativeData?.startTime
-          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
         end: initiativeData?.endTime
           ? initiativeData?.endTime
-          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
       },
       location: {
         city: initiativeData?.location,
-        address: faker.address.streetAddress(),
       },
       participants: {
         start: faker.random.number({ min: 1, max: 100 }),
@@ -103,36 +107,36 @@ function Body({ session, initiativeData }) {
 
   const handleJoin = async () => {
     const req = await fetch(`/api/initiatives/join-initiative`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log('Joined initiative');
+      console.log("Joined initiative");
     } else {
-      console.log('Failed to join initiative');
+      console.log("Failed to join initiative");
     }
     setButtonToggle(!buttonToggle);
   };
 
   const handleLeave = async () => {
     const req = await fetch(`/api/initiatives/leave-initiative`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log('Left initiative');
+      console.log("Left initiative");
     } else {
-      console.log('Failed to leave initiative');
+      console.log("Failed to leave initiative");
     }
     setButtonToggle(!buttonToggle);
   };
@@ -184,9 +188,6 @@ function Body({ session, initiativeData }) {
             <span className="text-sm text-gray-400 font-medium">
               {fake.initiative.location.city}
             </span>
-            <span className="text-sm font-medium overflow-clip truncate">
-              {fake.initiative.location.address}
-            </span>
           </div>
         </div>
       </div>
@@ -196,8 +197,9 @@ function Body({ session, initiativeData }) {
           <div className="text-xl font-bold">Participants</div>
           {session?.user?.role > 2 && (
             <div className="text-sm font-bold text-primary">
-              {/* <Link href={`/i/${initiativeData._id}/participants`}> */}
-              View all
+              <Link href={`/i/${initiativeData._id}/participants`}>
+                View all
+              </Link>
               {/* </Link> */}
             </div>
           )}
@@ -219,10 +221,7 @@ function Body({ session, initiativeData }) {
       </div>
       {/* Location */}
       <div className="flex flex-col gap-2">
-        <div className="text-xl font-bold">Location</div>
-        <div className="bg-primary w-full p-4 h-56 rounded-md font-bold text-white flex items-end">
-          OPEN STREET MAP API FETCH
-        </div>
+        <div className="text-xl font-bold">{fake.initiative.location.city}</div>
       </div>
       {/* Join */}
       {hasJoined ? (
@@ -231,6 +230,13 @@ function Body({ session, initiativeData }) {
           class="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700"
         >
           Leave
+        </button>
+      ) : hasApplied || buttonToggle ? (
+        <button
+          class="btn bg-gray-300 btn-block font-bold text-white cursor-not-allowed"
+          disabled
+        >
+          Application Sent
         </button>
       ) : (
         <button
@@ -248,7 +254,7 @@ function initiative({ sessionFromProp, initiativeData }) {
   const session = sessionFromProp;
   return (
     <div className="flex relative flex-col min-h-screen">
-      <Header session={session} />
+      <Header session={session} initiativeData={initiativeData} />
       <Body session={session} initiativeData={initiativeData} />
     </div>
   );
@@ -258,24 +264,24 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log('initiativeId', initiativeId);
+  console.log("initiativeId", initiativeId);
 
   const req = await fetch(`${process.env.NEXTAUTH_URL}/api/get-initiative`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       id: initiativeId,
     }),
   });
 
-  // const initiativeData = await req.json();
+  const initiativeData = await req.json();
 
   return {
     props: {
       sessionFromProp: session,
-      // initiativeData,
+      initiativeData,
     },
   };
 }

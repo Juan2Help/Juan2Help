@@ -62,7 +62,7 @@ function Initiative({ initiativeData }) {
       location: initiativeData?.location,
       title: initiativeData?.title?.toUpperCase(),
       content: initiativeData?.description,
-      participants: initiativeData?.participants,
+      participants: initiativeData?.participantsList?.length,
       isBookmarked: Math.random() > 0.5,
     },
   };
@@ -131,10 +131,10 @@ function Initiative({ initiativeData }) {
 function InitiativeCarousel() {
   return (
     <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 scrollbar-none p-1">
+      {/* <Initiative />
       <Initiative />
       <Initiative />
-      <Initiative />
-      <Initiative />
+      <Initiative /> */}
     </div>
   );
 }

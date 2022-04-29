@@ -11,15 +11,43 @@ import { FiFilter } from "react-icons/fi";
 import { GoPlus, GoCheck } from "react-icons/go";
 import { useState, useEffect } from "react";
 
-function InitiativesPage({ sessionFromProp, initiativeData }) {
+function InitiativesPage({
+  sessionFromProp,
+  newInitiativeData,
+  activeInitiativeData,
+}) {
   const session = sessionFromProp;
   const [Tab, setTab] = useState(0);
 
-  const [currentPageActive, setCurrentPageActive] = useState(1);
-  const [activeInitiatives, setActiveInitiatives] = useState(initiativeData);
-  const [newInitiatives, setNewInitiatives] = useState(initiativeData);
+  const [activeInitiatives, setActiveInitiatives] =
+    useState(activeInitiativeData);
+  const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
 
-  console.log("activeInitiatives", activeInitiatives);
+  const handleSearchBarChange = (e) => {
+    const { value } = e.target;
+    value = value.toLowerCase();
+    if (value.length > 0) {
+      setActiveInitiatives(
+        activeInitiativeData.filter(
+          (initiative) =>
+            initiative.title.toLowerCase().includes(value) ||
+            initiative.causeType.toLowerCase().includes(value) ||
+            initiative.location.toLowerCase().includes(value)
+        )
+      );
+      setNewInitiatives(
+        newInitiativeData.filter(
+          (initiative) =>
+            initiative.title.toLowerCase().includes(value) ||
+            initiative.causeType.toLowerCase().includes(value) ||
+            initiative.location.toLowerCase().includes(value)
+        )
+      );
+    } else {
+      setActiveInitiatives(activeInitiativeData);
+      setNewInitiatives(newInitiativeData);
+    }
+  };
 
   return (
     <ProtectedRoute session={session}>
@@ -63,7 +91,7 @@ function InitiativesPage({ sessionFromProp, initiativeData }) {
               {/*Search bar and filter*/}
               <div className="flex justify-between w-full">
                 <div className="flex flex-row w-full justify-between items-center space-x-3">
-                  <SearchBar />
+                  <SearchBar handleChange={handleSearchBarChange} />
                   <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
                 </div>
               </div>
@@ -105,7 +133,7 @@ export async function getServerSideProps(context) {
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
   //grab total number of pages from /api/initiatives/get-initiatives
-  const getNewInitiatives = async () => {
+  const getInitiatives = async (type) => {
     const req = await fetch(
       `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`,
       {
@@ -115,7 +143,8 @@ export async function getServerSideProps(context) {
         },
         body: JSON.stringify({
           page: 1,
-          type: "1",
+          type: type,
+          userId: session?.user?._id,
         }),
       }
     );
@@ -123,12 +152,11 @@ export async function getServerSideProps(context) {
     return data;
   };
 
-  getNewInitiatives();
-
   return {
     props: {
       sessionFromProp: session,
-      initiativeData: await getNewInitiatives(),
+      newInitiativeData: await getInitiatives("1"),
+      activeInitiativeData: await getInitiatives("3"),
     },
   };
 }

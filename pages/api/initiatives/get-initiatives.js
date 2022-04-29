@@ -1,26 +1,22 @@
+import { getSession } from "next-auth/react";
 import { ConnectDB } from "../../../config/connectDB";
 import { ObjectId } from "mongodb";
-import { getSession } from "next-auth/react";
-
-const INITIATIVES_PER_PAGE = 6;
 
 async function handler(req, res) {
   //Only POST mothod is accepted
   if (req.method === "POST") {
     // check if user is logged in
-    const session = await getSession({ req });
-
     const type = req.body.type;
 
     // 1: getAllInitiatives
     // 2: getFilteredInitiatives
     switch (type) {
       case "1":
-        return getAllInitiatives(req, res, session?.user);
+        return getAllInitiatives(req, res);
       case "2":
-        return getFilteredInitiatives(req, res, session?.user);
+        return getFilteredInitiatives(req, res);
       case "3":
-        return getActiveInitiatives(req, res, session?.user);
+        return getActiveInitiatives(req, res);
       default:
         return res.status(500).json({ message: "Invalid type" });
     }
@@ -42,23 +38,36 @@ async function handler(req, res) {
 
 export default handler;
 
-const getAllInitiatives = async (req, res, user) => {
+const getAllInitiatives = async (req, res) => {
   // get the current page from the request body
-  const { page } = req.body;
+  const { page, userId } = req.body;
 
-  console.log("GETTING ALL INITIATIVES");
+  console.log("GETTING NEW INITIATIVES");
 
   // connect to the database
   const conn = await ConnectDB();
   const db = conn.db();
 
   const initiatives = db.collection("initiatives");
+  const users = db.collection("users");
 
-  // grab all initiatives and skip page*INITIATIVES_PER_PAGE
+  // find user with id = user._id
+  const userData = await users.findOne({ _id: ObjectId(userId) });
+
+  if (
+    !userData?.activeInitiatives ||
+    userData?.activeInitiatives?.length === 0
+  ) {
+    userData.activeInitiatives = [];
+  }
+
+  const activeInitiativeIds = userData?.activeInitiatives?.map((id) =>
+    ObjectId(id)
+  );
+
+  // grab all initiatives with id NOT in activeInitiativeIds
   const allInitiatives = await initiatives
-    .find({})
-    .skip((page - 1) * INITIATIVES_PER_PAGE)
-    .limit(INITIATIVES_PER_PAGE)
+    .find({ _id: { $nin: activeInitiativeIds } })
     .toArray();
 
   // send the response status 200
@@ -66,7 +75,7 @@ const getAllInitiatives = async (req, res, user) => {
   conn.close();
 };
 
-const getFilteredInitiatives = async (req, res, user) => {
+const getFilteredInitiatives = async (req, res) => {
   // get the current page from the request body
   const { page, filter } = req.body;
 
@@ -95,31 +104,40 @@ const getFilteredInitiatives = async (req, res, user) => {
   conn.close();
 };
 
-const getActiveInitiatives = async (req, res, user) => {
+const getActiveInitiatives = async (req, res) => {
   // get the current page from the request body
-  const { page } = req.body;
+  const { page, userId } = req.body;
+
+  console.log("GETTING ACTIVE INITIATIVES");
 
   // connect to the database
   const conn = await ConnectDB();
   const db = conn.db();
 
   const initiatives = db.collection("initiatives");
+  const users = db.collection("users");
 
-  // grab all filtered initiatives using filter and skip page*INITIATIVES_PER_PAGE
-  const filteredInitiatives = await initiatives
-    .find({
-      $or: [
-        { title: { $regex: filter, $options: "i" } },
-        { description: { $regex: filter, $options: "i" } },
-        { tags: { $regex: filter, $options: "i" } },
-        { location: { $regex: filter, $options: "i" } },
-      ],
-    })
-    .skip((page - 1) * INITIATIVES_PER_PAGE)
-    .limit(INITIATIVES_PER_PAGE)
+  // find user with id = user._id
+  const userData = await users.findOne({ _id: ObjectId(userId) });
+
+  if (
+    !userData?.activeInitiatives ||
+    userData?.activeInitiatives?.length === 0
+  ) {
+    userData.activeInitiatives = [];
+  }
+
+  const activeInitiativeIds = userData?.activeInitiatives?.map((id) =>
+    ObjectId(id)
+  );
+
+  // grab all initiatives with id in activeInitiativeIds
+  const activeInitiatives = await initiatives
+    .find({ _id: { $in: activeInitiativeIds } })
     .toArray();
 
+  console.log("ACTIVE INITIATIVES", activeInitiatives);
   // send the response status 200
-  res.status(200).json(allInitiatives);
+  res.status(200).json(activeInitiatives);
   conn.close();
 };
