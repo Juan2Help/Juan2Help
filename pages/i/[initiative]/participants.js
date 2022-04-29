@@ -73,13 +73,15 @@ function Body({ participants, onClickHandler }) {
 }
 
 function Header({ initiativeTitle }) {
+  const router = useRouter();
   return (
     <div className="top-0 sticky flex flex-row items-center justify-between p-4 z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
       <div className="flex flex-row gap-2">
         <div className="py-2">
-          <Link href="">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
-          </Link>
+          <FiArrowLeft
+            className="cursor-pointer hover:text-gray-500"
+            onClick={() => router.back()}
+          />
         </div>
         <div className="font-bold text-xl">{`${initiativeTitle}`}</div>
       </div>
