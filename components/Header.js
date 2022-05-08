@@ -44,38 +44,40 @@ function Header({ session }) {
             </div>
           </div>
           <div className="relative">
-            <button
-              className="h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600"
-              onClick={() => setOpenState(!isOpen)}
-            >
-              <img className="rounded-full" src={faker.image.avatar()} />
-            </button>
-            {isOpen && (
-              <div className="object-left-bottom absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-100">
-                <div className="text-gray-700 block px-4 py-2 text-sm text-left">
+            <div class="dropdown dropdown-end">
+              <label tabindex="0">
+                <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+                  <img className="rounded-full" src={faker.image.avatar()} />
+                </div>
+              </label>
+              <ul tabindex="0" class="dropdown-content menu menu-compact p-2 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-200">
+                <div className="text-gray-700 px-4 py-2 text-sm text-left ">
                   You are logged in as
-                  <br />
                   <h2 className="font-bold">{session?.user?.name}</h2>
                 </div>
                 <div>
-                  <Link href={`/u/${session?.user?._id}`}>
-                    <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                      <FaUserCircle className="text-lg" />
-                      <span className=" text-gray-700 text-sm text-left pl-2">
-                        Your Profile
-                      </span>
-                    </div>
-                  </Link>
-                  <Link href="/">
-                    <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
-                      <IoMdSettings className="text-lg" />
-                      <span className=" text-gray-700 text-sm text-left pl-2">
-                        Settings
-                      </span>
-                    </div>
-                  </Link>
+                  <li>
+                    <Link href={`/u/${session?.user?._id}`}>
+                      <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                        <FaUserCircle className="text-lg" />
+                        <span className=" text-gray-700 text-sm text-left">
+                          Your Profile
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/">
+                      <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
+                        <IoMdSettings className="text-lg" />
+                        <span className=" text-gray-700 text-sm text-left">
+                          Settings
+                        </span>
+                      </div>
+                    </Link>
+                  </li>
                   {session?.user?.role >= 2 && (
-                    <>
+                    <li>
                       <Link
                         href={
                           session?.user?.role === 8
@@ -85,26 +87,25 @@ function Header({ session }) {
                       >
                         <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                           <MdManageSearch className="text-lg" />
-                          <span className=" text-gray-700 text-sm text-left pl-2">
+                          <span className=" text-gray-700 text-sm text-left">
                             Manage{" "}
                             {session?.user.role === 8 ? "App" : "Initiatives"}
                           </span>
                         </div>
                       </Link>
-                    </>
+                    </li>
                   )}
-                  <div
-                    className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300"
-                    onClick={() => signOut()}
-                  >
-                    <GoSignOut className="text-lg pt-1px" />
-                    <span className=" text-gray-700 text-sm text-left pl-2">
-                      Sign out
-                    </span>
-                  </div>
+                  <li>
+                    <div className="flex items-end px-4 py-2 text-left cursor-pointer hover:bg-purple-300" onClick={() => signOut()}>
+                      <GoSignOut className="text-lg pt-1px" />
+                      <span className=" text-gray-700 text-sm text-left">
+                        Sign out
+                      </span>
+                    </div>
+                  </li>
                 </div>
-              </div>
-            )}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
