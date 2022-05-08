@@ -9,10 +9,15 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
 
 function add({ sessionFromProp }) {
   const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState({});
+  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
+
   const router = useRouter();
 
   // submit initiative data to api
@@ -22,6 +27,11 @@ function add({ sessionFromProp }) {
 
     // add user email and NGO to initiative data
     initiativeData.NGOid = session.user.NGOid;
+    initiativeData.location = {
+      address,
+      latitude,
+      longitude,
+    };
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/add-initiative", {
       method: "POST",
@@ -59,6 +69,17 @@ function add({ sessionFromProp }) {
     }
     setInitiativeData({ ...initiativeData, [name]: value });
   };
+
+  const handlePlacesChange = async (address) => {
+    const results = await geocodeByAddress(address);
+    const { lat, lng } = await getLatLng(results[0]);
+    setAddress(results[0].address_components[0].long_name);
+    setLatitude(lat);
+    setLongitude(lng);
+    console.log("results", results);
+    console.log("latLng", lat, lng);
+  };
+
   return (
     <ProtectedRoute session={session} authority={2} router={router}>
       <Head>
@@ -123,17 +144,23 @@ function add({ sessionFromProp }) {
             id="location"
             name="location"
             type="text"
+            required
+            className="min-h-96"
             placeholder="Location"
-            onChange={handleChange}
+            isLocation={true}
+            onChange={setAddress}
+            value={address}
+            onSelect={handlePlacesChange}
           />
+
           <div className="space-y-2">
             <span className="font-bold text-md">Select cause</span>
             <select
-              class="select select-bordered w-full bg-white"
+              className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
             >
-              <option disabled selected>
+              <option disabled defaultValue={"Select Cause"}>
                 Select cause
               </option>
               <option value="Food">Food</option>
@@ -143,11 +170,11 @@ function add({ sessionFromProp }) {
             </select>
           </div>
           <Participants getParticipants={getParticipants} />
-          <label class="label cursor-pointer">
-            <span class="font-bold text-md">Publish initiative</span>
+          <label className="label cursor-pointer">
+            <span className="font-bold text-md">Publish initiative</span>
             <input
               type="checkbox"
-              class="toggle toggle-primary"
+              className="toggle toggle-primary"
               name="publish"
               onChange={handleChange}
             />

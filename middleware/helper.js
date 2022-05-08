@@ -55,3 +55,17 @@ export async function fetchUserDetails(id) {
   console.log("FETCHED USER DETAILS:", fetchedUserDetails);
   return fetchedUserDetails;
 }
+
+export async function fetchJSON(url, payload) {
+  const req = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const fetchedJSON = await req.json();
+  console.log("FETCHED JSON:", fetchedJSON);
+  return fetchedJSON;
+}

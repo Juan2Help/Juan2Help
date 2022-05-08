@@ -50,6 +50,11 @@ function TopOrganizers() {
 }
 
 function Initiative({ initiativeData }) {
+  let initiativeLocation =
+    typeof initiativeData?.location === "string"
+      ? initiativeData?.location
+      : initiativeData?.location?.address;
+
   const fake = {
     author: {
       name: initiativeData?.publisherName,
@@ -59,7 +64,7 @@ function Initiative({ initiativeData }) {
       date: moment(initiativeData?.startDate)
         .format("ddd, DD MMM YYYY")
         .toUpperCase(),
-      location: initiativeData?.location,
+      location: initiativeLocation,
       title: initiativeData?.title?.toUpperCase(),
       content: initiativeData?.description,
       participants: initiativeData?.participantsList?.length,

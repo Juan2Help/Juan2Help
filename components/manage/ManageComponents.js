@@ -16,9 +16,9 @@ import Button from "../Button";
 function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
   return (
     <>
-      <input type="checkbox" id="initiative-modal" class="modal-toggle" />
-      <label for="initiative-modal" class="modal cursor-pointer">
-        <label class="modal-box relative" for="">
+      <input type="checkbox" id="initiative-modal" className="modal-toggle" />
+      <label htmlFor="initiative-modal" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
           <div className="flex flex-row justify-around pb-4">
             <div className="btn btn-outline btn-circle text-xl">
               <FiLink />
@@ -30,7 +30,7 @@ function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
               <FiAlertTriangle />
             </div>
           </div>
-          <ul class="bg-base-100 w-full mt-4">
+          <ul className="bg-base-100 w-full mt-4">
             <li
               onClick={manageHandler}
               className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
@@ -66,7 +66,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
     location: location,
   };
   return (
-    <label for="initiative-modal" name="tile" key={id}>
+    <label htmlFor="initiative-modal" name="tile" key={id}>
       <div
         className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600"
         id={id}
@@ -142,7 +142,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
     },
   };
   return (
-    <label for="moderator-modal" name="tile" key={details.moderator.id}>
+    <label htmlFor="moderator-modal" name="tile" key={details.moderator.id}>
       <div
         className="w-full rounded-xl"
         id={details.moderator.id}
@@ -168,7 +168,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
                   <span>{details.moderator.location}</span>
                 </div>
               </div>
-              <span class="badge badge-sm badge-primary">
+              <span className="badge badge-sm badge-primary">
                 {`Level ${details.moderator.level}`}
               </span>
             </div>
@@ -214,9 +214,9 @@ function AddModeratorTile({ admin = false, id = "" }) {
 function ModeratorModal({ editHandler, deleteHandler }) {
   return (
     <>
-      <input type="checkbox" id="moderator-modal" class="modal-toggle" />
-      <label for="moderator-modal" class="modal cursor-pointer">
-        <label className="modal-box relative" for="">
+      <input type="checkbox" id="moderator-modal" className="modal-toggle" />
+      <label htmlFor="moderator-modal" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
           <div className="flex flex-row justify-around pb-4">
             <div className="btn btn-outline btn-circle text-xl">
               <FiLink />
@@ -228,7 +228,7 @@ function ModeratorModal({ editHandler, deleteHandler }) {
               <FiAlertTriangle />
             </div>
           </div>
-          <ul class="bg-base-100 w-full mt-4">
+          <ul className="bg-base-100 w-full mt-4">
             <li
               onClick={editHandler}
               className="hover:bg-gray-300 cursor-pointer py-2 px-2 rounded-md"
@@ -302,7 +302,7 @@ function OrganizationTile({ organization, id, onClickHandler }) {
     name,
   };
   return (
-    <label for="initiative-modal" name="tile" key={id}>
+    <label htmlFor="initiative-modal" name="tile" key={id}>
       <div
         className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4"
         id={id}

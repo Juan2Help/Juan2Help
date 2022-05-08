@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { React } from "react";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import {
@@ -15,12 +14,16 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
-import { fetchNGODetails } from "../../middleware/helper";
+import { fetchJSON, fetchNGODetails } from "../../middleware/helper";
+import { useRecoilState } from "recoil";
+import { managedInitiatives } from "../../atoms/initiatives";
 
 function index({ sessionFromProp, organizationDetails }) {
   const session = sessionFromProp;
 
-  const [handledInitiatives, setHandledInitiatives] = useState([]);
+  const [handledInitiatives, setHandledInitiatives] =
+    useRecoilState(managedInitiatives);
+
   const [handledModerators, setHandledModerators] = useState([]);
   const [selectedInitiative, setSelectedInitiative] = useState("");
   const [selectedModerator, setSelectedModerator] = useState("");
@@ -31,17 +34,9 @@ function index({ sessionFromProp, organizationDetails }) {
   // DATA FETCHING
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch("/api/handled-initiatives", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          email: session.user.email,
-        }),
+      const fetchedInitiatives = await fetchJSON("/api/handled-initiatives", {
+        email: session.user.email,
       });
-      const fetchedInitiatives = await req.json();
       setHandledInitiatives(fetchedInitiatives);
     };
     console.log(session);
@@ -54,18 +49,13 @@ function index({ sessionFromProp, organizationDetails }) {
   //fetch data for moderator list
   useEffect(() => {
     const fetchData = async () => {
-      const req = await fetch("/api/organizations/moderator-list", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          NGOid: session.user.NGOid,
+      const fetchedModerators = await fetchJSON(
+        "/api/organizations/moderator-list",
+        {
           email: session.user.email,
-        }),
-      });
-      const fetchedModerators = await req.json();
+          NGOid: session.user.NGOid,
+        }
+      );
       setHandledModerators(fetchedModerators);
     };
 
@@ -120,19 +110,11 @@ function index({ sessionFromProp, organizationDetails }) {
 
   const deleteModeratorHandler = async (e) => {
     try {
-      const req = await fetch("/api/organizations/delete-moderator", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          email: session.user.email,
-          id: selectedModerator,
-          NGOid: session.user.NGOid,
-        }),
+      const body = await fetchJSON("/api/organizations/delete-moderator", {
+        email: session.user.email,
+        id: selectedModerator,
+        NGOid: session.user.NGOid,
       });
-      const body = await req.json();
       setNewData(true);
     } catch (error) {
       console.log(error);

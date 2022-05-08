@@ -1,22 +1,22 @@
-import { faker } from '@faker-js/faker';
-import moment from 'moment';
-import { getSession, useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { React, useState, useEffect } from 'react';
+import { faker } from "@faker-js/faker";
+import moment from "moment";
+import { getSession, useSession } from "next-auth/react";
+import Image from "next/image";
+import { React, useState, useEffect } from "react";
 import {
   FiArrowLeft,
   FiMoreHorizontal,
   FiBookmark,
   FiClock,
   FiMapPin,
-} from 'react-icons/fi';
+} from "react-icons/fi";
 import {
   GrantAccess,
   redirectToLogin,
-} from '../../../middleware/ProtectedRoute';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Button from '../../../components/Button';
+} from "../../../middleware/ProtectedRoute";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Button from "../../../components/Button";
 
 function Header({ initiativeData, session }) {
   return (
@@ -62,7 +62,7 @@ function Header({ initiativeData, session }) {
 }
 
 function Body({ session, initiativeData }) {
-  console.log('initiativeData', initiativeData);
+  console.log("initiativeData", initiativeData);
   const [buttonToggle, setButtonToggle] = useState(false);
   const router = useRouter();
 
@@ -73,7 +73,7 @@ function Body({ session, initiativeData }) {
     session.user._id
   );
 
-  console.log('hasJoined', hasJoined);
+  console.log("hasJoined", hasJoined);
 
   const fake = {
     author: {
@@ -82,18 +82,21 @@ function Body({ session, initiativeData }) {
     },
     initiative: {
       date: moment(initiativeData?.startDate)
-        .format('ddd, DD MMM YYYY')
+        .format("ddd, DD MMM YYYY")
         .toUpperCase(),
       time: {
         start: initiativeData?.startTime
           ? initiativeData?.startTime
-          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
         end: initiativeData?.endTime
           ? initiativeData?.endTime
-          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
+          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
       },
       location: {
-        city: initiativeData?.location,
+        city:
+          typeof initiativeData?.location === "string"
+            ? initiativeData?.location
+            : initiativeData?.location?.address,
       },
       participants: {
         start: faker.random.number({ min: 1, max: 100 }),
@@ -108,36 +111,36 @@ function Body({ session, initiativeData }) {
 
   const handleJoin = async () => {
     const req = await fetch(`/api/initiatives/join-initiative`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log('Joined initiative');
+      console.log("Joined initiative");
     } else {
-      console.log('Failed to join initiative');
+      console.log("Failed to join initiative");
     }
     setButtonToggle(!buttonToggle);
   };
 
   const handleLeave = async () => {
     const req = await fetch(`/api/initiatives/leave-initiative`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log('Left initiative');
+      console.log("Left initiative");
     } else {
-      console.log('Failed to leave initiative');
+      console.log("Failed to leave initiative");
     }
 
     router.reload(window.location.pathname);
@@ -272,12 +275,12 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log('initiativeId', initiativeId);
+  console.log("initiativeId", initiativeId);
 
   const req = await fetch(`${process.env.NEXTAUTH_URL}/api/get-initiative`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       id: initiativeId,

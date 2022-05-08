@@ -10,8 +10,8 @@ function Participants({ getParticipants }) {
   };
 
   return (
-    <div class="w-full">
-      <label for="step" class="text-md font-bold">
+    <div className="w-full">
+      <label htmlFor="step" className="text-md font-bold">
         Participants
         <div className="flex flex-row space-x-4 items-center">
           <input
@@ -20,7 +20,7 @@ function Participants({ getParticipants }) {
             min="10"
             max="1000"
             value={sliderValue}
-            class="range range-primary range-sm flex"
+            className="range range-primary range-sm flex"
             onChange={changeValue}
           />
           <div className="w-28 text-right">
