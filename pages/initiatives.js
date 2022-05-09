@@ -8,8 +8,10 @@ import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 import { SearchBar } from "../components/Input";
 import { Featured, Initiative } from "../components/explore/ExploreComponents";
 import { FiFilter } from "react-icons/fi";
+import { FaFilter } from "react-icons/fa";
 import { GoPlus, GoCheck } from "react-icons/go";
 import { useState, useEffect } from "react";
+import { Input } from "../components/Input";
 
 function InitiativesPage({
   sessionFromProp,
@@ -18,10 +20,20 @@ function InitiativesPage({
 }) {
   const session = sessionFromProp;
   const [Tab, setTab] = useState(0);
-
+  const [FilterOpen, setFilterState] = useState(false);
+  const [participantssliderValue, participantssetSliderValue] = useState(0);
+  const [distancesliderValue,distancesetSliderValue] = useState(0);
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
+
+  const participantschangeValue = (e) => {
+    participantssetSliderValue(e.target.value);
+  };
+
+  const distancechangeValue = (e) => {
+    distancesetSliderValue(e.target.value);
+  };
 
   const handleSearchBarChange = (e) => {
     const { value } = e.target;
@@ -90,11 +102,106 @@ function InitiativesPage({
               </div>
               {/*Search bar and filter*/}
               <div className="flex justify-between w-full">
-                <div className="flex flex-row w-full justify-between items-center space-x-3">
+                <div className="flex flex-row w-full justify-between items-center space-x-4">
                   <SearchBar handleChange={handleSearchBarChange} />
-                  <FiFilter className="text-2xl hover:cursor-pointer hover:text-gray-500" />
+                  <button className="hover:cursor-pointer" onClick={() => setFilterState(!FilterOpen)}>
+                    {FilterOpen == false && (
+                      <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
+                        <FiFilter className="text-2xl"/>
+                        <span className="hidden md:inline">Filters</span>
+                    </div>
+                    )}
+                    {FilterOpen == true && (
+                      <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
+                        <FaFilter className="text-xl "/>
+                        <span className="hidden md:inline font-medium">Filters</span>
+                    </div>
+                    )}
+                  </button>
                 </div>
               </div>
+              {FilterOpen == true && (
+                <>
+                  <div className="flex flex-row justify-left w-full">
+                    <div className="w-1/6 space-y-1">
+                      <span className="font-semibold">Category</span>
+                      <ul>
+                        <li>
+                          <div className="flex items-center">
+                            <input type="checkbox" id="Food" name="Food" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
+                            <span className="ml-1 text-md text-gray-900">Food</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="flex items-center">
+                            <input type="checkbox" id="Medicine" name="Medicine" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
+                            <span className="ml-1 text-md text-gray-900">Medicine</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="flex items-center">
+                            <input type="checkbox" id="Nature" name="Nature" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
+                            <span className="ml-1 text-md text-gray-900">Nature</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="flex items-center">
+                            <input type="checkbox" id="Teach" name="Teach" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
+                            <span className="ml-1 text-md text-gray-900">Teach</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="w-1/2 space-y-5">
+                      <div className="space-y-1">
+                        <span className="font-semibold">Participants</span>
+                        <div className="flex items-center space-x-3">
+                          <input
+                            name="participants"
+                            type="range"
+                            min="10"
+                            max="1000"
+                            value={participantssliderValue}
+                            className="range range-primary range-sm flex"
+                            onChange={participantschangeValue}
+                          />
+                          <div className="w-28 text-right">
+                            <Input
+                              type="number"
+                              placeholder="1000"
+                              value={participantssliderValue}
+                              onChange={participantschangeValue}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <span className="font-semibold">Distance</span>
+                        <div className="flex items-center space-x-3">
+                          <input
+                            name="distance"
+                            type="range"
+                            min="10"
+                            max="1000"
+                            value={distancesliderValue}
+                            className="range range-primary range-sm flex"
+                            onChange={distancechangeValue}
+                          />
+                          <div className="w-28 text-right">
+                              <Input
+                                type="number"
+                                placeholder="1000"
+                                value={distancesliderValue}
+                                onChange={distancechangeValue}
+                              />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <hr></hr>
+                </>
+              )}
               {Tab == 0 && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
