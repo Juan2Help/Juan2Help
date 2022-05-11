@@ -58,7 +58,7 @@ function index({ sessionFromProp, organizationDetails }) {
       setHandledModerators(fetchedModerators);
     };
 
-    if (session?.user?.role === 4) fetchData();
+    if (session?.user?.role >= 4) fetchData();
     // log fetchedModerators
   }, [newData]);
 

@@ -31,7 +31,7 @@ async function handler(req, res) {
       });
       if (!isModerator) {
         console.log("NOT A MODERATOR");
-        res.status(400).json({ message: "User is not a moderator" });
+        res.status(400).json([]);
         return;
       }
     }
