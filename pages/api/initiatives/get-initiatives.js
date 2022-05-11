@@ -8,13 +8,15 @@ async function handler(req, res) {
     // check if user is logged in
     const type = req.body.type;
 
+    console.log("REQUEST FOUND TYPE:", type);
+
     // 1: getAllInitiatives
     // 2: getFilteredInitiatives
     switch (type) {
       case "1":
         return getAllInitiatives(req, res);
       case "2":
-        return getFilteredInitiatives(req, res);
+        return getNearByInitiatives(req, res);
       case "3":
         return getActiveInitiatives(req, res);
       default:
@@ -75,9 +77,11 @@ const getAllInitiatives = async (req, res) => {
   conn.close();
 };
 
-const getFilteredInitiatives = async (req, res) => {
+const getNearByInitiatives = async (req, res) => {
   // get the current page from the request body
-  const { page, filter } = req.body;
+  const { page, center } = req.body;
+
+  console.log("Center:", center);
 
   // connect to the database
   const conn = await ConnectDB();
@@ -85,22 +89,32 @@ const getFilteredInitiatives = async (req, res) => {
 
   const initiatives = db.collection("initiatives");
 
-  // grab all filtered initiatives using filter and skip page*INITIATIVES_PER_PAGE
-  const filteredInitiatives = await initiatives
+  // create geoindex on initiatives collection location.coordinates
+  await initiatives.createIndex({
+    location: "2dsphere",
+  });
+
+  console.log("DONE ENSURING INDEX");
+
+  // find initiatives within a radius of 10km
+  const nearByInitiatives = await initiatives
     .find({
-      $or: [
-        { title: { $regex: filter, $options: "i" } },
-        { description: { $regex: filter, $options: "i" } },
-        { tags: { $regex: filter, $options: "i" } },
-        { location: { $regex: filter, $options: "i" } },
-      ],
+      location: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [center.lng, center.lat],
+          },
+          $maxDistance: 2500,
+        },
+      },
     })
-    .skip((page - 1) * INITIATIVES_PER_PAGE)
-    .limit(INITIATIVES_PER_PAGE)
     .toArray();
 
+  console.log("NEARBY INITIATIVES", nearByInitiatives);
+
   // send the response status 200
-  res.status(200).json(allInitiatives);
+  res.status(200).json(nearByInitiatives);
   conn.close();
 };
 

@@ -155,8 +155,8 @@ function Body({ session, initiativeData }) {
   const [map, setMap] = useState(null);
 
   const center = {
-    lat: initiativeData?.location?.latitude || 0,
-    lng: initiativeData?.location?.longitude || 0,
+    lat: initiativeData?.location?.coordinates[1] || 0,
+    lng: initiativeData?.location?.coordinates[0] || 0,
   };
 
   console.log("location", initiativeData?.location);
@@ -278,7 +278,7 @@ function Body({ session, initiativeData }) {
         ) : (
           <></>
         )}
-        <div className="text-xl font-bold">{fake.initiative.location.city}</div>
+        <div className="text-l font-bold">{fake.initiative.location.city}</div>
       </div>
       {/* Join */}
       {hasJoined ? (

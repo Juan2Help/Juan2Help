@@ -114,7 +114,6 @@ function index({ sessionFromProp, organizationDetails }) {
         NGOid: session.user.NGOid,
       });
       setNewData(true);
-      e.className = e.className.replace("modal-open", "");
       setNewData(false);
     } catch (error) {
       console.log(error);
