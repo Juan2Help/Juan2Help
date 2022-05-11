@@ -19,7 +19,7 @@ function Input({
   const fail =
     "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-md font-medium focus:ring-red-500 focus:outline-none focus:border-red-500 block w-full px-4 py-3 dark:bg-red-100 dark:border-red-400 focus:border-purple-700 focus:z-10";
   const nofail =
-    "appearance-none relative block w-full px-4 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-purple-700 focus:border-purple-700 focus:z-10 sm:text-sm";
+    "appearance-none relative block w-full px-2 py-3 border border-gray-300 placeholder-gray-400 text-gray-900 font-medium rounded-md focus:outline-none focus:ring-purple-700 focus:border-purple-700 focus:z-10 sm:text-sm";
   let variant = hasError ? fail : nofail;
   let isClicked = false;
 

@@ -7,7 +7,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 import { SearchBar } from "../components/Input";
 import { Featured, Initiative } from "../components/explore/ExploreComponents";
-import { FiFilter } from "react-icons/fi";
+import { FiFilter, FiMap} from "react-icons/fi";
 import { FaFilter } from "react-icons/fa";
 import { GoPlus, GoCheck } from "react-icons/go";
 import { useState, useEffect } from "react";
@@ -19,7 +19,7 @@ function InitiativesPage({
   activeInitiativeData,
 }) {
   const session = sessionFromProp;
-  const [Tab, setTab] = useState(0);
+  const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0);
   const [distancesliderValue, distancesetSliderValue] = useState(0);
@@ -84,35 +84,34 @@ function InitiativesPage({
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="initiatives" />
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
+              {/*Navigation Tabs*/}
               <div className="flex flex-row w-full h-14 items-center">
-                <button
-                  class={
-                    Tab
-                      ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300"
-                      : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700"
-                  }
-                  onClick={() => setTab(0)}
-                >
+                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                                  Tab == "ActiveInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("ActiveInit")}>
                   <div className="flex flex-row items-center space-x-2 ">
                     <GoCheck />
                     <span>Active Initiatives</span>
                   </div>
                 </button>
-                <button
-                  class={
-                    !Tab
-                      ? "flex items-center font-semibold justify-center w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400  text-black border-b-2  border-gray-300"
-                      : " flex items-center justify-center font-semibold w-1/2 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 border-violet-700 border-b-4 text-violet-700"
-                  }
-                  onClick={() => setTab(1)}
-                >
+
+                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                                  Tab == "NewInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("NewInit")}>
                   <div className="flex flex-row items-center space-x-2">
                     <GoPlus />
                     <span>Join New Initiatives</span>
                   </div>
                 </button>
+
+                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                                  Tab == "MapInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("MapInit")}>
+                  <div className="flex flex-row items-center space-x-2">
+                    <FiMap />
+                    <span>Initiative Map</span>
+                  </div>
+                </button>
               </div>
               {/*Search bar and filter*/}
+<<<<<<< HEAD
               <div className="flex justify-between w-full">
                 <div className="flex flex-row w-full justify-between items-center space-x-4">
                   <SearchBar handleChange={handleSearchBarChange} />
@@ -137,6 +136,31 @@ function InitiativesPage({
                   </button>
                 </div>
               </div>
+=======
+              {(Tab == "ActiveInit" || Tab == "NewInit") && (
+                <>
+                  <div className="flex justify-between w-full">
+                    <div className="flex flex-row w-full justify-between items-center space-x-4">
+                      <SearchBar handleChange={handleSearchBarChange} />
+                      <button className="hover:cursor-pointer" onClick={() => setFilterState(!FilterOpen)}>
+                        {FilterOpen == false && (
+                          <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
+                            <FiFilter className="text-2xl"/>
+                            <span className="hidden md:inline">Filters</span>
+                        </div>
+                        )}
+                        {FilterOpen == true && (
+                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
+                            <FaFilter className="text-xl "/>
+                            <span className="hidden md:inline font-medium">Filters</span>
+                        </div>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+>>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
               {FilterOpen == true && (
                 <>
                   <div className="flex flex-row justify-left w-full">
@@ -233,12 +257,21 @@ function InitiativesPage({
                             onChange={distancechangeValue}
                           />
                           <div className="w-28 text-right">
+<<<<<<< HEAD
                             <Input
                               type="number"
                               placeholder="1000"
                               value={distancesliderValue}
                               onChange={distancechangeValue}
                             />
+=======
+                              <Input
+                                type="number"
+                                placeholder="1000 km"
+                                value={distancesliderValue}
+                                onChange={distancechangeValue}
+                              />
+>>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
                           </div>
                         </div>
                       </div>
@@ -247,7 +280,7 @@ function InitiativesPage({
                   <hr></hr>
                 </>
               )}
-              {Tab == 0 && (
+              {Tab == "ActiveInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {activeInitiatives.map((initiative) => (
@@ -259,7 +292,7 @@ function InitiativesPage({
                   </div>
                 </>
               )}
-              {Tab == 1 && (
+              {Tab == "NewInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {newInitiatives.map((initiative) => (
