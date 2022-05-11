@@ -8,6 +8,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import { useSession, signOut } from 'next-auth/react';
 import { faker } from '@faker-js/faker';
 import { useEffect } from 'react/cjs/react.production.min';
+import { Notification } from './Notifications';
 
 function Header({ session }) {
   const hasMessage = false;
@@ -33,14 +34,66 @@ function Header({ session }) {
               <FiMessageCircle />
             </div>
           </div>
-          <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
-            <div className="indicator">
-              {hasNotification && (
-                <div className="indicator-item badge-xs badge-secondary badge">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+          <div className="dropdown dropdown-end">
+            <label tabIndex="0">
+              <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
+                <div className="indicator">
+                  {hasNotification && (
+                    <div className="indicator-item badge-xs badge-secondary badge">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+                    </div>
+                  )}
+                  <FiBell />
                 </div>
-              )}
-              <FiBell />
+              </div>
+            </label>
+            <div
+              tabindex="0"
+              class="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-scroll"
+            >
+              <div className="flex flex-col p-2 gap-4">
+                <div className="flex flex-row items-center justify-between">
+                  <div className="font-bold text-xl">Notifications</div>
+                  <div className="flex flex-row gap-1">
+                    <div class="bg-purple-100 text-primary rounded-full py-1 px-3 text-md font-medium">
+                      All
+                    </div>
+                    <div class="bg-gray-200 rounded-full py-1 px-3 text-md font-medium">
+                      Unread
+                    </div>
+                  </div>
+                </div>
+                <hr />
+              </div>
+              <div className="px-2 flex flex-row items-center justify-between">
+                <div className="font-medium">New</div>
+                <div className="text-primary text-xs">See All</div>
+              </div>
+              <ul>
+                <li>
+                  <Notification />
+                </li>
+                <li>
+                  <Notification />
+                </li>
+                <li>
+                  <Notification />
+                </li>
+              </ul>
+              <div className="px-2 flex flex-row items-center justify-between">
+                <div className="font-medium">Earlier</div>
+              </div>
+              <ul>
+                <li>
+                  <Notification />
+                </li>
+                <li>
+                  <Notification />
+                </li>
+                <li>
+                  <Notification />
+                </li>
+              </ul>
             </div>
           </div>
           <div class="dropdown dropdown-end">
