@@ -2,7 +2,8 @@ import { faker } from "@faker-js/faker";
 import moment from "moment";
 import { getSession, useSession } from "next-auth/react";
 import Image from "next/image";
-import { React, useState, useEffect } from "react";
+import { React, useState, useEffect, useCallback } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import {
   FiArrowLeft,
   FiMoreHorizontal,
@@ -35,7 +36,7 @@ function Header({ initiativeData, session }) {
           </Link>
         </div>
         {session?.user?.role >= 2 && (
-          <div class="dropdown dropdown-end">
+          <div className="dropdown dropdown-end">
             <label tabindex="0">
               <div className="p-2 rounded-full bg-purple-100">
                 <FiMoreHorizontal />
@@ -43,7 +44,7 @@ function Header({ initiativeData, session }) {
             </label>
             <ul
               tabindex="0"
-              class="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
+              className="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
             >
               <li>
                 <a>Edit initiative</a>
@@ -146,6 +147,31 @@ function Body({ session, initiativeData }) {
     router.reload(window.location.pathname);
   };
 
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.GOOGLE_PLACES_API_KEY,
+  });
+
+  const [map, setMap] = useState(null);
+
+  const center = {
+    lat: initiativeData?.location?.latitude || 0,
+    lng: initiativeData?.location?.longitude || 0,
+  };
+
+  console.log("location", initiativeData?.location);
+
+  const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
+    map.setZoom(2);
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
   return (
     <div className="p-4 flex flex-col mt-40 gap-4">
       {/* TITLE */}
@@ -157,14 +183,14 @@ function Body({ session, initiativeData }) {
               {fake.author.name}
             </span>
             <span>·</span>
-            <label class="swap text-xs font-bold">
+            <label className="swap text-xs font-bold">
               <input type="checkbox" value={fake.initiative.isBookmarked} />
               <span className="swap-on text-primary">Follow</span>
               <span className="swap-off text-primary">Unfollow</span>
             </label>
           </div>
         </div>
-        <label class="swap swap-flip text-lg">
+        <label className="swap swap-flip text-lg">
           <input type="checkbox" value={fake.initiative.isBookmarked} />
           <FiBookmark className="swap-on text-primary fill-current" />
           <FiBookmark className="swap-off" />
@@ -211,7 +237,7 @@ function Body({ session, initiativeData }) {
         </div>
         <div className="flex flex-row gap-4 items-center">
           <progress
-            class="progress progress-primary w-full"
+            className="progress progress-primary w-full"
             value={fake.initiative.participants.current}
             max={fake.initiative.participants.end}
           />
@@ -230,21 +256,41 @@ function Body({ session, initiativeData }) {
           <p>{fake.initiative.description}</p>
         </div>
       </div>
+
       {/* Location */}
       <div className="flex flex-col gap-2">
+        <div className="text-xl font-bold">Location</div>
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={{
+              height: "400px",
+              width: "100%",
+            }}
+            center={center}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+          >
+            {/* Child components, such as markers, info windows, etc. */}
+            <>
+              <Marker position={center} />
+            </>
+          </GoogleMap>
+        ) : (
+          <></>
+        )}
         <div className="text-xl font-bold">{fake.initiative.location.city}</div>
       </div>
       {/* Join */}
       {hasJoined ? (
         <button
           onClick={handleLeave}
-          class="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700"
+          className="btn btn-primary btn-block font-bold text-white bg-red-600 border-red-600 focus:bg-red-700 focus:border-red-700 hover:bg-red-700"
         >
           Leave
         </button>
       ) : hasApplied || buttonToggle ? (
         <button
-          class="btn bg-gray-300 btn-block font-bold text-white cursor-not-allowed"
+          className="btn bg-gray-300 btn-block font-bold text-white cursor-not-allowed"
           disabled
         >
           Application Sent
@@ -252,7 +298,7 @@ function Body({ session, initiativeData }) {
       ) : (
         <button
           onClick={handleJoin}
-          class="btn btn-primary btn-block font-bold text-white"
+          className="btn btn-primary btn-block font-bold text-white"
         >
           Join
         </button>

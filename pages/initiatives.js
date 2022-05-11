@@ -22,7 +22,7 @@ function InitiativesPage({
   const [Tab, setTab] = useState(0);
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0);
-  const [distancesliderValue,distancesetSliderValue] = useState(0);
+  const [distancesliderValue, distancesetSliderValue] = useState(0);
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
@@ -40,20 +40,32 @@ function InitiativesPage({
     value = value.toLowerCase();
     if (value.length > 0) {
       setActiveInitiatives(
-        activeInitiativeData.filter(
-          (initiative) =>
-            initiative.title.toLowerCase().includes(value) ||
-            initiative.causeType.toLowerCase().includes(value) ||
-            initiative.location.toLowerCase().includes(value)
-        )
+        activeInitiativeData.filter((initiative) => {
+          const loc =
+            typeof initiative.location === "string"
+              ? initiative.location.toLowerCase()
+              : initiative.location.address.toLowerCase();
+
+          return (
+            initiative?.title?.toLowerCase().includes(value) ||
+            initiative?.causeType?.toLowerCase().includes(value) ||
+            loc.includes(value)
+          );
+        })
       );
       setNewInitiatives(
-        newInitiativeData.filter(
-          (initiative) =>
-            initiative.title.toLowerCase().includes(value) ||
-            initiative.causeType.toLowerCase().includes(value) ||
-            initiative.location.toLowerCase().includes(value)
-        )
+        newInitiativeData.filter((initiative) => {
+          const loc =
+            typeof initiative.location === "string"
+              ? initiative.location.toLowerCase()
+              : initiative.location.address.toLowerCase();
+
+          return (
+            initiative?.title?.toLowerCase().includes(value) ||
+            initiative?.causeType?.toLowerCase().includes(value) ||
+            loc.includes(value)
+          );
+        })
       );
     } else {
       setActiveInitiatives(activeInitiativeData);
@@ -104,18 +116,23 @@ function InitiativesPage({
               <div className="flex justify-between w-full">
                 <div className="flex flex-row w-full justify-between items-center space-x-4">
                   <SearchBar handleChange={handleSearchBarChange} />
-                  <button className="hover:cursor-pointer" onClick={() => setFilterState(!FilterOpen)}>
+                  <button
+                    className="hover:cursor-pointer"
+                    onClick={() => setFilterState(!FilterOpen)}
+                  >
                     {FilterOpen == false && (
                       <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
-                        <FiFilter className="text-2xl"/>
+                        <FiFilter className="text-2xl" />
                         <span className="hidden md:inline">Filters</span>
-                    </div>
+                      </div>
                     )}
                     {FilterOpen == true && (
                       <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
-                        <FaFilter className="text-xl "/>
-                        <span className="hidden md:inline font-medium">Filters</span>
-                    </div>
+                        <FaFilter className="text-xl " />
+                        <span className="hidden md:inline font-medium">
+                          Filters
+                        </span>
+                      </div>
                     )}
                   </button>
                 </div>
@@ -128,26 +145,54 @@ function InitiativesPage({
                       <ul>
                         <li>
                           <div className="flex items-center">
-                            <input type="checkbox" id="Food" name="Food" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
-                            <span className="ml-1 text-md text-gray-900">Food</span>
+                            <input
+                              type="checkbox"
+                              id="Food"
+                              name="Food"
+                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                            />
+                            <span className="ml-1 text-md text-gray-900">
+                              Food
+                            </span>
                           </div>
                         </li>
                         <li>
                           <div className="flex items-center">
-                            <input type="checkbox" id="Medicine" name="Medicine" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
-                            <span className="ml-1 text-md text-gray-900">Medicine</span>
+                            <input
+                              type="checkbox"
+                              id="Medicine"
+                              name="Medicine"
+                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                            />
+                            <span className="ml-1 text-md text-gray-900">
+                              Medicine
+                            </span>
                           </div>
                         </li>
                         <li>
                           <div className="flex items-center">
-                            <input type="checkbox" id="Nature" name="Nature" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
-                            <span className="ml-1 text-md text-gray-900">Nature</span>
+                            <input
+                              type="checkbox"
+                              id="Nature"
+                              name="Nature"
+                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                            />
+                            <span className="ml-1 text-md text-gray-900">
+                              Nature
+                            </span>
                           </div>
                         </li>
                         <li>
                           <div className="flex items-center">
-                            <input type="checkbox" id="Teach" name="Teach" class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"/>
-                            <span className="ml-1 text-md text-gray-900">Teach</span>
+                            <input
+                              type="checkbox"
+                              id="Teach"
+                              name="Teach"
+                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                            />
+                            <span className="ml-1 text-md text-gray-900">
+                              Teach
+                            </span>
                           </div>
                         </li>
                       </ul>
@@ -188,12 +233,12 @@ function InitiativesPage({
                             onChange={distancechangeValue}
                           />
                           <div className="w-28 text-right">
-                              <Input
-                                type="number"
-                                placeholder="1000"
-                                value={distancesliderValue}
-                                onChange={distancechangeValue}
-                              />
+                            <Input
+                              type="number"
+                              placeholder="1000"
+                              value={distancesliderValue}
+                              onChange={distancechangeValue}
+                            />
                           </div>
                         </div>
                       </div>

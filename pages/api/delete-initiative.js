@@ -12,6 +12,40 @@ async function handler(req, res) {
     const db = conn.db();
 
     const initiatives = db.collection("initiatives");
+    const users = db.collection("users");
+
+    // Grab participants list and registrantslist
+    const initiative = await initiatives.findOne({ _id: ObjectId(id) });
+    const participantsList = initiative?.participantsList;
+    const registrantsList = initiative?.registrantsList;
+
+    // loop through array and remove initiative id from activeInitiatives array of users
+    for (let i = 0; i < participantsList?.length; i++) {
+      const user = await users.findOne({ _id: ObjectId(participantsList[i]) });
+      const activeInitiatives = user.activeInitiatives;
+      const index = activeInitiatives.indexOf(id);
+      if (index > -1) {
+        activeInitiatives.splice(index, 1);
+        await users.updateOne(
+          { _id: ObjectId(participantsList[i]) },
+          { $set: { activeInitiatives } }
+        );
+      }
+    }
+
+    // loop through array and remove initiative id from applications array of users
+    for (let i = 0; i < registrantsList?.length; i++) {
+      const user = await users.findOne({ _id: ObjectId(registrantsList[i]) });
+      const applications = user.applications;
+      const index = applications.indexOf(id);
+      if (index > -1) {
+        applications.splice(index, 1);
+        await users.updateOne(
+          { _id: ObjectId(registrantsList[i]) },
+          { $set: { applications } }
+        );
+      }
+    }
 
     // delete initiative the given with id and publisher
     const deleteResponse = await initiatives.deleteOne({

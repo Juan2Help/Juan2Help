@@ -104,8 +104,6 @@ export default NextAuth({
           .toLocaleLowerCase();
         session.user.uid = token.sub;
       }
-
-      console.log("Supplying", session);
       return session;
     },
   },

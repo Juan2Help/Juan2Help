@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Input } from "../Input";
 
-function Participants({ getParticipants }) {
+function Participants({ getParticipants, defaultValue }) {
   const [sliderValue, setSliderValue] = useState(0);
 
   const changeValue = (e) => {
@@ -29,6 +29,7 @@ function Participants({ getParticipants }) {
               placeholder="1000"
               value={sliderValue}
               onChange={changeValue}
+              defaultValue={defaultValue}
             />
           </div>
         </div>

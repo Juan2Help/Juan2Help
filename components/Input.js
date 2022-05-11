@@ -57,7 +57,10 @@ function Input({
                       ? { backgroundColor: "#fafafa", cursor: "pointer" }
                       : { backgroundColor: "#ffffff", cursor: "pointer" };
                     return (
-                      <div {...getSuggestionItemProps(suggestion, { style })}>
+                      <div
+                        {...getSuggestionItemProps(suggestion, { style })}
+                        key={suggestion.id}
+                      >
                         {suggestion.description}
                       </div>
                     );
@@ -127,16 +130,26 @@ function TextArea({
   );
 }
 
-function Date({ handleChange }) {
+function Date({ handleChange, defaultValue }) {
   return (
     <div className="w-full flex flex-row space-x-4">
       <div className="flex-1 space-y-2">
         <span className="font-bold text-md">Start date</span>
-        <Input type="date" name="startDate" onChange={handleChange} />
+        <Input
+          type="date"
+          name="startDate"
+          onChange={handleChange}
+          defaultValue={defaultValue?.startDate}
+        />
       </div>
       <div className="flex-1 space-y-2">
         <span className="font-bold text-md">End date</span>
-        <Input type="date" name="endDate" onChange={handleChange} />
+        <Input
+          type="date"
+          name="endDate"
+          onChange={handleChange}
+          defaultValue={defaultValue?.endDate}
+        />
       </div>
     </div>
   );

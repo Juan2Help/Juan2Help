@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.10.2",
     "@sendgrid/mail": "^7.6.2",
     "bcryptjs": "^2.4.3",
     "daisyui": "^2.6.3",

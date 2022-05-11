@@ -73,7 +73,7 @@ function add({ sessionFromProp }) {
   const handlePlacesChange = async (address) => {
     const results = await geocodeByAddress(address);
     const { lat, lng } = await getLatLng(results[0]);
-    setAddress(results[0].address_components[0].long_name);
+    setAddress(results[0].formatted_address);
     setLatitude(lat);
     setLongitude(lng);
     console.log("results", results);
@@ -159,10 +159,8 @@ function add({ sessionFromProp }) {
               className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
+              defaultValue="Select Cause"
             >
-              <option disabled defaultValue={"Select Cause"}>
-                Select cause
-              </option>
               <option value="Food">Food</option>
               <option value="Medicine">Medicine</option>
               <option value="Nature">Nature</option>

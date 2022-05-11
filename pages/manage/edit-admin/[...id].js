@@ -15,7 +15,9 @@ import { fetchNGODetails } from "../../../middleware/helper";
 function edit({ sessionFromProp, organizationDetailsProp, NGOid }) {
   const session = sessionFromProp;
 
-  const [organizationDetails, setOrganizationDetails] = useState({});
+  const [organizationDetails, setOrganizationDetails] = useState(
+    ...organizationDetailsProp
+  );
   const router = useRouter();
 
   // submit initiative data to api
@@ -24,7 +26,6 @@ function edit({ sessionFromProp, organizationDetailsProp, NGOid }) {
     e.preventDefault();
     // add initiative id and session user email to data
     const data = {
-      NGOid: NGOid,
       ...organizationDetails,
     };
 

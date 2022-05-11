@@ -187,6 +187,7 @@ function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
           <ModeratorTile
             moderator={moderator}
             onClickHandler={onClickHandler}
+            key={moderator._id}
           />
         ))}
       </>

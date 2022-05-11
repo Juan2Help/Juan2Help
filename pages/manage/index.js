@@ -39,12 +39,11 @@ function index({ sessionFromProp, organizationDetails }) {
       });
       setHandledInitiatives(fetchedInitiatives);
     };
-    console.log(session);
     if (session?.user?.role >= 2) fetchData();
 
     // log fetchedInitiatives
-    console.log(handledInitiatives);
-  }, [session, newData]);
+    console.log("Fetched:", handledInitiatives);
+  }, [newData]);
 
   //fetch data for moderator list
   useEffect(() => {
@@ -61,15 +60,13 @@ function index({ sessionFromProp, organizationDetails }) {
 
     if (session?.user?.role === 4) fetchData();
     // log fetchedModerators
-  }, [session, newData]);
+  }, [newData]);
 
   // END OF DATA FETCHING
 
   // HANDLER FUNCTIONS
   const onClickInitiativeHandler = (e) => {
     setSelectedInitiative(e.currentTarget.id);
-    console.log(e.currentTarget.id);
-    console.log(selectedInitiative);
   };
 
   const onClickModeratorHandler = (e) => {
@@ -99,6 +96,7 @@ function index({ sessionFromProp, organizationDetails }) {
       });
       const body = await req.json();
       setNewData(true);
+      setNewData(false);
     } catch (error) {
       console.log(error);
     }
@@ -116,6 +114,8 @@ function index({ sessionFromProp, organizationDetails }) {
         NGOid: session.user.NGOid,
       });
       setNewData(true);
+      e.className = e.className.replace("modal-open", "");
+      setNewData(false);
     } catch (error) {
       console.log(error);
     }
