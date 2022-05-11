@@ -105,7 +105,6 @@ const getNearByInitiatives = async (req, res) => {
             type: "Point",
             coordinates: [center.lng, center.lat],
           },
-          $maxDistance: 2500,
         },
       },
     })
