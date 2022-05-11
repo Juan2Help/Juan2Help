@@ -28,9 +28,9 @@ function add({ sessionFromProp }) {
     // add user email and NGO to initiative data
     initiativeData.NGOid = session.user.NGOid;
     initiativeData.location = {
+      type: "Point",
       address,
-      latitude,
-      longitude,
+      coordinates: [longitude, latitude],
     };
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/add-initiative", {

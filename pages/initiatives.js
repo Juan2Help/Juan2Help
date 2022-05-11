@@ -7,11 +7,14 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 import { SearchBar } from "../components/Input";
 import { Featured, Initiative } from "../components/explore/ExploreComponents";
-import { FiFilter, FiMap} from "react-icons/fi";
+import { FiFilter, FiMap } from "react-icons/fi";
 import { FaFilter } from "react-icons/fa";
 import { GoPlus, GoCheck } from "react-icons/go";
-import { useState, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Input } from "../components/Input";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { fetchJSON } from "../middleware/helper";
+import { useRouter } from "next/router";
 
 function InitiativesPage({
   sessionFromProp,
@@ -26,6 +29,21 @@ function InitiativesPage({
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
+  const [nearByInitiatives, setNearByInitiatives] = useState([]);
+  const [map, setMap] = useState(null);
+  const [latlng, setLatLng] = useState([0, 0]);
+  const router = useRouter();
+
+  const fetchNearByInitiatives = async () => {
+    const data = await fetchJSON("/api/initiatives/get-initiatives", {
+      type: "2",
+      center: {
+        lat: latlng[0],
+        lng: latlng[1],
+      },
+    });
+    setNearByInitiatives(data);
+  };
 
   const participantschangeValue = (e) => {
     participantssetSliderValue(e.target.value);
@@ -73,6 +91,48 @@ function InitiativesPage({
     }
   };
 
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: process.env.GOOGLE_PLACES_API_KEY,
+  });
+
+  const grabLatLng = () => {
+    const success = (data) => {
+      setLatLng([data.coords.latitude, data.coords.longitude]);
+    };
+    const error = (err) => {
+      console.error(err);
+    };
+
+    const data = navigator.geolocation.getCurrentPosition(success, error, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000,
+    });
+  };
+
+  const center = {
+    lat: latlng[0] || 0,
+    lng: latlng[1] || 0,
+  };
+
+  const onLoad = useCallback(function callback(map) {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
+    map.setZoom(2);
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(function callback(map) {
+    setMap(null);
+  }, []);
+
+  const onClickMarker = (initiative) => {
+    router.push(`/i/${initiative._id}`);
+  };
+
+  useEffect(() => grabLatLng(), []);
+
   return (
     <ProtectedRoute session={session}>
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
@@ -86,24 +146,43 @@ function InitiativesPage({
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
               {/*Navigation Tabs*/}
               <div className="flex flex-row w-full h-14 items-center">
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "ActiveInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("ActiveInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == "ActiveInit" &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => setTab("ActiveInit")}
+                >
                   <div className="flex flex-row items-center space-x-2 ">
                     <GoCheck />
                     <span>Active Initiatives</span>
                   </div>
                 </button>
 
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "NewInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("NewInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == "NewInit" &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => setTab("NewInit")}
+                >
                   <div className="flex flex-row items-center space-x-2">
                     <GoPlus />
                     <span>Join New Initiatives</span>
                   </div>
                 </button>
 
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "MapInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("MapInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == "MapInit" &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => {
+                    setTab("MapInit");
+                    grabLatLng();
+                    fetchNearByInitiatives();
+                  }}
+                >
                   <div className="flex flex-row items-center space-x-2">
                     <FiMap />
                     <span>Initiative Map</span>
@@ -111,56 +190,34 @@ function InitiativesPage({
                 </button>
               </div>
               {/*Search bar and filter*/}
-<<<<<<< HEAD
-              <div className="flex justify-between w-full">
-                <div className="flex flex-row w-full justify-between items-center space-x-4">
-                  <SearchBar handleChange={handleSearchBarChange} />
-                  <button
-                    className="hover:cursor-pointer"
-                    onClick={() => setFilterState(!FilterOpen)}
-                  >
-                    {FilterOpen == false && (
-                      <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
-                        <FiFilter className="text-2xl" />
-                        <span className="hidden md:inline">Filters</span>
-                      </div>
-                    )}
-                    {FilterOpen == true && (
-                      <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
-                        <FaFilter className="text-xl " />
-                        <span className="hidden md:inline font-medium">
-                          Filters
-                        </span>
-                      </div>
-                    )}
-                  </button>
-                </div>
-              </div>
-=======
               {(Tab == "ActiveInit" || Tab == "NewInit") && (
                 <>
                   <div className="flex justify-between w-full">
                     <div className="flex flex-row w-full justify-between items-center space-x-4">
                       <SearchBar handleChange={handleSearchBarChange} />
-                      <button className="hover:cursor-pointer" onClick={() => setFilterState(!FilterOpen)}>
+                      <button
+                        className="hover:cursor-pointer"
+                        onClick={() => setFilterState(!FilterOpen)}
+                      >
                         {FilterOpen == false && (
                           <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
-                            <FiFilter className="text-2xl"/>
+                            <FiFilter className="text-2xl" />
                             <span className="hidden md:inline">Filters</span>
-                        </div>
+                          </div>
                         )}
                         {FilterOpen == true && (
-                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
-                            <FaFilter className="text-xl "/>
-                            <span className="hidden md:inline font-medium">Filters</span>
-                        </div>
+                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center transition ease-in-out translate-y-10 duration-300">
+                            <FaFilter className="text-xl " />
+                            <span className="hidden md:inline font-medium">
+                              Filters
+                            </span>
+                          </div>
                         )}
                       </button>
                     </div>
                   </div>
                 </>
               )}
->>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
               {FilterOpen == true && (
                 <>
                   <div className="flex flex-row justify-left w-full">
@@ -257,21 +314,12 @@ function InitiativesPage({
                             onChange={distancechangeValue}
                           />
                           <div className="w-28 text-right">
-<<<<<<< HEAD
                             <Input
                               type="number"
-                              placeholder="1000"
+                              placeholder="1000 km"
                               value={distancesliderValue}
                               onChange={distancechangeValue}
                             />
-=======
-                              <Input
-                                type="number"
-                                placeholder="1000 km"
-                                value={distancesliderValue}
-                                onChange={distancechangeValue}
-                              />
->>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
                           </div>
                         </div>
                       </div>
@@ -304,6 +352,40 @@ function InitiativesPage({
                   </div>
                 </>
               )}
+              {Tab == "MapInit" &&
+                (isLoaded ? (
+                  <>
+                    <GoogleMap
+                      mapContainerStyle={{
+                        height: "600px",
+                        width: "100%",
+                        borderRadius: "25px",
+                      }}
+                      center={center}
+                      onLoad={onLoad}
+                      onUnmount={onUnmount}
+                    >
+                      {/* Child components, such as markers, info windows, etc. */}
+                      <>
+                        {nearByInitiatives?.map((initiative) => (
+                          <Marker
+                            key={initiative.id}
+                            position={{
+                              lat: initiative?.location?.coordinates[1],
+                              lng: initiative?.location?.coordinates[0],
+                            }}
+                            label={initiative?.title}
+                            onClick={() => onClickMarker(initiative)}
+                          />
+                        ))}
+                      </>
+                    </GoogleMap>
+                  </>
+                ) : (
+                  <>
+                    <div>Script Not Loaded!</div>
+                  </>
+                ))}
             </div>
           </div>
         </div>

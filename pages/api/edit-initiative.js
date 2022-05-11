@@ -15,6 +15,7 @@ async function handler(req, res) {
       endDate,
       causeType,
       email,
+      location,
       id,
     } = req.body;
 
@@ -37,6 +38,7 @@ async function handler(req, res) {
           startDate,
           endDate,
           causeType,
+          location,
         },
       }
     );
