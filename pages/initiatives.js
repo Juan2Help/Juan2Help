@@ -370,6 +370,11 @@ function InitiativesPage({
                         {nearByInitiatives?.map((initiative) => (
                           <Marker
                             key={initiative.id}
+                            icon={{
+                              url: "/images/custom-marker.png",
+                              anchor: new google.maps.Point(17, 46),
+                              scaledSize: new google.maps.Size(37, 64),
+                            }}
                             position={{
                               lat: initiative?.location?.coordinates[1],
                               lng: initiative?.location?.coordinates[0],
