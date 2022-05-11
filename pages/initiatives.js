@@ -1,17 +1,17 @@
-import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../components/ProtectedRoute";
-import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
-import { SearchBar } from "../components/Input";
-import { Featured, Initiative } from "../components/explore/ExploreComponents";
-import { FiFilter, FiMap} from "react-icons/fi";
-import { FaFilter } from "react-icons/fa";
-import { GoPlus, GoCheck } from "react-icons/go";
-import { useState, useEffect } from "react";
-import { Input } from "../components/Input";
+import Head from 'next/head';
+import Navbar from '../components/Navbar';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../components/ProtectedRoute';
+import { GrantAccess, redirectToLogin } from '../middleware/ProtectedRoute';
+import { SearchBar } from '../components/Input';
+import { Featured, Initiative } from '../components/explore/ExploreComponents';
+import { FiFilter, FiMap } from 'react-icons/fi';
+import { FaFilter } from 'react-icons/fa';
+import { GoPlus, GoCheck } from 'react-icons/go';
+import { useState, useEffect } from 'react';
+import { Input } from '../components/Input';
 
 function InitiativesPage({
   sessionFromProp,
@@ -19,7 +19,7 @@ function InitiativesPage({
   activeInitiativeData,
 }) {
   const session = sessionFromProp;
-  const [Tab, setTab] = useState("ActiveInit");
+  const [Tab, setTab] = useState('ActiveInit');
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0);
   const [distancesliderValue, distancesetSliderValue] = useState(0);
@@ -42,7 +42,7 @@ function InitiativesPage({
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
           const loc =
-            typeof initiative.location === "string"
+            typeof initiative.location === 'string'
               ? initiative.location.toLowerCase()
               : initiative.location.address.toLowerCase();
 
@@ -56,7 +56,7 @@ function InitiativesPage({
       setNewInitiatives(
         newInitiativeData.filter((initiative) => {
           const loc =
-            typeof initiative.location === "string"
+            typeof initiative.location === 'string'
               ? initiative.location.toLowerCase()
               : initiative.location.address.toLowerCase();
 
@@ -86,24 +86,39 @@ function InitiativesPage({
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
               {/*Navigation Tabs*/}
               <div className="flex flex-row w-full h-14 items-center">
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "ActiveInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("ActiveInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == 'ActiveInit' &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => setTab('ActiveInit')}
+                >
                   <div className="flex flex-row items-center space-x-2 ">
                     <GoCheck />
                     <span>Active Initiatives</span>
                   </div>
                 </button>
 
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "NewInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("NewInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == 'NewInit' &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => setTab('NewInit')}
+                >
                   <div className="flex flex-row items-center space-x-2">
                     <GoPlus />
                     <span>Join New Initiatives</span>
                   </div>
                 </button>
 
-                <button className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                                  Tab == "MapInit" && ` border-violet-700 border-b-4 text-violet-700`}`} onClick={() => setTab("MapInit")}>
+                <button
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                    Tab == 'MapInit' &&
+                    ` border-violet-700 border-b-4 text-violet-700`
+                  }`}
+                  onClick={() => setTab('MapInit')}
+                >
                   <div className="flex flex-row items-center space-x-2">
                     <FiMap />
                     <span>Initiative Map</span>
@@ -111,56 +126,34 @@ function InitiativesPage({
                 </button>
               </div>
               {/*Search bar and filter*/}
-<<<<<<< HEAD
-              <div className="flex justify-between w-full">
-                <div className="flex flex-row w-full justify-between items-center space-x-4">
-                  <SearchBar handleChange={handleSearchBarChange} />
-                  <button
-                    className="hover:cursor-pointer"
-                    onClick={() => setFilterState(!FilterOpen)}
-                  >
-                    {FilterOpen == false && (
-                      <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
-                        <FiFilter className="text-2xl" />
-                        <span className="hidden md:inline">Filters</span>
-                      </div>
-                    )}
-                    {FilterOpen == true && (
-                      <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
-                        <FaFilter className="text-xl " />
-                        <span className="hidden md:inline font-medium">
-                          Filters
-                        </span>
-                      </div>
-                    )}
-                  </button>
-                </div>
-              </div>
-=======
-              {(Tab == "ActiveInit" || Tab == "NewInit") && (
+              {(Tab == 'ActiveInit' || Tab == 'NewInit') && (
                 <>
                   <div className="flex justify-between w-full">
                     <div className="flex flex-row w-full justify-between items-center space-x-4">
                       <SearchBar handleChange={handleSearchBarChange} />
-                      <button className="hover:cursor-pointer" onClick={() => setFilterState(!FilterOpen)}>
+                      <button
+                        className="hover:cursor-pointer"
+                        onClick={() => setFilterState(!FilterOpen)}
+                      >
                         {FilterOpen == false && (
                           <div className="flex flex-row space-x-1 text-gray-900 hover:text-gray-500">
-                            <FiFilter className="text-2xl"/>
+                            <FiFilter className="text-2xl" />
                             <span className="hidden md:inline">Filters</span>
-                        </div>
+                          </div>
                         )}
                         {FilterOpen == true && (
                           <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center">
-                            <FaFilter className="text-xl "/>
-                            <span className="hidden md:inline font-medium">Filters</span>
-                        </div>
+                            <FaFilter className="text-xl " />
+                            <span className="hidden md:inline font-medium">
+                              Filters
+                            </span>
+                          </div>
                         )}
                       </button>
                     </div>
                   </div>
                 </>
               )}
->>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
               {FilterOpen == true && (
                 <>
                   <div className="flex flex-row justify-left w-full">
@@ -257,21 +250,12 @@ function InitiativesPage({
                             onChange={distancechangeValue}
                           />
                           <div className="w-28 text-right">
-<<<<<<< HEAD
                             <Input
                               type="number"
-                              placeholder="1000"
+                              placeholder="1000 km"
                               value={distancesliderValue}
                               onChange={distancechangeValue}
                             />
-=======
-                              <Input
-                                type="number"
-                                placeholder="1000 km"
-                                value={distancesliderValue}
-                                onChange={distancechangeValue}
-                              />
->>>>>>> 1eb5e7059a0257facfbbe1b926ee686f8645c44a
                           </div>
                         </div>
                       </div>
@@ -280,7 +264,7 @@ function InitiativesPage({
                   <hr></hr>
                 </>
               )}
-              {Tab == "ActiveInit" && (
+              {Tab == 'ActiveInit' && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {activeInitiatives.map((initiative) => (
@@ -292,7 +276,7 @@ function InitiativesPage({
                   </div>
                 </>
               )}
-              {Tab == "NewInit" && (
+              {Tab == 'NewInit' && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {newInitiatives.map((initiative) => (
@@ -322,9 +306,9 @@ export async function getServerSideProps(context) {
     const req = await fetch(
       `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           page: 1,
@@ -340,8 +324,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
-      newInitiativeData: await getInitiatives("1"),
-      activeInitiativeData: await getInitiatives("3"),
+      newInitiativeData: await getInitiatives('1'),
+      activeInitiativeData: await getInitiatives('3'),
     },
   };
 }
