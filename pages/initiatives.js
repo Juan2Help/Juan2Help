@@ -230,7 +230,7 @@ function InitiativesPage({
                               type="checkbox"
                               id="Food"
                               name="Food"
-                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                             />
                             <span className="ml-1 text-md text-gray-900">
                               Food
@@ -243,7 +243,7 @@ function InitiativesPage({
                               type="checkbox"
                               id="Medicine"
                               name="Medicine"
-                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                             />
                             <span className="ml-1 text-md text-gray-900">
                               Medicine
@@ -256,7 +256,7 @@ function InitiativesPage({
                               type="checkbox"
                               id="Nature"
                               name="Nature"
-                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                             />
                             <span className="ml-1 text-md text-gray-900">
                               Nature
@@ -269,7 +269,7 @@ function InitiativesPage({
                               type="checkbox"
                               id="Teach"
                               name="Teach"
-                              class="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
                             />
                             <span className="ml-1 text-md text-gray-900">
                               Teach
