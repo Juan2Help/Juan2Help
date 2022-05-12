@@ -1,16 +1,16 @@
-import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
-import Causes from "../components/Causes";
+import Head from 'next/head';
+import Navbar from '../components/Navbar';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import Causes from '../components/Causes';
 import {
   Featured,
   Initiatives,
   TopOrganizers,
-} from "../components/explore/ExploreComponents";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../components/ProtectedRoute";
-import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
+} from '../components/explore/ExploreComponents';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../components/ProtectedRoute';
+import { GrantAccess, redirectToLogin } from '../middleware/ProtectedRoute';
 
 function Explore({ sessionFromProp }) {
   const session = sessionFromProp;
