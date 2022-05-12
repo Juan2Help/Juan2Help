@@ -15,9 +15,9 @@ import { faker } from "@faker-js/faker";
 function ModalToggle() {
   return (
     <>
-      <input type="checkbox" id="my-modal-4" class="modal-toggle" />
-      <label htmlFor="my-modal-4" class="modal cursor-pointer">
-        <label class="modal-box relative" htmlFor="">
+      <input type="checkbox" id="my-modal-4" className="modal-toggle" />
+      <label htmlFor="my-modal-4" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
           <div className="flex flex-row justify-around pb-4">
             <div className="btn btn-outline btn-circle text-xl">
               <FiLink />
@@ -34,7 +34,7 @@ function ModalToggle() {
             <a>Why you're seeing this post</a>
             <hr />
           </div>
-          <ul class="bg-base-100 w-full space-y-4 mt-4">
+          <ul className="bg-base-100 w-full space-y-4 mt-4">
             <li>
               <a>Hide</a>
             </li>
@@ -81,7 +81,7 @@ function Post() {
               </span>
             </div>
           </div>
-          <div class="p-2">
+          <div className="p-2">
             <label htmlFor="my-modal-4" className="text-xl">
               <FiMoreHorizontal />
             </label>
@@ -105,7 +105,7 @@ function Post() {
           <FiMessageCircle />
           <FiSend />
           <div className="flex-auto"></div>
-          <label class="swap swap-flip">
+          <label className="swap swap-flip">
             <input type="checkbox" value={fake.post.isBookmarked} />
             <FiBookmark className="swap-on text-primary fill-current" />
             <FiBookmark className="swap-off" />

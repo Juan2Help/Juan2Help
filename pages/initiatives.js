@@ -148,7 +148,7 @@ function InitiativesPage({
               {/*Navigation Tabs*/}
               <div className="flex flex-row w-full h-14 items-center">
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2 hover:text-gray-700 border-gray-300 ${
                     Tab == "ActiveInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
@@ -161,7 +161,7 @@ function InitiativesPage({
                 </button>
 
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  hover:text-gray-700 border-gray-300 ${
                     Tab == "NewInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
@@ -174,7 +174,7 @@ function InitiativesPage({
                 </button>
 
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  hover:text-gray-700 border-gray-300 ${
                     Tab == "MapInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
@@ -194,10 +194,10 @@ function InitiativesPage({
               {(Tab == "ActiveInit" || Tab == "NewInit") && (
                 <>
                   <div className="flex justify-between w-full">
-                    <div className="flex flex-row w-full justify-between items-center space-x-4">
-                      <SearchBar handleChange={handleSearchBarChange} />
+                    <div className="flex flex-row w-full items-center space-x-4">
+                      <SearchBar handleChange={handleSearchBarChange}/>
                       <button
-                        className="hover:cursor-pointer"
+                        className="hover:cursor-pointer w-1/8"
                         onClick={() => setFilterState(!FilterOpen)}
                       >
                         {FilterOpen == false && (
@@ -207,7 +207,7 @@ function InitiativesPage({
                           </div>
                         )}
                         {FilterOpen == true && (
-                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center transition ease-in-out translate-y-10 duration-300">
+                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center transition ease-in-out duration-300">
                             <FaFilter className="text-xl " />
                             <span className="hidden md:inline font-medium">
                               Filters

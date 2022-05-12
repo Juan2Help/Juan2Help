@@ -89,16 +89,16 @@ function Header({ session, socket }) {
             </label>
             <div
               tabindex="0"
-              class="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-scroll"
+              className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-scroll"
             >
               <div className="flex flex-col p-2 gap-4">
                 <div className="flex flex-row items-center justify-between">
                   <div className="font-bold text-xl">Notifications</div>
                   <div className="flex flex-row gap-1">
-                    <div class="bg-purple-100 text-primary rounded-full py-1 px-3 text-md font-medium">
+                    <div className="bg-purple-100 text-primary rounded-full py-1 px-3 text-md font-medium">
                       All
                     </div>
-                    <div class="bg-gray-200 rounded-full py-1 px-3 text-md font-medium">
+                    <div className="bg-gray-200 rounded-full py-1 px-3 text-md font-medium">
                       Unread
                     </div>
                   </div>
@@ -134,7 +134,7 @@ function Header({ session, socket }) {
               </ul>
             </div>
           </div>
-          <div class="dropdown dropdown-end">
+          <div className="dropdown dropdown-end">
             <label tabindex="0">
               <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
                 <img className="rounded-full" src={faker.image.avatar()} />
@@ -142,7 +142,7 @@ function Header({ session, socket }) {
             </label>
             <ul
               tabindex="0"
-              class="dropdown-content menu menu-compact p-2 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-200"
+              className="dropdown-content menu menu-compact p-2 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-200"
             >
               <div className="text-gray-700 px-4 py-2 text-sm text-left ">
                 You are logged in as

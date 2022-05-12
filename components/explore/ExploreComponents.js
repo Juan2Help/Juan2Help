@@ -98,32 +98,32 @@ function Initiative({ initiativeData }) {
             <span className="text-sm font-medium text-gray-300">
               {fake.initiative.participants} joined
             </span>
-            <div class="avatar-group -space-x-5">
-              <div class="avatar">
-                <div class="w-8">
+            <div className="avatar-group -space-x-5">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
-              <div class="avatar">
-                <div class="w-8">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
-              <div class="avatar">
-                <div class="w-8">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
             </div>
             <div className="flex-auto"></div>
-            <label class="swap swap-flip">
+            <label className="swap swap-flip">
               <input type="checkbox" value={fake.initiative.isBookmarked} />
               <FiBookmark className="swap-on text-primary fill-current" />
               <FiBookmark className="swap-off" />
             </label>
           </div>
           <progress
-            class="progress w-full progress-primary"
+            className="progress w-full progress-primary"
             value={fake.initiative.participants}
             max="100"
           ></progress>
