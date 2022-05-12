@@ -217,11 +217,7 @@ function search({
     socket?.emit("newUser", {
       userID: session?.user?._id,
     });
-
     console.log("SOCKET INITIALIZED:", socket);
-    socket?.on("getNotification", (data) => {
-      return setHasNotification(true);
-    });
   }, [socket]);
 
   return (
