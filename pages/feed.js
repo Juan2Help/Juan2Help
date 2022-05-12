@@ -24,7 +24,7 @@ function MyFeed() {
   );
 }
 
-function Feed({ sessionFromProp }) {
+function Feed({ sessionFromProp, socket }) {
   const session = sessionFromProp;
 
   return (
@@ -33,7 +33,7 @@ function Feed({ sessionFromProp }) {
         <Head>
           <title>Welcome Home!</title>
         </Head>
-        <Header session={session} />
+        <Header session={session} socket={socket} />
         <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
           <Sidebar active="feed" />
           <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-3/5 flex flex-col space-y-6">

@@ -16,7 +16,7 @@ async function handler(req, res) {
     }
 
     // get the initiative id and user id from the request body
-    const { registrantId, initiativeId } = req.body;
+    const { registrantId, initiativeId, name } = req.body;
 
     // connect to the database
     const conn = await ConnectDB();
@@ -24,6 +24,7 @@ async function handler(req, res) {
 
     const initiatives = db.collection("initiatives");
     const users = db.collection("users");
+    const notifications = db.collection("notifications");
 
     // update initiative: delete the user from the registrants list
     const initiativeUpdate = await initiatives.updateOne(
@@ -37,6 +38,10 @@ async function handler(req, res) {
       }
     );
 
+    const initiative = await initiatives.findOne({
+      _id: ObjectId(initiativeId),
+    });
+
     // update user: remove the initiative from the applications
     const userUpdate = await users.updateOne(
       {
@@ -49,13 +54,39 @@ async function handler(req, res) {
       }
     );
 
-    console.log(`Application of ${registrantId} to ${initiativeId} approved`);
+    // find user in notifications and update
+    const userEntry = await notifications.findOne({
+      user: registrantId,
+    });
+
+    if (!userEntry) {
+      await notifications.insertOne({
+        user: registrantId,
+        notifications: [],
+      });
+    }
+
+    await notifications.updateOne(
+      {
+        user: registrantId,
+      },
+      {
+        $push: {
+          notifications: {
+            type: 2,
+            initiativeID: initiative._id,
+            name: name,
+            message: `your application for ${initiative.title} has been rejected.`,
+            dateCreated: new Date(),
+          },
+        },
+      }
+    );
+
+    console.log(`Application of ${registrantId} to ${initiativeId} rejected`);
 
     // send the response status 200
-    res
-      .status(200)
-      .json(`Application of ${registrantId} to ${initiativeId} approved`);
-    conn.close();
+    res.status(200).json({ message: `Application rejected` });
   } else {
     //Response for other than POST method
     res.status(500).json({ message: "Why you here, fam?" });

@@ -12,7 +12,7 @@ import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 
-function Explore({ sessionFromProp }) {
+function Explore({ sessionFromProp, socket }) {
   const session = sessionFromProp;
 
   return (
@@ -22,7 +22,7 @@ function Explore({ sessionFromProp }) {
           <Head>
             <title>Welcome Explore!</title>
           </Head>
-          <Header session={session} />
+          <Header session={session} socket={socket} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">

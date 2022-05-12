@@ -1,19 +1,56 @@
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { FiBell, FiMessageCircle } from 'react-icons/fi';
-import { MdManageSearch } from 'react-icons/md';
-import { IoMdSettings } from 'react-icons/io';
-import { GoSignOut } from 'react-icons/go';
-import { FaUserCircle } from 'react-icons/fa';
-import { useSession, signOut } from 'next-auth/react';
-import { faker } from '@faker-js/faker';
-import { useEffect } from 'react/cjs/react.production.min';
-import { Notification } from './Notifications';
+import Link from "next/link";
+import React, { useState } from "react";
+import { FiBell, FiMessageCircle } from "react-icons/fi";
+import { MdManageSearch } from "react-icons/md";
+import { IoMdSettings } from "react-icons/io";
+import { GoSignOut } from "react-icons/go";
+import { FaUserCircle } from "react-icons/fa";
+import { useSession, signOut } from "next-auth/react";
+import { faker } from "@faker-js/faker";
+import { useEffect } from "react";
+import { Notification } from "./Notifications";
+import { useRecoilState } from "recoil";
+import { notificationsState } from "../atoms/notificationsAtom";
+import { fetchJSON } from "../middleware/helper";
 
-function Header({ session }) {
-  const hasMessage = false;
-  const hasNotification = true;
-  const [isOpen, setOpenState] = useState(false);
+function Header({ session, socket }) {
+  const [hasMessage, setHasMessage] = useState(false);
+  const [hasNotification, setHasNotification] = useState(false);
+  const [notifications, setNotifications] = useRecoilState(notificationsState);
+
+  const getNotification = async () => {
+    const data = await fetchJSON("/api/user/get-notifications", {
+      id: session.user._id,
+    });
+
+    if (data.length > 0) {
+      setNotifications(data);
+    }
+  };
+
+  const handleNotificationClick = async () => {
+    if (hasNotification) {
+      setHasNotification(false);
+      await getNotification();
+    }
+  };
+
+  useEffect(() => {
+    if (notifications.length === 0) {
+      getNotification();
+    }
+  }, []);
+
+  useEffect(() => {
+    socket?.emit("newUser", {
+      userID: session?.user?._id,
+    });
+
+    console.log("SOCKET INITIALIZED:", socket);
+    socket?.on("getNotification", (data) => {
+      return setHasNotification(true);
+    });
+  }, [socket]);
 
   return (
     <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
@@ -25,22 +62,25 @@ function Header({ session }) {
         </Link>
         <div className="flex flex-row items-center justify-center space-x-2">
           <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
-            <div className="indicator flex">
+            <div className="indicator flex cursor-pointer">
               {hasMessage && (
                 <div className="indicator-item badge-xs badge-secondary badge">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
                 </div>
               )}
               <FiMessageCircle />
             </div>
           </div>
-          <div className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end ">
             <label tabIndex="0">
-              <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
+              <div
+                className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl"
+                onClick={handleNotificationClick}
+              >
                 <div className="indicator">
                   {hasNotification && (
                     <div className="indicator-item badge-xs badge-secondary badge">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51]"></span>
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
                     </div>
                   )}
                   <FiBell />
@@ -70,15 +110,13 @@ function Header({ session }) {
                 <div className="text-primary text-xs">See All</div>
               </div>
               <ul>
-                <li>
-                  <Notification />
-                </li>
-                <li>
-                  <Notification />
-                </li>
-                <li>
-                  <Notification />
-                </li>
+                {/* sort by time and map */}
+                {notifications.map((notification) => (
+                  <Notification
+                    key={notification._id}
+                    notificationData={notification}
+                  />
+                ))}
               </ul>
               <div className="px-2 flex flex-row items-center justify-between">
                 <div className="font-medium">Earlier</div>
@@ -135,14 +173,14 @@ function Header({ session }) {
                   <li>
                     <Link
                       href={
-                        session?.user?.role === 8 ? '/manage/admin' : '/manage'
+                        session?.user?.role === 8 ? "/manage/admin" : "/manage"
                       }
                     >
                       <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                         <MdManageSearch className="text-lg" />
                         <span className=" text-gray-700 text-sm text-left">
-                          Manage{' '}
-                          {session?.user.role === 8 ? 'App' : 'Initiatives'}
+                          Manage{" "}
+                          {session?.user.role === 8 ? "App" : "Initiatives"}
                         </span>
                       </div>
                     </Link>

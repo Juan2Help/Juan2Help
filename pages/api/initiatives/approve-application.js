@@ -16,7 +16,7 @@ async function handler(req, res) {
     }
 
     // get the initiative id and user id from the request body
-    const { registrantId, initiativeId } = req.body;
+    const { registrantId, initiativeId, name } = req.body;
 
     // connect to the database
     const conn = await ConnectDB();
@@ -24,6 +24,7 @@ async function handler(req, res) {
 
     const initiatives = db.collection("initiatives");
     const users = db.collection("users");
+    const notifications = db.collection("notifications");
 
     // update initiative: delete the user from the registrants list and append the user to the members list
     const initiativeUpdate = await initiatives.updateOne(
@@ -39,6 +40,10 @@ async function handler(req, res) {
         },
       }
     );
+
+    const initiative = await initiatives.findOne({
+      _id: ObjectId(initiativeId),
+    });
 
     // update user: remove the initiative from the applications
     // and append the initiative to the activeInitiatives
@@ -56,12 +61,37 @@ async function handler(req, res) {
       }
     );
 
-    console.log(`Application of ${registrantId} to ${initiativeId} approved`);
+    // find user in notifications and update
+    const userEntry = await notifications.findOne({
+      user: registrantId,
+    });
+
+    if (!userEntry) {
+      await notifications.insertOne({
+        user: registrantId,
+        notifications: [],
+      });
+    }
+
+    await notifications.updateOne(
+      {
+        user: registrantId,
+      },
+      {
+        $push: {
+          notifications: {
+            type: 2,
+            initiativeID: initiative._id,
+            name: name,
+            message: `your application for ${initiative.title} has been approved. See you!`,
+            dateCreated: new Date(),
+          },
+        },
+      }
+    );
 
     // send the response status 200
-    res
-      .status(200)
-      .json(`Application of ${registrantId} to ${initiativeId} approved`);
+    res.status(200).json({ message: `Application approved` });
     conn.close();
   } else {
     //Response for other than POST method

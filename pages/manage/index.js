@@ -18,7 +18,7 @@ import { fetchJSON, fetchNGODetails } from "../../middleware/helper";
 import { useRecoilState } from "recoil";
 import { managedInitiatives } from "../../atoms/initiatives";
 
-function index({ sessionFromProp, organizationDetails }) {
+function index({ sessionFromProp, organizationDetails, socket }) {
   const session = sessionFromProp;
 
   const [handledInitiatives, setHandledInitiatives] =
@@ -129,7 +129,7 @@ function index({ sessionFromProp, organizationDetails }) {
           <Head>
             <title>Manage Initiatives</title>
           </Head>
-          <Header session={session} />
+          <Header session={session} socket={socket} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12">
