@@ -221,7 +221,13 @@ function thread({ sessionFromProp }) {
                 </div>
                 {/* Search */}
                 <div className="px-2">
-                  <div className="lg:col-span-2 flex w-full h-8 rounded-md bg-gray-100"></div>
+                  <div className="lg:col-span-2 flex items-center w-full h-8 rounded-full bg-gray-100">
+                    <input
+                      type="text"
+                      placeholder="Search messages"
+                      class="input input-xs input-ghost w-full px-4"
+                    />
+                  </div>
                 </div>
                 {/* Threads */}
                 <MessageList />
