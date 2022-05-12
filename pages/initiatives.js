@@ -6,7 +6,7 @@ import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 import { SearchBar } from "../components/Input";
-import { Featured, Initiative } from "../components/explore/ExploreComponents";
+import { Initiative } from "../components/explore/ExploreComponents";
 import { FiFilter, FiMap } from "react-icons/fi";
 import { FaFilter } from "react-icons/fa";
 import { GoPlus, GoCheck } from "react-icons/go";
@@ -26,7 +26,6 @@ function InitiativesPage({
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0);
-  const [distancesliderValue, distancesetSliderValue] = useState(0);
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
@@ -48,10 +47,6 @@ function InitiativesPage({
 
   const participantschangeValue = (e) => {
     participantssetSliderValue(e.target.value);
-  };
-
-  const distancechangeValue = (e) => {
-    distancesetSliderValue(e.target.value);
   };
 
   const handleSearchBarChange = (e) => {
@@ -298,28 +293,6 @@ function InitiativesPage({
                               placeholder="1000"
                               value={participantssliderValue}
                               onChange={participantschangeValue}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <span className="font-semibold">Distance</span>
-                        <div className="flex items-center space-x-3">
-                          <input
-                            name="distance"
-                            type="range"
-                            min="10"
-                            max="1000"
-                            value={distancesliderValue}
-                            className="range range-primary range-sm flex"
-                            onChange={distancechangeValue}
-                          />
-                          <div className="w-28 text-right">
-                            <Input
-                              type="number"
-                              placeholder="1000 km"
-                              value={distancesliderValue}
-                              onChange={distancechangeValue}
                             />
                           </div>
                         </div>

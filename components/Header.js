@@ -75,7 +75,7 @@ function Header({ session, socket }) {
           <div className="dropdown dropdown-end ">
             <label tabIndex="0">
               <div
-                className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl"
+                className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl cursor-pointer"
                 onClick={handleNotificationClick}
               >
                 <div className="indicator">

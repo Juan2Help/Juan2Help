@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import Link from "next/link";
 import {
+  FiBookmark,
   FiCalendar,
   FiCompass,
   FiCopy,
@@ -36,22 +37,25 @@ function Navbar({ active }) {
           <FiCopy className="text-2xl" />
         </div>
       </Link>
-      {session?.user?.role >= 2 && (
-        <Link href="/manage/initiative/add">
-          <div className="text-white p-4 rounded-full bg-purple-700">
-            <FiPlus className="text-2xl" />
-          </div>
-        </Link>
-      )}
       <Link href="/initiatives">
-        <div
-          className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
+        <div className={`text-white p-4 rounded-full bg-gray-400 ${
             active == "initiatives"
-              ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
+              ? `bg-purple-600`
               : "text-gray-300"
           }`}
         >
           <RiHandHeartLine className="text-2xl" />
+        </div>
+      </Link>
+      <Link href="/bookmarks">
+        <div
+          className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
+            active == "bookmarks"
+              ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
+              : "text-gray-300"
+          }`}
+        >
+          <FiBookmark className="text-2xl" />
         </div>
       </Link>
       <Link href="/schedule">
