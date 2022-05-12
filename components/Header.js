@@ -46,10 +46,11 @@ function Header({ session, socket }) {
       userID: session?.user?._id,
     });
 
+    const listener = (data) => setHasNotification(true);
     console.log("SOCKET INITIALIZED:", socket);
-    socket?.on("getNotification", (data) => {
-      return setHasNotification(true);
-    });
+    socket?.on("getNotification", listener);
+
+    return () => socket?.off("getNotification", listener);
   }, [socket]);
 
   return (
