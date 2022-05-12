@@ -140,6 +140,7 @@ function search({
   registrants,
   initiativeId,
   initiativeTitle,
+  socket,
 }) {
   const session = sessionFromProp;
   const router = useRouter();
@@ -176,8 +177,15 @@ function search({
       body: JSON.stringify({
         registrantId: selectedRegistrant,
         initiativeId: initiativeId,
+        name: session?.user?.name.split(" ")[0],
       }),
     });
+
+    socket?.emit("application-decision", {
+      registrantId: selectedRegistrant,
+      decision: "accepted",
+    });
+
     grabRegistrants();
   };
 
@@ -190,7 +198,13 @@ function search({
       body: JSON.stringify({
         registrantId: selectedRegistrant,
         initiativeId: initiativeId,
+        name: session?.user?.name.split(" ")[0],
       }),
+    });
+
+    socket?.emit("application-decision", {
+      registrantId: selectedRegistrant,
+      decision: "rejected",
     });
     grabRegistrants();
   };
@@ -198,6 +212,13 @@ function search({
   const visitHandler = () => {
     router.push(`/u/${selectedRegistrant}`);
   };
+
+  useEffect(() => {
+    socket?.emit("newUser", {
+      userID: session?.user?._id,
+    });
+    console.log("SOCKET INITIALIZED:", socket);
+  }, [socket]);
 
   return (
     <div className="flex relative flex-col min-h-screen">

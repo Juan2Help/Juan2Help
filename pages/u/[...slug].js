@@ -29,9 +29,11 @@ function profile({ sessionFromProp, userDetails }) {
           </Head>
           <div className="flex flex-col w-screen xl:max-w-7xl px-4 xl:px-8">
             <div className="relative w-full py-4 flex flex-row justify-between text-lg">
-              <div className="p-1 rounded-full bg-purple-100 text-primary">
-                <FiChevronLeft />
-              </div>
+              <Link href={`/explore`}>
+                <div className="p-1 rounded-full bg-purple-100 text-primary cursor-pointer">
+                  <FiChevronLeft />
+                </div>
+              </Link>
               <button
                 onClick={() => setOpenState(!isOpen)}
                 className="p-1 rounded-full bg-purple-100 text-primary"

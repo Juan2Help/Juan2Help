@@ -67,7 +67,7 @@ function EditModerator({ sessionFromProp }) {
           <div className="space-y-2">
             <span className="font-bold text-md">Select role</span>
             <select
-              class="select select-bordered w-full bg-white"
+              className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="role"
             >

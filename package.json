@@ -16,13 +16,16 @@
     "moment": "^2.29.1",
     "mongodb": "^4.4.0",
     "mongoose": "^6.2.5",
+    "net": "^1.0.2",
     "next": "12.1.0",
     "next-auth": "^4.2.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-icons": "^4.3.1",
     "react-places-autocomplete": "^7.3.0",
-    "recoil": "github:facebookexperimental/Recoil#nightly"
+    "recoil": "github:facebookexperimental/Recoil#nightly",
+    "socket.io": "^4.5.0",
+    "socket.io-client": "^4.5.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.0.0-beta.0",

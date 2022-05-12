@@ -14,8 +14,8 @@ function SuggestedPerson() {
     return (
         <div className="flex flex-row items-center justify-between space-x-2">
             <div className="flex flex-row items-center space-x-4">
-                <div class="avatar">
-                    <div class="w-10">
+                <div className="avatar">
+                    <div className="w-10">
                         <img src={fake.avatar} className="rounded-full" />
                     </div>
                 </div>
@@ -36,10 +36,10 @@ function SuggestedPerson() {
                 </div>
             </div>
             <div className="flex flex-col items-center text-xs font-medium text-primary">
-                <label class="swap text-right">
+                <label className="swap text-right">
                     <input type="checkbox" />
-                    <div class="swap-off">Follow</div>
-                    <div class="swap-on">Unfollow</div>
+                    <div className="swap-off">Follow</div>
+                    <div className="swap-on">Unfollow</div>
                 </label>
             </div>
         </div>

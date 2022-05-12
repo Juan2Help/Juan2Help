@@ -7,9 +7,9 @@ function ConfirmAction({ handleChange }) {
   const message = "";
   return (
     <>
-      <input type="checkbox" id="confirm-action" class="modal-toggle" />
-      <label for="confirm-action" class="modal cursor-pointer">
-        <label class="modal-box relative" for="">
+      <input type="checkbox" id="confirm-action" className="modal-toggle" />
+      <label for="confirm-action" className="modal cursor-pointer">
+        <label className="modal-box relative" for="">
           <div className="flex flex-col justify-around pb-4 space-y-2">
             <span className="text-lg font-bold">
               Confirm your password to continue.

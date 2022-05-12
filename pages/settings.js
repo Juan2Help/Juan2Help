@@ -6,25 +6,25 @@ import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess } from "../middleware/ProtectedRoute";
 
-function Settings({ sessionFromProp }) {
+function Settings({ sessionFromProp, socket }) {
   const session = sessionFromProp;
 
   return (
-      <ProtectedRoute session={session}>
-        <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
-          <div className="flex flex-col items-center">
-            <Head>
-              <title>Juan2Help</title>
-            </Head>
-            <Header />
-            <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
-              <Sidebar active="explore" />
-              <div className="flex text-center text-3xl">Settings</div>
-            </div>
+    <ProtectedRoute session={session}>
+      <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
+        <div className="flex flex-col items-center">
+          <Head>
+            <title>Juan2Help</title>
+          </Head>
+          <Header session={session} socket={socket} />
+          <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
+            <Sidebar active="explore" />
+            <div className="flex text-center text-3xl">Settings</div>
           </div>
         </div>
-        <Navbar active="explore" />
-      </ProtectedRoute>
+      </div>
+      <Navbar active="explore" />
+    </ProtectedRoute>
   );
 }
 

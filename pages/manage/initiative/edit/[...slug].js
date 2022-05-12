@@ -5,23 +5,28 @@ import { Input, TextArea, Date } from "../../../../components/Input";
 import Button from "../../../../components/Button";
 import { getSession } from "next-auth/react";
 import ProtectedRoute from "../../../../components/ProtectedRoute";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { GrantAccess } from "../../../../middleware/ProtectedRoute";
 import { fetchJSON } from "../../../../middleware/helper";
 import { geocodeByAddress } from "react-places-autocomplete";
 import { getLatLng } from "react-places-autocomplete";
 
-function edit({ sessionFromProp, data }) {
+function edit({ sessionFromProp, data, socket }) {
   const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState(data);
   const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
-
+  const router = useRouter();
   console.log("data", data);
 
-  const router = useRouter();
+  useEffect(() => {
+    console.log("SOCKET INITIALIZED", socket);
+    socket?.emit("newUser", {
+      userID: session?.user?._id,
+    });
+  }, [socket]);
 
   // submit initiative data to api
   const handleSubmit = async (e) => {
@@ -35,6 +40,10 @@ function edit({ sessionFromProp, data }) {
       address,
       coordinates: [longitude, latitude],
     };
+    initiativeData.email = session.user.email;
+    initiativeData.name = session.user.name.split(" ")[0];
+    //
+    console.log("SENDING", initiativeData);
     // send a POST request to the api to create a new initiative
     const response = await fetch("/api/edit-initiative", {
       method: "POST",
@@ -43,6 +52,8 @@ function edit({ sessionFromProp, data }) {
         "Content-Type": "application/json",
       },
     });
+
+    socket?.emit("updateInitiative", initiativeData.participantsList);
 
     //check if response is ok
     if (response.ok) {

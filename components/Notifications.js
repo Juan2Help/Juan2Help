@@ -1,41 +1,37 @@
-import faker from '@faker-js/faker';
-import moment from 'moment';
-import Link from 'next/link';
+import faker from "@faker-js/faker";
+import moment from "moment";
+import Link from "next/link";
 
-function Notification() {
-  const time = moment(faker.time.recent(10, '12:00'));
-  const parsedTime =
-    time.startOf('hour').fromNow()[0] != 'i'
-      ? time.startOf('hour').fromNow()
-      : time.endOf('day').fromNow();
-  const fake = {
+function Notification({ notificationData }) {
+  const time = moment(notificationData?.dateCreated).fromNow();
+
+  const data = {
     notification: {
-      name: faker.name.firstName(),
-      message: faker.lorem.sentence(),
-      time: parsedTime,
+      name: notificationData?.name,
+      message: notificationData?.message,
+      time: time,
       avatar: faker.image.avatar(),
-      href: faker.internet.domainName(),
-      id: faker.datatype.uuid(),
+      href: `/i/${notificationData?.initiativeID}`,
     },
   };
   return (
     <>
-      <Link href={fake.notification.href}>
+      <Link href={data.notification.href}>
         <div className="flex flex-row gap-3">
           <img
-            src={fake.notification.avatar}
+            src={data.notification.avatar}
             alt="avatar"
             className="rounded-full w-12 h-12"
             object-fit="cover"
           />
           <div className="flex flex-col">
             <div>
-              <span className="font-bold">{fake.notification.name}</span>{' '}
-              <span className="text-sm">{fake.notification.message}</span>
+              <span className="font-bold">{data.notification.name}</span>{" "}
+              <span className="text-sm">{data.notification.message}</span>
             </div>
             <div>
               <span className="text-gray-500 text-xs font-bold">
-                {fake.notification.time}
+                {data.notification.time}
               </span>
             </div>
           </div>

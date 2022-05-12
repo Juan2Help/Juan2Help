@@ -72,14 +72,16 @@ function Initiative({ initiativeData }) {
     },
   };
   return (
-    <Link href={`/i/${initiativeData._id}`}>
-      <div className="rounded-xl bg-white w-72 overflow-hidden flex-none cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
-        <div className="h-36 w-full sm:w-96 bg-slate-500 relative">
-          <Image
-            src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-            layout="fill"
-            objectFit="cover"
-          />
+    
+      <div className="rounded-xl bg-white w-72 overflow-hidden flex-none hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+        <div className="h-36 w-full sm:w-96 bg-slate-500 relative cursor-pointer ">
+          <Link href={`/i/${initiativeData._id}`}>
+            <Image
+              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+              layout="fill"
+              objectFit="cover"
+            />
+          </Link>
         </div>
         <div className="flex flex-col p-4 space-y-2">
           <div className="flex flex-col">
@@ -98,38 +100,37 @@ function Initiative({ initiativeData }) {
             <span className="text-sm font-medium text-gray-300">
               {fake.initiative.participants} joined
             </span>
-            <div class="avatar-group -space-x-5">
-              <div class="avatar">
-                <div class="w-8">
+            <div className="avatar-group -space-x-5">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
-              <div class="avatar">
-                <div class="w-8">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
-              <div class="avatar">
-                <div class="w-8">
+              <div className="avatar">
+                <div className="w-8">
                   <img src={faker.image.avatar()} />
                 </div>
               </div>
             </div>
             <div className="flex-auto"></div>
-            <label class="swap swap-flip">
+            <label className="swap swap-flip">
               <input type="checkbox" value={fake.initiative.isBookmarked} />
               <FiBookmark className="swap-on text-primary fill-current" />
               <FiBookmark className="swap-off" />
             </label>
           </div>
           <progress
-            class="progress w-full progress-primary"
+            className="progress w-full progress-primary"
             value={fake.initiative.participants}
             max="100"
           ></progress>
         </div>
       </div>
-    </Link>
   );
 }
 

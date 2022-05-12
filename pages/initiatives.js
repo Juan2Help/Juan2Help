@@ -1,31 +1,31 @@
-import Head from 'next/head';
-import Navbar from '../components/Navbar';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import { getSession } from 'next-auth/react';
-import ProtectedRoute from '../components/ProtectedRoute';
-import { GrantAccess, redirectToLogin } from '../middleware/ProtectedRoute';
-import { SearchBar } from '../components/Input';
-import { Featured, Initiative } from '../components/explore/ExploreComponents';
-import { FiFilter, FiMap } from 'react-icons/fi';
-import { FaFilter } from 'react-icons/fa';
-import { GoPlus, GoCheck } from 'react-icons/go';
-import { useState, useCallback, useEffect } from 'react';
-import { Input } from '../components/Input';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
-import { fetchJSON } from '../middleware/helper';
-import { useRouter } from 'next/router';
+import Head from "next/head";
+import Navbar from "../components/Navbar";
+import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import { getSession } from "next-auth/react";
+import ProtectedRoute from "../components/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
+import { SearchBar } from "../components/Input";
+import { Initiative } from "../components/explore/ExploreComponents";
+import { FiFilter, FiMap } from "react-icons/fi";
+import { FaFilter } from "react-icons/fa";
+import { GoPlus, GoCheck } from "react-icons/go";
+import { useState, useCallback, useEffect } from "react";
+import { Input } from "../components/Input";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { fetchJSON } from "../middleware/helper";
+import { useRouter } from "next/router";
 
 function InitiativesPage({
   sessionFromProp,
   newInitiativeData,
   activeInitiativeData,
+  socket,
 }) {
   const session = sessionFromProp;
-  const [Tab, setTab] = useState('ActiveInit');
+  const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0);
-  const [distancesliderValue, distancesetSliderValue] = useState(0);
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
@@ -35,8 +35,8 @@ function InitiativesPage({
   const router = useRouter();
 
   const fetchNearByInitiatives = async () => {
-    const data = await fetchJSON('/api/initiatives/get-initiatives', {
-      type: '2',
+    const data = await fetchJSON("/api/initiatives/get-initiatives", {
+      type: "2",
       center: {
         lat: latlng[0],
         lng: latlng[1],
@@ -49,10 +49,6 @@ function InitiativesPage({
     participantssetSliderValue(e.target.value);
   };
 
-  const distancechangeValue = (e) => {
-    distancesetSliderValue(e.target.value);
-  };
-
   const handleSearchBarChange = (e) => {
     const { value } = e.target;
     value = value.toLowerCase();
@@ -60,7 +56,7 @@ function InitiativesPage({
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
           const loc =
-            typeof initiative.location === 'string'
+            typeof initiative.location === "string"
               ? initiative.location.toLowerCase()
               : initiative.location.address.toLowerCase();
 
@@ -74,7 +70,7 @@ function InitiativesPage({
       setNewInitiatives(
         newInitiativeData.filter((initiative) => {
           const loc =
-            typeof initiative.location === 'string'
+            typeof initiative.location === "string"
               ? initiative.location.toLowerCase()
               : initiative.location.address.toLowerCase();
 
@@ -92,7 +88,7 @@ function InitiativesPage({
   };
 
   const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
+    id: "google-map-script",
     googleMapsApiKey: process.env.GOOGLE_PLACES_API_KEY,
   });
 
@@ -140,18 +136,18 @@ function InitiativesPage({
           <Head>
             <title>Search Initiatives</title>
           </Head>
-          <Header session={session} />
+          <Header session={session} socket={socket} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <Sidebar active="initiatives" />
             <div className="w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
               {/*Navigation Tabs*/}
               <div className="flex flex-row w-full h-14 items-center">
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                    Tab == 'ActiveInit' &&
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2 hover:text-gray-700 border-gray-300 ${
+                    Tab == "ActiveInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
-                  onClick={() => setTab('ActiveInit')}
+                  onClick={() => setTab("ActiveInit")}
                 >
                   <div className="flex flex-row items-center space-x-2 ">
                     <GoCheck />
@@ -160,11 +156,11 @@ function InitiativesPage({
                 </button>
 
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                    Tab == 'NewInit' &&
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  hover:text-gray-700 border-gray-300 ${
+                    Tab == "NewInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
-                  onClick={() => setTab('NewInit')}
+                  onClick={() => setTab("NewInit")}
                 >
                   <div className="flex flex-row items-center space-x-2">
                     <GoPlus />
@@ -173,12 +169,12 @@ function InitiativesPage({
                 </button>
 
                 <button
-                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  border-gray-300 ${
-                    Tab == 'MapInit' &&
+                  className={`flex items-center font-semibold justify-center w-1/3 h-full cursor-pointer rounded-tl-lg hover:bg-gray-200 hover:border-gray-400 text-black border-b-2  hover:text-gray-700 border-gray-300 ${
+                    Tab == "MapInit" &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
                   onClick={() => {
-                    setTab('MapInit');
+                    setTab("MapInit");
                     grabLatLng();
                     fetchNearByInitiatives();
                   }}
@@ -190,13 +186,13 @@ function InitiativesPage({
                 </button>
               </div>
               {/*Search bar and filter*/}
-              {(Tab == 'ActiveInit' || Tab == 'NewInit') && (
+              {(Tab == "ActiveInit" || Tab == "NewInit") && (
                 <>
                   <div className="flex justify-between w-full">
-                    <div className="flex flex-row w-full justify-between items-center space-x-4">
-                      <SearchBar handleChange={handleSearchBarChange} />
+                    <div className="flex flex-row w-full items-center space-x-4">
+                      <SearchBar handleChange={handleSearchBarChange}/>
                       <button
-                        className="hover:cursor-pointer"
+                        className="hover:cursor-pointer w-1/8"
                         onClick={() => setFilterState(!FilterOpen)}
                       >
                         {FilterOpen == false && (
@@ -206,7 +202,7 @@ function InitiativesPage({
                           </div>
                         )}
                         {FilterOpen == true && (
-                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center transition ease-in-out translate-y-10 duration-300">
+                          <div className="flex flex-row space-x-1 text-purple-700 hover:text-purple-400 items-center transition ease-in-out duration-300">
                             <FaFilter className="text-xl " />
                             <span className="hidden md:inline font-medium">
                               Filters
@@ -301,34 +297,12 @@ function InitiativesPage({
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-1">
-                        <span className="font-semibold">Distance</span>
-                        <div className="flex items-center space-x-3">
-                          <input
-                            name="distance"
-                            type="range"
-                            min="10"
-                            max="1000"
-                            value={distancesliderValue}
-                            className="range range-primary range-sm flex"
-                            onChange={distancechangeValue}
-                          />
-                          <div className="w-28 text-right">
-                            <Input
-                              type="number"
-                              placeholder="1000 km"
-                              value={distancesliderValue}
-                              onChange={distancechangeValue}
-                            />
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <hr></hr>
                 </>
               )}
-              {Tab == 'ActiveInit' && (
+              {Tab == "ActiveInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {activeInitiatives.map((initiative) => (
@@ -340,7 +314,7 @@ function InitiativesPage({
                   </div>
                 </>
               )}
-              {Tab == 'NewInit' && (
+              {Tab == "NewInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {newInitiatives.map((initiative) => (
@@ -352,14 +326,14 @@ function InitiativesPage({
                   </div>
                 </>
               )}
-              {Tab == 'MapInit' &&
+              {Tab == "MapInit" &&
                 (isLoaded ? (
                   <>
                     <GoogleMap
                       mapContainerStyle={{
-                        height: '600px',
-                        width: '100%',
-                        borderRadius: '25px',
+                        height: "600px",
+                        width: "100%",
+                        borderRadius: "25px",
                       }}
                       center={center}
                       onLoad={onLoad}
@@ -371,7 +345,7 @@ function InitiativesPage({
                           <Marker
                             key={initiative.id}
                             icon={{
-                              url: '/images/custom-marker.svg',
+                              url: "/images/custom-marker.svg",
                               anchor: new google.maps.Point(17, 46),
                               scaledSize: new google.maps.Size(37, 64),
                               labelOrigin: new google.maps.Point(25, 60),
@@ -410,9 +384,9 @@ export async function getServerSideProps(context) {
     const req = await fetch(
       `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           page: 1,
@@ -428,8 +402,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       sessionFromProp: session,
-      newInitiativeData: await getInitiatives('1'),
-      activeInitiativeData: await getInitiatives('3'),
+      newInitiativeData: await getInitiatives("1"),
+      activeInitiativeData: await getInitiatives("3"),
     },
   };
 }
