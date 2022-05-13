@@ -25,8 +25,8 @@ function InitiativesPage({
   const session = sessionFromProp;
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
-  const [participantssliderValue, participantssetSliderValue] = useState(0)
-  const [participantstextValue, participantssettextValue] = useState("0");
+  const [participantssliderValue, participantssetSliderValue] = useState(1000)
+  const [participantstextValue, participantssettextValue] = useState("1000");
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
