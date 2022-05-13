@@ -26,12 +26,18 @@ function InitiativesPage({
   const session = sessionFromProp;
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
+<<<<<<< HEAD
   const [participantssliderValue, participantssetSliderValue] = useState(0);
   const [participantstextValue, participantssettextValue] = useState("0");
+=======
+  const [participantssliderValue, participantssetSliderValue] = useState(1000)
+  const [participantstextValue, participantssettextValue] = useState("1000");
+>>>>>>> 20d99560a5fd2b3b3aae6d7f84f6412d4971f1fe
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
+  const [searchquery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [map, setMap] = useState(null);
   const [latlng, setLatLng] = useState([0, 0]);
@@ -53,6 +59,7 @@ function InitiativesPage({
     participantssetSliderValue(value);
     participantssettextValue(value);
     setActiveInitiatives(
+<<<<<<< HEAD
       activeInitiativeData.filter(
         (initiative) =>
           initiative?.participants <= value &&
@@ -69,12 +76,21 @@ function InitiativesPage({
             ? initiative?.causeType?.toLowerCase().includes(category)
             : 1)
       )
+=======
+      activeInitiativeData.filter((initiative) => 
+        (initiative?.title?.toLowerCase().includes(searchquery) && initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
+    );
+    setNewInitiatives(
+      newInitiativeData.filter((initiative) => 
+        (initiative?.title?.toLowerCase().includes(searchquery) && initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
+>>>>>>> 20d99560a5fd2b3b3aae6d7f84f6412d4971f1fe
     );
   };
 
   const categoryHandleChange = (e) => {
     const { value } = e.target;
     value = value.toLowerCase();
+<<<<<<< HEAD
     setCategory(value);
     if (value == "all") {
       setActiveInitiatives(activeInitiativeData);
@@ -85,14 +101,40 @@ function InitiativesPage({
           return (
             initiative?.causeType?.toLowerCase().includes(value) &&
             initiative?.participants <= participantssliderValue
+=======
+    setCategory(value)
+    if (value == "all"){
+      setActiveInitiatives(activeInitiativeData.filter((initiative) => {
+        return (
+          initiative?.title?.toLowerCase().includes(searchquery) && (initiative?.participants <= participantssliderValue)
+        );
+      })
+    );
+      setNewInitiatives(newInitiativeData.filter((initiative) => {
+        return (
+          initiative?.title?.toLowerCase().includes(searchquery) && (initiative?.participants <= participantssliderValue)
+        );
+      })
+    );
+    }
+    else {
+      setActiveInitiatives(
+        activeInitiativeData.filter((initiative) => {
+          return (
+            initiative?.title?.toLowerCase().includes(searchquery) && initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+>>>>>>> 20d99560a5fd2b3b3aae6d7f84f6412d4971f1fe
           );
         })
       );
       setNewInitiatives(
         newInitiativeData.filter((initiative) => {
           return (
+<<<<<<< HEAD
             initiative?.causeType?.toLowerCase().includes(value) &&
             initiative?.participants <= participantssliderValue
+=======
+            initiative?.title?.toLowerCase().includes(searchquery) && initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+>>>>>>> 20d99560a5fd2b3b3aae6d7f84f6412d4971f1fe
           );
         })
       );
@@ -102,6 +144,7 @@ function InitiativesPage({
   const handleSearchBarChange = (e) => {
     const { value } = e.target;
     value = value.toLowerCase();
+    setSearchQuery(value)
     if (value.length > 0) {
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
