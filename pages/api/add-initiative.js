@@ -28,7 +28,7 @@ async function handler(req, res) {
 
     const conn = await ConnectDB();
     const db = conn.db();
-    const initiatives = db.collection("messages");
+    const initiatives = db.collection("initiatives");
 
     // create a new initiative
     const initiative = await initiatives.insertOne({
@@ -50,6 +50,7 @@ async function handler(req, res) {
     });
 
     // send the response status 200
+    res.status(200).json(initiative);
     conn.close();
   } else {
     //Response for other than POST method
