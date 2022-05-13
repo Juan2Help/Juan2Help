@@ -6,7 +6,7 @@ async function handler(req, res) {
   if (req.method === "POST") {
     // destructure the request body
     console.log("REQUEST", req.body);
-    const { email } = req.body;
+    const { id } = req.body;
 
     const conn = await ConnectDB();
     const db = conn.db();
@@ -14,9 +14,9 @@ async function handler(req, res) {
     const collection = db.collection("initiatives");
 
     // grab user to pull bookmarks from
-    const user = await users.findOne({ email });
+    const user = await users.findOne({ _id: ObjectId(id) });
 
-    const bookmarks = user.bookmarks;
+    const bookmarks = user?.bookmarks || [];
 
     if (bookmarks?.length === 0) {
       return res.status(200).json([]);

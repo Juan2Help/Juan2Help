@@ -50,7 +50,7 @@ function TopOrganizers() {
   );
 }
 
-function Initiative({ initiativeData }) {
+function Initiative({ initiativeData, bookmarkList }) {
   console.log(initiativeData);
   let initiativeLocation =
     typeof initiativeData?.location === "string"
@@ -69,7 +69,7 @@ function Initiative({ initiativeData }) {
       title: initiativeData?.title?.toUpperCase(),
       content: initiativeData?.description,
       participants: initiativeData?.participantsList?.length,
-      isBookmarked: Math.random() > 0.5,
+      isBookmarked: bookmarkList?.includes(initiativeData?._id),
     },
   };
 
@@ -83,7 +83,7 @@ function Initiative({ initiativeData }) {
 
   const onClickUnbookmark = async () => {
     console.log("UNBOOKMARKED", initiativeData);
-    const response = await fetchJSON("/api/user/add-bookmark", {
+    const response = await fetchJSON("/api/user/remove-bookmark", {
       initiativeID: initiativeData._id,
     });
     console.log(response);
@@ -137,7 +137,10 @@ function Initiative({ initiativeData }) {
           </div>
           <div className="flex-auto"></div>
           <label className="swap swap-flip">
-            <input type="checkbox" value={fake.initiative.isBookmarked} />
+            <input
+              type="checkbox"
+              defaultChecked={fake.initiative.isBookmarked}
+            />
             <FiBookmark
               className="swap-on text-primary fill-current"
               onClick={onClickUnbookmark}

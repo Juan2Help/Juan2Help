@@ -13,19 +13,19 @@ async function handler(req, res) {
       return;
     }
 
-    const { inititativeID } = req.body;
+    const { initiativeID } = req.body;
 
     const conn = await ConnectDB();
     const db = conn.db();
     const users = db.collection("users");
 
     // get user
-    const user = await users.findOne({ _id: ObjectId(session?.user?.id) });
+    const user = await users.findOne({ _id: ObjectId(session?.user?._id) });
 
     // add bookmark
     const bookmark = await users.updateOne(
-      { _id: ObjectId(session?.user?.id) },
-      { $pull: { bookmarks: inititativeID } }
+      { _id: ObjectId(session?.user?._id) },
+      { $pull: { bookmarks: initiativeID } }
     );
 
     res.status(200).json({ message: "bookmarked!" });

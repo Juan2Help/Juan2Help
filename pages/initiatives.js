@@ -21,6 +21,7 @@ function InitiativesPage({
   newInitiativeData,
   activeInitiativeData,
   socket,
+  bookmarkList,
 }) {
   const session = sessionFromProp;
   const [Tab, setTab] = useState("ActiveInit");
@@ -340,6 +341,7 @@ function InitiativesPage({
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
+                        bookmarkList={bookmarkList}
                       />
                     ))}
                   </div>
@@ -352,6 +354,7 @@ function InitiativesPage({
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
+                        bookmarkList={bookmarkList}
                       />
                     ))}
                   </div>
@@ -435,6 +438,10 @@ export async function getServerSideProps(context) {
       sessionFromProp: session,
       newInitiativeData: await getInitiatives("1"),
       activeInitiativeData: await getInitiatives("3"),
+      bookmarkList: await fetchJSON(
+        `${process.env.NEXTAUTH_URL}/api/user/list-bookmarks`,
+        { id: session.user._id }
+      ),
     },
   };
 }
