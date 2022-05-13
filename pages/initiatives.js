@@ -31,6 +31,7 @@ function InitiativesPage({
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
+  const [searchquery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [map, setMap] = useState(null);
   const [latlng, setLatLng] = useState([0, 0]);
@@ -53,11 +54,11 @@ function InitiativesPage({
     participantssettextValue(value);
     setActiveInitiatives(
       activeInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
+        (initiative?.title?.toLowerCase().includes(searchquery) && initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
     );
     setNewInitiatives(
       newInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
+        (initiative?.title?.toLowerCase().includes(searchquery) && initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
     );
   };
   
@@ -66,21 +67,31 @@ function InitiativesPage({
     value = value.toLowerCase();
     setCategory(value)
     if (value == "all"){
-      setActiveInitiatives(activeInitiativeData);
-      setNewInitiatives(newInitiativeData);
+      setActiveInitiatives(activeInitiativeData.filter((initiative) => {
+        return (
+          initiative?.title?.toLowerCase().includes(searchquery) && (initiative?.participants <= participantssliderValue)
+        );
+      })
+    );
+      setNewInitiatives(newInitiativeData.filter((initiative) => {
+        return (
+          initiative?.title?.toLowerCase().includes(searchquery) && (initiative?.participants <= participantssliderValue)
+        );
+      })
+    );
     }
     else {
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
           return (
-            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+            initiative?.title?.toLowerCase().includes(searchquery) && initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
       setNewInitiatives(
         newInitiativeData.filter((initiative) => {
           return (
-            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+            initiative?.title?.toLowerCase().includes(searchquery) && initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
@@ -90,6 +101,7 @@ function InitiativesPage({
   const handleSearchBarChange = (e) => {
     const { value } = e.target;
     value = value.toLowerCase();
+    setSearchQuery(value)
     if (value.length > 0) {
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
