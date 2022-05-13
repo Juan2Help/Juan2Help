@@ -25,7 +25,7 @@ function InitiativesPage({
   const session = sessionFromProp;
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
-  const [participantssliderValue, participantssetSliderValue] = useState(0)
+  const [participantssliderValue, participantssetSliderValue] = useState(0);
   const [participantstextValue, participantssettextValue] = useState("1000");
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
@@ -52,35 +52,44 @@ function InitiativesPage({
     participantssetSliderValue(value);
     participantssettextValue(value);
     setActiveInitiatives(
-      activeInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+      activeInitiativeData.filter(
+        (initiative) =>
+          initiative?.participants <= value &&
+          category != "all" &&
+          initiative?.causeType?.toLowerCase().includes(category)
+      )
     );
     setNewInitiatives(
-      newInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+      newInitiativeData.filter(
+        (initiative) =>
+          initiative?.participants <= value &&
+          category != "all" &&
+          initiative?.causeType?.toLowerCase().includes(category)
+      )
     );
   };
-  
+
   const categoryHandleChange = (e) => {
     const { value } = e.target;
     value = value.toLowerCase();
-    setCategory(value)
-    if (value == "all"){
+    setCategory(value);
+    if (value == "all") {
       setActiveInitiatives(activeInitiativeData);
       setNewInitiatives(newInitiativeData);
-    }
-    else {
+    } else {
       setActiveInitiatives(
         activeInitiativeData.filter((initiative) => {
           return (
-            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+            initiative?.causeType?.toLowerCase().includes(value) &&
+            initiative?.participants <= participantssliderValue
           );
         })
       );
       setNewInitiatives(
         newInitiativeData.filter((initiative) => {
           return (
-            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+            initiative?.causeType?.toLowerCase().includes(value) &&
+            initiative?.participants <= participantssliderValue
           );
         })
       );
@@ -99,8 +108,11 @@ function InitiativesPage({
               : initiative.location.address.toLowerCase();
 
           return (
-            (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
-            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+            (initiative?.title?.toLowerCase().includes(value) ||
+              loc.includes(value)) &&
+            category != "all" &&
+            initiative?.causeType?.toLowerCase().includes(category) &&
+            initiative?.participants <= participantssliderValue
           );
         })
       );
@@ -112,22 +124,35 @@ function InitiativesPage({
               : initiative.location.address.toLowerCase();
 
           return (
-            (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
-            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+            (initiative?.title?.toLowerCase().includes(value) ||
+              loc.includes(value)) &&
+            category != "all" &&
+            initiative?.causeType?.toLowerCase().includes(category) &&
+            initiative?.participants <= participantssliderValue
           );
         })
       );
     } else {
-      setActiveInitiatives(activeInitiativeData.filter((initiative) => {
-        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
-        );}));
-      setNewInitiatives(newInitiativeData.filter((initiative) => {
-        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
-        );}));
+      setActiveInitiatives(
+        activeInitiativeData.filter((initiative) => {
+          return (
+            category != "all" &&
+            initiative?.causeType?.toLowerCase().includes(category) &&
+            initiative?.participants <= participantssliderValue
+          );
+        })
+      );
+      setNewInitiatives(
+        newInitiativeData.filter((initiative) => {
+          return (
+            category != "all" &&
+            initiative?.causeType?.toLowerCase().includes(category) &&
+            initiative?.participants <= participantssliderValue
+          );
+        })
+      );
     }
   };
-
-
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -232,7 +257,7 @@ function InitiativesPage({
                 <>
                   <div className="flex justify-between w-full">
                     <div className="flex flex-row w-full items-center space-x-4">
-                      <SearchBar handleChange={handleSearchBarChange}/>
+                      <SearchBar handleChange={handleSearchBarChange} />
                       <button
                         className="hover:cursor-pointer w-1/8"
                         onClick={() => setFilterState(!FilterOpen)}
@@ -276,7 +301,9 @@ function InitiativesPage({
                     </div>
                     <div className="w-1/2 space-y-5">
                       <div className="space-y-1">
-                        <span className="font-semibold">Maximum Participants</span>
+                        <span className="font-semibold">
+                          Maximum Participants
+                        </span>
                         <div className="flex items-center space-x-3">
                           <input
                             name="participants"
@@ -291,7 +318,7 @@ function InitiativesPage({
                             <Input
                               type="number"
                               placeholder={participantstextValue}
-                              value={participantssliderValue} 
+                              value={participantssliderValue}
                               onChange={participantschangeValue}
                             />
                           </div>

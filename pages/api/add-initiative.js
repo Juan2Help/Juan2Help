@@ -28,7 +28,7 @@ async function handler(req, res) {
 
     const conn = await ConnectDB();
     const db = conn.db();
-    const initiatives = db.collection("messages");
+    const initiatives = db.collection("initiatives");
 
     // create a new initiative
     const initiative = await initiatives.insertOne({
@@ -48,6 +48,8 @@ async function handler(req, res) {
       registrantsList: Array(0),
       participantsList: Array(0),
     });
+
+    res.status(200).json(initiative);
 
     // send the response status 200
     conn.close();

@@ -5,6 +5,7 @@ import moment from "moment";
 import { FiArrowRight, FiBookmark, FiMapPin } from "react-icons/fi";
 import { MdOutlineLocalFireDepartment } from "react-icons/md";
 import Link from "next/link";
+import { fetchJSON } from "../../middleware/helper";
 function OrganizerTile({ name }) {
   return (
     <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center space-y-2">
@@ -50,7 +51,7 @@ function TopOrganizers() {
 }
 
 function Initiative({ initiativeData }) {
-  console.log(initiativeData)
+  console.log(initiativeData);
   let initiativeLocation =
     typeof initiativeData?.location === "string"
       ? initiativeData?.location
@@ -71,75 +72,96 @@ function Initiative({ initiativeData }) {
       isBookmarked: Math.random() > 0.5,
     },
   };
+
+  const onClickBookmark = async () => {
+    console.log("BOOKMARKED", initiativeData);
+    const response = await fetchJSON("/api/user/add-bookmark", {
+      initiativeID: initiativeData._id,
+    });
+    console.log(response);
+  };
+
+  const onClickUnbookmark = async () => {
+    console.log("UNBOOKMARKED", initiativeData);
+    const response = await fetchJSON("/api/user/add-bookmark", {
+      initiativeID: initiativeData._id,
+    });
+    console.log(response);
+  };
+
   return (
-    
-      <div className="rounded-xl bg-white w-72 overflow-hidden flex-none hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
-        <div className="h-36 w-full sm:w-96 bg-slate-500 relative cursor-pointer ">
-          <Link href={`/i/${initiativeData._id}`}>
-            <Image
-              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-              layout="fill"
-              objectFit="cover"
-            />
-          </Link>
+    <div className="rounded-xl bg-white w-72 overflow-hidden flex-none hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+      <div className="h-36 w-full sm:w-96 bg-slate-500 relative cursor-pointer ">
+        <Link href={`/i/${initiativeData._id}`}>
+          <Image
+            src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+            layout="fill"
+            objectFit="cover"
+          />
+        </Link>
+      </div>
+      <div className="flex flex-col p-4 space-y-2">
+        <div className="flex flex-col">
+          <span className="text-xs font-bold text-gray-400 ">
+            {fake.initiative.date}
+          </span>
+          <span className="text-md font-bold truncate h-fit">
+            {fake.initiative.title}
+          </span>
+          <div className="text-gray-300 text-xs font-bold flex flex-row space-x-2 items-center">
+            <FiMapPin />
+            <span>{fake.initiative.location}</span>
+          </div>
         </div>
-        <div className="flex flex-col p-4 space-y-2">
-          <div className="flex flex-col"> 
-            <span className="text-xs font-bold text-gray-400 ">
-              {fake.initiative.date}
-            </span>
-            <span className="text-md font-bold truncate h-fit">
-              {fake.initiative.title}
-            </span>
-            <div className="text-gray-300 text-xs font-bold flex flex-row space-x-2 items-center">
-              <FiMapPin />
-              <span>{fake.initiative.location}</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-row items-center space-x-2">
-            <span className="text-sm font-medium text-gray-300">
-              {fake.initiative.participants}/{initiativeData.participants} joined 
-            </span>
-            <div className="avatar-group -space-x-5">
-              <div className="avatar">
-                <div className="w-8">
-                  <img src={faker.image.avatar()} />
-                </div>
-              </div>
-              <div className="avatar">
-                <div className="w-8">
-                  <img src={faker.image.avatar()} />
-                </div>
-              </div>
-              <div className="avatar">
-                <div className="w-8">
-                  <img src={faker.image.avatar()} />
-                </div>
+
+        <div className="flex flex-row items-center space-x-2">
+          <span className="text-sm font-medium text-gray-300">
+            {fake.initiative.participants}/{initiativeData.participants} joined
+          </span>
+          <div className="avatar-group -space-x-5">
+            <div className="avatar">
+              <div className="w-8">
+                <img src={faker.image.avatar()} />
               </div>
             </div>
-            <div className="flex-auto"></div>
-            <label className="swap swap-flip">
-              <input type="checkbox" value={fake.initiative.isBookmarked} />
-              <FiBookmark className="swap-on text-primary fill-current" />
-              <FiBookmark className="swap-off" />
-            </label>
+            <div className="avatar">
+              <div className="w-8">
+                <img src={faker.image.avatar()} />
+              </div>
+            </div>
+            <div className="avatar">
+              <div className="w-8">
+                <img src={faker.image.avatar()} />
+              </div>
+            </div>
           </div>
-          <progress
-            className="progress w-full progress-primary"
-            value={fake.initiative.participants}
-            max="100"
-          ></progress>
-          <div className={`relative my-2 max-w-xs h-4 text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full
+          <div className="flex-auto"></div>
+          <label className="swap swap-flip">
+            <input type="checkbox" value={fake.initiative.isBookmarked} />
+            <FiBookmark
+              className="swap-on text-primary fill-current"
+              onClick={onClickUnbookmark}
+            />
+            <FiBookmark className="swap-off" onClick={onClickBookmark} />
+          </label>
+        </div>
+        <progress
+          className="progress w-full progress-primary"
+          value={fake.initiative.participants}
+          max="100"
+        ></progress>
+        <div
+          className={`relative my-2 max-w-xs h-4 text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full
             ${initiativeData?.causeType == "Nature" && `bg-green-400`} 
             ${initiativeData?.causeType == "Teach" && `bg-red-300`}
             ${initiativeData?.causeType == "Food" && `bg-yellow-300`}
             ${initiativeData?.causeType == "Medicine" && `bg-blue-300`}
-            ${initiativeData?.causeType == null && `bg-black`}`}>
-            <span>{initiativeData?.causeType}</span>
-          </div>
+            ${initiativeData?.causeType == null && `bg-black`}`}
+        >
+          <span>{initiativeData?.causeType}</span>
         </div>
       </div>
+    </div>
   );
 }
 
