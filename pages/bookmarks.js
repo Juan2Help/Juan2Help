@@ -6,7 +6,6 @@ import { getSession } from "next-auth/react";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
 import { Initiative } from "../components/explore/ExploreComponents";
-import Image from "next/image";
 import { fetchJSON } from "../middleware/helper";
 
 function Bookmarks({ sessionFromProp, socket, bookmarks, bookmarkList }) {

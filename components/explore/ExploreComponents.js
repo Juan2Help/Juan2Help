@@ -74,19 +74,15 @@ function Initiative({ initiativeData, bookmarkList }) {
   };
 
   const onClickBookmark = async () => {
-    console.log("BOOKMARKED", initiativeData);
     const response = await fetchJSON("/api/user/add-bookmark", {
       initiativeID: initiativeData._id,
     });
-    console.log(response);
   };
 
   const onClickUnbookmark = async () => {
-    console.log("UNBOOKMARKED", initiativeData);
     const response = await fetchJSON("/api/user/remove-bookmark", {
       initiativeID: initiativeData._id,
     });
-    console.log(response);
   };
 
   return (
