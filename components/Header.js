@@ -62,16 +62,18 @@ function Header({ session, socket }) {
           </h1>
         </Link>
         <div className="flex flex-row items-center justify-center space-x-2">
-          <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
-            <div className="indicator flex cursor-pointer">
-              {hasMessage && (
-                <div className="indicator-item badge-xs badge-secondary badge">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
-                </div>
-              )}
-              <FiMessageCircle />
+          <Link href="/t/messages">
+            <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
+              <div className="indicator flex cursor-pointer">
+                {hasMessage && (
+                  <div className="indicator-item badge-xs badge-secondary badge">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
+                  </div>
+                )}
+                <FiMessageCircle />
+              </div>
             </div>
-          </div>
+          </Link>
           <div className="dropdown dropdown-end ">
             <label tabIndex="0">
               <div
