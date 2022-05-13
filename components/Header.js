@@ -12,11 +12,14 @@ import { Notification } from "./Notifications";
 import { useRecoilState } from "recoil";
 import { notificationsState } from "../atoms/notificationsAtom";
 import { fetchJSON } from "../middleware/helper";
+import { useRouter } from "next/router";
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
   const [notifications, setNotifications] = useRecoilState(notificationsState);
+
+  const router = useRouter();
 
   const getNotification = async () => {
     const data = await fetchJSON("/api/user/get-notifications", {
@@ -69,7 +72,11 @@ function Header({ session, socket }) {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
                 </div>
               )}
-              <FiMessageCircle />
+              <FiMessageCircle
+                onClick={() => {
+                  router.push("/t/messages");
+                }}
+              />
             </div>
           </div>
           <div className="dropdown dropdown-end ">
