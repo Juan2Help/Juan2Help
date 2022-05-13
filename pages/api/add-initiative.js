@@ -52,6 +52,7 @@ async function handler(req, res) {
     res.status(200).json(initiative);
 
     // send the response status 200
+    res.status(200).json(initiative);
     conn.close();
   } else {
     //Response for other than POST method
