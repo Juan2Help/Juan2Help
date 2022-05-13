@@ -26,7 +26,7 @@ function InitiativesPage({
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(0)
-  const [participantstextValue, participantssettextValue] = useState("1000");
+  const [participantstextValue, participantssettextValue] = useState("0");
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
@@ -53,11 +53,11 @@ function InitiativesPage({
     participantssettextValue(value);
     setActiveInitiatives(
       activeInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+        (initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
     );
     setNewInitiatives(
       newInitiativeData.filter((initiative) => 
-        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+        (initiative?.participants <= value) && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1))
     );
   };
   
@@ -100,7 +100,7 @@ function InitiativesPage({
 
           return (
             (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
-            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+            && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
@@ -113,17 +113,17 @@ function InitiativesPage({
 
           return (
             (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
-            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+            && (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
     } else {
-      setActiveInitiatives(activeInitiativeData.filter((initiative) => {
-        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
-        );}));
-      setNewInitiatives(newInitiativeData.filter((initiative) => {
-        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
-        );}));
+      setActiveInitiatives(activeInitiativeData.filter((initiative) => {return (
+        (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1) && (initiative?.participants <= participantssliderValue));
+      }));
+      setNewInitiatives(newInitiativeData.filter((initiative) => {return (
+        (category!="all" ? initiative?.causeType?.toLowerCase().includes(category) : 1) && (initiative?.participants <= participantssliderValue));
+      }));
     }
   };
 
