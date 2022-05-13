@@ -9,6 +9,9 @@ const SocketHandler = (req, res) => {
   console.log("Socket is initializing");
   const io = new Server(res.socket.server);
 
+  io.eio.pingTimeout = 120000; // 2 minutes
+  io.eio.pingInterval = 5000; // 5 seconds
+
   res.socket.server.io = io;
 
   // when a user connects
@@ -50,7 +53,18 @@ const SocketHandler = (req, res) => {
       socket.to(userSocketID).emit("application-decision", { decision });
     });
 
+    socket.on("send-message", ({ message, receiver, sender }) => {
+      addUser(socket.id, sender);
+      console.log("CURRENT USERS:", users);
+      console.log("SENDING MESSAGE:", message, receiver);
+      const receiverSocketID = getUser(receiver);
+      console.log("RECEIVER SOCKET ID:", receiverSocketID);
+
+      socket.to(receiverSocketID).emit("receive-message", { message });
+    });
+
     socket.on("disconnect", () => {
+      console.log("User disconnected");
       deleteUser(socket.id);
     });
   });

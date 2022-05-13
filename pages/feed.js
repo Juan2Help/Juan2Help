@@ -7,12 +7,35 @@ import Suggestions from "../components/feed/Suggestions";
 import ProtectedRoute from "../components/ProtectedRoute";
 import { getSession, useSession } from "next-auth/react";
 import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
+import { FiSend } from "react-icons/fi";
+
+function PostInput({ onSubmit }) {
+  return (
+    <form onSubmit={onSubmit}>
+      <div className="w-full min-h-full py-10 active:border-none ">
+        <div className="flex flex-row space-y-2">
+          <input
+            className="w-full border-2 border-gray-200 rounded-lg p-2"
+            placeholder="What's on your mind?"
+          />
+          {/* POST Button */}
+          <div className="flex flex-row justify-end">
+            <button className="cursor-pointer text-l px-5">
+              <FiSend />
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  );
+}
 
 function MyFeed() {
   return (
     <div className="w-full min-h-screen flex justify-center pb-4">
       <div className="w-full min-h-full md:px-6 lg:px-0">
         <div className="w-full">
+          <PostInput />
           <Post />
           <Post />
           <Post />
