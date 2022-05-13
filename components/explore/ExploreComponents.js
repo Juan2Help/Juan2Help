@@ -50,11 +50,11 @@ function TopOrganizers() {
 }
 
 function Initiative({ initiativeData }) {
+  console.log(initiativeData)
   let initiativeLocation =
     typeof initiativeData?.location === "string"
       ? initiativeData?.location
       : initiativeData?.location?.address;
-
   const fake = {
     author: {
       name: initiativeData?.publisherName,
@@ -84,8 +84,8 @@ function Initiative({ initiativeData }) {
           </Link>
         </div>
         <div className="flex flex-col p-4 space-y-2">
-          <div className="flex flex-col">
-            <span className="text-xs font-bold text-gray-400">
+          <div className="flex flex-col"> 
+            <span className="text-xs font-bold text-gray-400 ">
               {fake.initiative.date}
             </span>
             <span className="text-md font-bold truncate h-fit">
@@ -96,9 +96,10 @@ function Initiative({ initiativeData }) {
               <span>{fake.initiative.location}</span>
             </div>
           </div>
+          
           <div className="flex flex-row items-center space-x-2">
             <span className="text-sm font-medium text-gray-300">
-              {fake.initiative.participants} joined
+              {fake.initiative.participants}/{initiativeData.participants} joined 
             </span>
             <div className="avatar-group -space-x-5">
               <div className="avatar">
@@ -129,6 +130,14 @@ function Initiative({ initiativeData }) {
             value={fake.initiative.participants}
             max="100"
           ></progress>
+          <div className={`relative my-2 max-w-xs h-4 text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full
+            ${initiativeData?.causeType == "Nature" && `bg-green-400`} 
+            ${initiativeData?.causeType == "Teach" && `bg-red-300`}
+            ${initiativeData?.causeType == "Food" && `bg-yellow-300`}
+            ${initiativeData?.causeType == "Medicine" && `bg-blue-300`}
+            ${initiativeData?.causeType == null && `bg-black`}`}>
+            <span>{initiativeData?.causeType}</span>
+          </div>
         </div>
       </div>
   );

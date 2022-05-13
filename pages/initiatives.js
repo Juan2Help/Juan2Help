@@ -25,11 +25,13 @@ function InitiativesPage({
   const session = sessionFromProp;
   const [Tab, setTab] = useState("ActiveInit");
   const [FilterOpen, setFilterState] = useState(false);
-  const [participantssliderValue, participantssetSliderValue] = useState(0);
+  const [participantssliderValue, participantssetSliderValue] = useState(0)
+  const [participantstextValue, participantssettextValue] = useState("1000");
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
+  const [category, setCategory] = useState("all");
   const [map, setMap] = useState(null);
   const [latlng, setLatLng] = useState([0, 0]);
   const router = useRouter();
@@ -46,7 +48,43 @@ function InitiativesPage({
   };
 
   const participantschangeValue = (e) => {
-    participantssetSliderValue(e.target.value);
+    const { value } = e.target;
+    participantssetSliderValue(value);
+    participantssettextValue(value);
+    setActiveInitiatives(
+      activeInitiativeData.filter((initiative) => 
+        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+    );
+    setNewInitiatives(
+      newInitiativeData.filter((initiative) => 
+        (initiative?.participants <= value) && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)))
+    );
+  };
+  
+  const categoryHandleChange = (e) => {
+    const { value } = e.target;
+    value = value.toLowerCase();
+    setCategory(value)
+    if (value == "all"){
+      setActiveInitiatives(activeInitiativeData);
+      setNewInitiatives(newInitiativeData);
+    }
+    else {
+      setActiveInitiatives(
+        activeInitiativeData.filter((initiative) => {
+          return (
+            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+          );
+        })
+      );
+      setNewInitiatives(
+        newInitiativeData.filter((initiative) => {
+          return (
+            initiative?.causeType?.toLowerCase().includes(value) && (initiative?.participants <= participantssliderValue)
+          );
+        })
+      );
+    }
   };
 
   const handleSearchBarChange = (e) => {
@@ -61,9 +99,8 @@ function InitiativesPage({
               : initiative.location.address.toLowerCase();
 
           return (
-            initiative?.title?.toLowerCase().includes(value) ||
-            initiative?.causeType?.toLowerCase().includes(value) ||
-            loc.includes(value)
+            (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
+            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
@@ -75,17 +112,22 @@ function InitiativesPage({
               : initiative.location.address.toLowerCase();
 
           return (
-            initiative?.title?.toLowerCase().includes(value) ||
-            initiative?.causeType?.toLowerCase().includes(value) ||
-            loc.includes(value)
+            (initiative?.title?.toLowerCase().includes(value) || loc.includes(value))
+            && (category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
           );
         })
       );
     } else {
-      setActiveInitiatives(activeInitiativeData);
-      setNewInitiatives(newInitiativeData);
+      setActiveInitiatives(activeInitiativeData.filter((initiative) => {
+        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+        );}));
+      setNewInitiatives(newInitiativeData.filter((initiative) => {
+        return ((category!="all" && initiative?.causeType?.toLowerCase().includes(category)) && (initiative?.participants <= participantssliderValue)
+        );}));
     }
   };
+
+
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -216,72 +258,30 @@ function InitiativesPage({
               )}
               {FilterOpen == true && (
                 <>
-                  <div className="flex flex-row justify-left w-full">
+                  <div className="flex flex-row justify-left space-x-10 w-full">
                     <div className="w-1/6 space-y-1">
                       <span className="font-semibold">Category</span>
-                      <ul>
-                        <li>
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id="Food"
-                              name="Food"
-                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                            />
-                            <span className="ml-1 text-md text-gray-900">
-                              Food
-                            </span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id="Medicine"
-                              name="Medicine"
-                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                            />
-                            <span className="ml-1 text-md text-gray-900">
-                              Medicine
-                            </span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id="Nature"
-                              name="Nature"
-                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                            />
-                            <span className="ml-1 text-md text-gray-900">
-                              Nature
-                            </span>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="flex items-center">
-                            <input
-                              type="checkbox"
-                              id="Teach"
-                              name="Teach"
-                              className="accent-primary h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-                            />
-                            <span className="ml-1 text-md text-gray-900">
-                              Teach
-                            </span>
-                          </div>
-                        </li>
-                      </ul>
+                      <select
+                        className="select select-bordered w-full bg-white"
+                        onChange={categoryHandleChange}
+                        name="causeType"
+                        defaultValue="Select Cause"
+                      >
+                        <option value="All">All</option>
+                        <option value="Food">Food</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Nature">Nature</option>
+                        <option value="Teach">Teach</option>
+                      </select>
                     </div>
                     <div className="w-1/2 space-y-5">
                       <div className="space-y-1">
-                        <span className="font-semibold">Participants</span>
+                        <span className="font-semibold">Maximum Participants</span>
                         <div className="flex items-center space-x-3">
                           <input
                             name="participants"
                             type="range"
-                            min="10"
+                            min="0"
                             max="1000"
                             value={participantssliderValue}
                             className="range range-primary range-sm flex"
@@ -290,8 +290,8 @@ function InitiativesPage({
                           <div className="w-28 text-right">
                             <Input
                               type="number"
-                              placeholder="1000"
-                              value={participantssliderValue}
+                              placeholder={participantstextValue}
+                              value={participantssliderValue} 
                               onChange={participantschangeValue}
                             />
                           </div>
