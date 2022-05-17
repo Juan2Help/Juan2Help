@@ -84,7 +84,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
         ) : (
           <div className="text-center text-gray-500">No contacts found.</div>
         ))}
-      <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
+      <div className="text-center text-gray-500 border-y-[0.5px] py-2 text-xs border-solid border-gray-200">
         Active Messages
       </div>
       <div>
@@ -153,17 +153,18 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           )}
       </div>
       <div className="flex flex-row gap-1 items-center justify-self-end w-full p-2">
-        <div className="flex-1 bg-gray-100 rounded-full">
+        <div className="flex-1 bg-gray-100 rounded-2xl h-min flex items-center">
           <textarea
             type="text"
             name="message"
             placeholder="Type here"
-            className="input input-ghost w-full"
+            className="input input-ghost w-full h-min rounded-2xl overflow-hidden focis:outline-0 px-4 py-1"
+            rows="1"
             id="message"
             onChange={onChange}
           />
         </div>
-        <div className="p-4 cursor-pointer rounded-full hover:bg-gray-100">
+        <div className="p-4 cursor-pointer rounded-full hover:bg-gray-100 self-end">
           <FiSend className="text-primary text-lg" onClick={onClick} />
         </div>
       </div>
@@ -325,6 +326,8 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
 
   const onChangeText = (e) => {
     setMessageBody(e.target.value);
+    e.target.style.height = 'inherit';
+    e.target.style.height = `${e.target.scrollHeight}px`;
   };
 
   const onChangeSearchName = (e) => {

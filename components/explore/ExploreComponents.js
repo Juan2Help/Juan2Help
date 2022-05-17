@@ -1,14 +1,14 @@
-import faker from "@faker-js/faker";
-import Image from "next/image";
-import React from "react";
-import moment from "moment";
-import { FiArrowRight, FiBookmark, FiMapPin } from "react-icons/fi";
-import { MdOutlineLocalFireDepartment } from "react-icons/md";
-import Link from "next/link";
-import { fetchJSON } from "../../middleware/helper";
+import faker from '@faker-js/faker';
+import Image from 'next/image';
+import React from 'react';
+import moment from 'moment';
+import { FiArrowRight, FiBookmark, FiMapPin } from 'react-icons/fi';
+import { MdOutlineLocalFireDepartment } from 'react-icons/md';
+import Link from 'next/link';
+import { fetchJSON } from '../../middleware/helper';
 function OrganizerTile({ name }) {
   return (
-    <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center space-y-2">
+    <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center gap-2">
       <div className="w-full pb-full">
         <img
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
@@ -25,10 +25,10 @@ function OrganizerTile({ name }) {
 
 function TopOrganizers() {
   return (
-    <div className="hidden md:block space-y-2">
+    <div className="hidden md:block gap-2">
       <div className="flex flex-row justify-between items-center">
         <span className="text-xl font-bold">Top Organizers</span>
-        <div className="text-sm text-primary font-bold space-x-2 flex flex-row items-center">
+        <div className="text-sm text-primary font-bold gap-2 flex flex-row items-center">
           <span>View all</span>
           <FiArrowRight className="inline" />
         </div>
@@ -53,17 +53,17 @@ function TopOrganizers() {
 function Initiative({ initiativeData, bookmarkList }) {
   console.log(initiativeData);
   let initiativeLocation =
-    typeof initiativeData?.location === "string"
+    typeof initiativeData?.location === 'string'
       ? initiativeData?.location
       : initiativeData?.location?.address;
-  const fake = {
+  const data = {
     author: {
       name: initiativeData?.publisherName,
       avatar: faker.image.avatar(),
     },
     initiative: {
       date: moment(initiativeData?.startDate)
-        .format("ddd, DD MMM YYYY")
+        .format('ddd, DD MMM YYYY')
         .toUpperCase(),
       location: initiativeLocation,
       title: initiativeData?.title?.toUpperCase(),
@@ -74,13 +74,13 @@ function Initiative({ initiativeData, bookmarkList }) {
   };
 
   const onClickBookmark = async () => {
-    const response = await fetchJSON("/api/user/add-bookmark", {
+    const response = await fetchJSON('/api/user/add-bookmark', {
       initiativeID: initiativeData._id,
     });
   };
 
   const onClickUnbookmark = async () => {
-    const response = await fetchJSON("/api/user/remove-bookmark", {
+    const response = await fetchJSON('/api/user/remove-bookmark', {
       initiativeID: initiativeData._id,
     });
   };
@@ -96,46 +96,30 @@ function Initiative({ initiativeData, bookmarkList }) {
           />
         </Link>
       </div>
-      <div className="flex flex-col p-4 space-y-2">
+      <div className="flex flex-col p-4 gap-2 flex-1">
         <div className="flex flex-col">
           <span className="text-xs font-bold text-gray-400 ">
-            {fake.initiative.date}
+            {data.initiative.date}
           </span>
           <span className="text-md font-bold truncate h-fit">
-            {fake.initiative.title}
+            {data.initiative.title}
           </span>
-          <div className="text-gray-300 text-xs font-bold flex flex-row space-x-2 items-center">
-            <FiMapPin />
-            <span>{fake.initiative.location}</span>
+          <div className="text-gray-300 text-xs font-bold grid grid-flow-row grid-cols-10 items-center">
+            <FiMapPin className="col-span-1" />
+            <div className="col-span-9 max-h-16 truncate">
+              {data.initiative.location}
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-row items-center space-x-2">
+        <div className="flex flex-row items-center justify-between gap-2">
           <span className="text-sm font-medium text-gray-300">
-            {fake.initiative.participants}/{initiativeData.participants} joined
+            {data.initiative.participants}/{initiativeData.participants} joined
           </span>
-          <div className="avatar-group -space-x-5">
-            <div className="avatar">
-              <div className="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
-            </div>
-            <div className="avatar">
-              <div className="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
-            </div>
-            <div className="avatar">
-              <div className="w-8">
-                <img src={faker.image.avatar()} />
-              </div>
-            </div>
-          </div>
-          <div className="flex-auto"></div>
           <label className="swap swap-flip">
             <input
               type="checkbox"
-              defaultChecked={fake.initiative.isBookmarked}
+              defaultChecked={data.initiative.isBookmarked}
             />
             <FiBookmark
               className="swap-on text-primary fill-current"
@@ -146,16 +130,16 @@ function Initiative({ initiativeData, bookmarkList }) {
         </div>
         <progress
           className="progress w-full progress-primary"
-          value={fake.initiative.participants}
+          value={data.initiative.participants}
           max="100"
         ></progress>
         <div
-          className={`relative my-2 max-w-xs h-4 text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full
-            ${initiativeData?.causeType == "Nature" && `bg-green-400`} 
-            ${initiativeData?.causeType == "Teach" && `bg-red-300`}
-            ${initiativeData?.causeType == "Food" && `bg-yellow-300`}
-            ${initiativeData?.causeType == "Medicine" && `bg-blue-300`}
-            ${initiativeData?.causeType == null && `bg-black`}`}
+          className={`relative my-2 max-w-xs text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full self-start px-2 py-1
+            ${initiativeData?.causeType == 'Nature' && `bg-green-400`} 
+            ${initiativeData?.causeType == 'Teach' && `bg-red-300`}
+            ${initiativeData?.causeType == 'Food' && `bg-yellow-300`}
+            ${initiativeData?.causeType == 'Medicine' && `bg-blue-300`}
+            ${initiativeData?.causeType == null && `bg-transparent`}`}
         >
           <span>{initiativeData?.causeType}</span>
         </div>
@@ -178,10 +162,10 @@ function InitiativeCarousel() {
 function Nearby() {
   return (
     <>
-      <div className="w-full xl:w-1/2 overflow-clip space-y-2">
+      <div className="w-full xl:w-1/2 overflow-clip gap-2">
         <div className="flex flex-row justify-between items-center">
           <span className="text-xl font-bold">Nearby Initiatives</span>
-          <div className="text-sm text-primary font-bold space-x-2 flex flex-row items-center">
+          <div className="text-sm text-primary font-bold gap-2 flex flex-row items-center">
             <span>View all</span>
             <FiArrowRight className="inline" />
           </div>

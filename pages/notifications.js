@@ -17,13 +17,13 @@ function notifications({ sessionFromProp }) {
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
         <div className="flex flex-col items-center">
           <Head>
-            <title>Welcome Explore!</title>
+            <title>Notifications</title>
           </Head>
           <div className="sm:block hidden">
             <Header session={session} />
           </div>
-          <div className="flex flex-row w-screen xl:max-w-7xl p-4 xl:px-8">
-            <Sidebar active="feed" />
+          <div className="flex flex-row w-screen xl:max-w-7xl p-4 xl:px-8 gap-4">
+            <Sidebar />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-3/5 flex flex-col gap-5">
               <div className="font-bold text-xl flex gap-4 items-center">
                 <div className="sm:hidden block">

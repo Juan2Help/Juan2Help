@@ -1,18 +1,18 @@
-import Link from "next/link";
-import React, { useState } from "react";
-import { FiBell, FiMessageCircle } from "react-icons/fi";
-import { MdManageSearch } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
-import { GoSignOut } from "react-icons/go";
-import { FaUserCircle } from "react-icons/fa";
-import { useSession, signOut } from "next-auth/react";
-import { faker } from "@faker-js/faker";
-import { useEffect } from "react";
-import { Notification } from "./Notifications";
-import { useRecoilState } from "recoil";
-import { notificationsState } from "../atoms/notificationsAtom";
-import { fetchJSON } from "../middleware/helper";
-import { useRouter } from "next/router";
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { FiBell, FiMessageCircle } from 'react-icons/fi';
+import { MdManageSearch } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
+import { GoSignOut } from 'react-icons/go';
+import { FaUserCircle } from 'react-icons/fa';
+import { useSession, signOut } from 'next-auth/react';
+import { faker } from '@faker-js/faker';
+import { useEffect } from 'react';
+import { Notification } from './Notifications';
+import { useRecoilState } from 'recoil';
+import { notificationsState } from '../atoms/notificationsAtom';
+import { fetchJSON } from '../middleware/helper';
+import { useRouter } from 'next/router';
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
@@ -22,7 +22,7 @@ function Header({ session, socket }) {
   const router = useRouter();
 
   const getNotification = async () => {
-    const data = await fetchJSON("/api/user/get-notifications", {
+    const data = await fetchJSON('/api/user/get-notifications', {
       id: session.user._id,
     });
 
@@ -45,15 +45,15 @@ function Header({ session, socket }) {
   }, []);
 
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
     const listener = (data) => setHasNotification(true);
-    console.log("SOCKET INITIALIZED:", socket);
-    socket?.on("getNotification", listener);
+    console.log('SOCKET INITIALIZED:', socket);
+    socket?.on('getNotification', listener);
 
-    return () => socket?.off("getNotification", listener);
+    return () => socket?.off('getNotification', listener);
   }, [socket]);
 
   return (
@@ -75,18 +75,27 @@ function Header({ session, socket }) {
                 )}
                 <FiMessageCircle
                   onClick={() => {
-                    router.push("/t/messages");
+                    router.push('/t/messages');
                   }}
                 />
               </div>
             </div>
           </Link>
-          <div className="dropdown dropdown-end ">
+          <Link href="/notifications">
+            <div className="md:hidden rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl cursor-pointer">
+              <div className="indicator">
+                {hasNotification && (
+                  <div className="indicator-item badge-xs badge-secondary badge">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75 z-[51] cursor-pointer"></span>
+                  </div>
+                )}
+                <FiBell />
+              </div>
+            </div>
+          </Link>
+          <div className="dropdown dropdown-end md:block hidden">
             <label tabIndex="0">
-              <div
-                className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl cursor-pointer"
-                onClick={handleNotificationClick}
-              >
+              <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl cursor-pointer">
                 <div className="indicator">
                   {hasNotification && (
                     <div className="indicator-item badge-xs badge-secondary badge">
@@ -117,7 +126,11 @@ function Header({ session, socket }) {
               </div>
               <div className="px-2 flex flex-row items-center justify-between">
                 <div className="font-medium">New</div>
-                <div className="text-primary text-xs">See All</div>
+                <Link href="/notifications">
+                  <div className="text-primary text-xs curosr-pointer">
+                    See All
+                  </div>
+                </Link>
               </div>
               <ul>
                 {/* sort by time and map */}
@@ -183,14 +196,14 @@ function Header({ session, socket }) {
                   <li>
                     <Link
                       href={
-                        session?.user?.role === 8 ? "/manage/admin" : "/manage"
+                        session?.user?.role === 8 ? '/manage/admin' : '/manage'
                       }
                     >
                       <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                         <MdManageSearch className="text-lg" />
                         <span className=" text-gray-700 text-sm text-left">
-                          Manage{" "}
-                          {session?.user.role === 8 ? "App" : "Initiatives"}
+                          Manage{' '}
+                          {session?.user.role === 8 ? 'App' : 'Initiatives'}
                         </span>
                       </div>
                     </Link>
