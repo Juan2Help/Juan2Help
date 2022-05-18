@@ -68,6 +68,7 @@ function Profile({ sessionFromProp, userDetails }) {
                   alt="avatar"
                   src={faker.image.avatar()}
                   className="min-h-full min-w-full"
+                  layout="fill"
                 />
               </div>
               <div className="w-full p-2 flex flex-col text-center justify-center">

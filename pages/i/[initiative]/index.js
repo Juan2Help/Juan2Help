@@ -17,7 +17,6 @@ import {
 } from '../../../middleware/ProtectedRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Button from '../../../components/Button';
 
 function Header({ initiativeData, session }) {
   return (
@@ -26,7 +25,7 @@ function Header({ initiativeData, session }) {
         <Image
           alt=""
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-          layout="fill"
+          layout='fill'
           objectFit="cover"
         />
       </div>
@@ -169,7 +168,7 @@ function Body({ session, initiativeData, socket }) {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_PLACES_API_KEY,
+    googleMapsApiKey: "AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I",
   });
 
   const [map, setMap] = useState(null);

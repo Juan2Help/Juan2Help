@@ -17,7 +17,7 @@ function SuggestedPerson() {
       <div className="flex flex-row items-center space-x-4">
         <div className="avatar">
           <div className="w-10">
-            <Image alt="" src={fake.avatar} className="rounded-full" />
+            <Image alt="" src={fake.avatar} className="rounded-full" layout="fill" />
           </div>
         </div>
         <div className="flex flex-col">

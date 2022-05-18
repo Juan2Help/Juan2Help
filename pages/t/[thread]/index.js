@@ -52,6 +52,7 @@ function MessageItem({ threadData, onClick }) {
           alt="avatar"
           className="rounded-full w-12 h-12"
           object-fit="cover"
+          layout="fill"
         />
         <div className="flex flex-col w-9/12">
           <div>
@@ -134,6 +135,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
               src={data.thread.receiver.avatar}
               alt="avatar"
               className="w-8 h-8 rounded-full"
+              layout="fill"
             />
           )}
 
@@ -202,6 +204,7 @@ function PersonDetails({ threadData, onClick }) {
               src={data.message.avatar}
               alt="avatar"
               className="rounded-full"
+              layout="fill"
             />
           )}
         </div>

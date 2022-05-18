@@ -15,6 +15,8 @@ function OrganizerTile({ name }) {
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
           className="rounded-xl"
           objectFit="cover"
+          width={128}
+          height={128}
         />
       </div>
       <span className="text-xs font-bold uppercase break-normal h-12 text-ellipsis line-clamp-3 text-center">

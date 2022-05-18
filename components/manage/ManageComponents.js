@@ -78,7 +78,8 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
             <Image
               alt="initiative-image"
               src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-              layout="fill"
+              height={200}
+              width={200}
               objectFit="cover"
             />
           </div>
@@ -158,7 +159,8 @@ function ModeratorTile({ moderator, onClickHandler }) {
                 alt="moderator-avatar"
                 className="min-w-full min-h-full"
                 src={details.moderator.avatar}
-                layout="fill"
+                height={200}
+                width={200}
                 objectFit="cover"
               />
             </div>
@@ -266,6 +268,8 @@ function NGODetails({ router, details, session, override = false }) {
               alt="Organization Logo"
               src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
               className="rounded-full"
+              height={200}
+              width={200}
             />
           </div>
         </div>
@@ -319,8 +323,9 @@ function OrganizationTile({ organization, id, onClickHandler }) {
             <Image
               alt="Organization Logo"
               src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-              layout="fill"
               objectFit="cover"
+              height={200}
+              width={200}
             />
           </div>
         </div>

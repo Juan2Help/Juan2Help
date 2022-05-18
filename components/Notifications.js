@@ -28,6 +28,7 @@ function Notification({ notificationData }) {
             alt="avatar"
             className="rounded-full w-12 h-12"
             object-fit="cover"
+            layout="fill"
           />
           <div className="flex flex-col">
             <div>
@@ -62,7 +63,7 @@ function NotificationList({ session }) {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, [getNotification, notifications]);
+  }, []);
 
   console.log(notifications);
   return (

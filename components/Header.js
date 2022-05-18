@@ -43,7 +43,7 @@ function Header({ session, socket }) {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, [getNotification, notifications]);
+  }, []);
 
   useEffect(() => {
     socket?.emit('newUser', {
@@ -145,11 +145,14 @@ function Header({ session, socket }) {
           </div>
           <div className="dropdown dropdown-end">
             <label tabIndex="0">
-              <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+              <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600 position-relative">
                 <Image
                   alt="avatar"
+                  width={32}
+                  height={32}
                   className="rounded-full"
                   src={faker.image.avatar()}
+                  
                 />
               </div>
             </label>

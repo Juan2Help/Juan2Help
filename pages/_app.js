@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       });
     }
   };
-  useEffect(() => initializeSocket(), [socket, initializeSocket]);
+  useEffect(() => initializeSocket(), [socket]);
 
   return (
     <>
