@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next/swc-linux-x64-gnu": "^12.1.0",
+    "@next/swc-linux-x64-musl": "^12.1.0",
     "@react-google-maps/api": "^2.10.2",
     "@sendgrid/mail": "^7.6.2",
     "bcryptjs": "^2.4.3",

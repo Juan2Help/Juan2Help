@@ -1,4 +1,4 @@
-import { Server } from "Socket.IO";
+import { Server } from "socket.io";
 
 let users = {};
 const addUser = (socketID, userID) => (users[userID] = socketID);

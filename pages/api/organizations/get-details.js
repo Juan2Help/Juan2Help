@@ -47,9 +47,13 @@ async function handler(req, res) {
     }
 
     // check if organization with same name exists then return error
-    const { name, description } = await organizations.findOne({
+    const data = await organizations.findOne({
       _id: ObjectId(NGOid),
     });
+
+    if (!data) return res.status(400).json({})
+
+    const { name, description } = data;
 
     // send the response status 200
     res.status(200).json({ name, description });

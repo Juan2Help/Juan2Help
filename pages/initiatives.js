@@ -16,10 +16,28 @@ import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 import { fetchJSON } from "../middleware/helper";
 import { useRouter } from "next/router";
 
+
+const getInitiatives = async (type, session) => {
+  const req = await fetch(
+    `/api/initiatives/get-initiatives`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        page: 1,
+        type: type,
+        userId: session?.user?._id,
+      }),
+    }
+  );
+  const data = await req.json();
+  return data;
+};
+
 function InitiativesPage({
   sessionFromProp,
-  newInitiativeData,
-  activeInitiativeData,
   socket,
   bookmarkList,
 }) {
@@ -29,14 +47,19 @@ function InitiativesPage({
   const [participantssliderValue, participantssetSliderValue] = useState(1000);
   const [participantstextValue, participantssettextValue] = useState("1000");
   const [activeInitiatives, setActiveInitiatives] =
-    useState(activeInitiativeData);
-  const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
+    useState([]);
+  const [newInitiatives, setNewInitiatives] = useState([]);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
   const [searchquery, setSearchQuery] = useState("");
   const [category, setCategory] = useState("all");
   const [map, setMap] = useState(null);
   const [latlng, setLatLng] = useState([0, 0]);
   const router = useRouter();
+
+  const initializeData = async () =>{
+    setActiveInitiatives(await getInitiatives('3', session));
+    setNewInitiatives(await getInitiatives('1', session));
+  }
 
   const fetchNearByInitiatives = async () => {
     const data = await fetchJSON("/api/initiatives/get-initiatives", {
@@ -181,7 +204,7 @@ function InitiativesPage({
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: process.env.GOOGLE_PLACES_API_KEY,
+    googleMapsApiKey: "AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I",
   });
 
   const grabLatLng = () => {
@@ -219,7 +242,10 @@ function InitiativesPage({
     router.push(`/i/${initiative._id}`);
   };
 
-  useEffect(() => grabLatLng(), []);
+  useEffect(() => {
+    grabLatLng();
+    initializeData();
+    }, []);
 
   return (
     <ProtectedRoute session={session}>
@@ -357,7 +383,7 @@ function InitiativesPage({
               {Tab == "ActiveInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    {activeInitiatives.map((initiative) => (
+                    {activeInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
@@ -370,7 +396,7 @@ function InitiativesPage({
               {Tab == "NewInit" && (
                 <>
                   <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    {newInitiatives.map((initiative) => (
+                    {newInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
@@ -429,35 +455,17 @@ function InitiativesPage({
   );
 }
 
+
+
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
-  //grab total number of pages from /api/initiatives/get-initiatives
-  const getInitiatives = async (type) => {
-    const req = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/initiatives/get-initiatives`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          page: 1,
-          type: type,
-          userId: session?.user?._id,
-        }),
-      }
-    );
-    const data = await req.json();
-    return data;
-  };
+  //grab total number of pages from /api/initiatives/get-initiative
 
   return {
     props: {
       sessionFromProp: session,
-      newInitiativeData: await getInitiatives("1"),
-      activeInitiativeData: await getInitiatives("3"),
       bookmarkList: await fetchJSON(
         `${process.env.NEXTAUTH_URL}/api/user/list-bookmarks`,
         { id: session.user._id }

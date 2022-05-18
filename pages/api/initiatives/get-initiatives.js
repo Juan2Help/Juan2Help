@@ -31,7 +31,6 @@ async function handler(req, res) {
 
     const count = await initiatives.countDocuments();
     // send the response status 200
-    res.status(200).json({ pages: Math.ceil(count / INITIATIVES_PER_PAGE) });
   } else {
     //Response for other than POST method
     res.status(500).json({ message: "Why you here, fam?" });
