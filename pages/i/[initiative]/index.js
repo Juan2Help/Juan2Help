@@ -24,9 +24,10 @@ function Header({ initiativeData, session }) {
       <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
         <Image
           alt=""
-          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-          layout="fill"
-          objectFit="cover"
+          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"  
+          objectFit="contain"
+          height={200}
+          width={200}
         />
       </div>
       <div className="-top-20 sticky flex flex-row justify-between p-4">

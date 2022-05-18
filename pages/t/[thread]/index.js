@@ -127,7 +127,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
   return (
     <>
       <div className="w-full border-b border-gray-100">
-        <div className="py-3 px-4 flex flex-row items-center gap-3">
+        <div className="py-3 px-4 flex flex-row items-center align-center gap-3">
           <Link href="/t/messages" passHref>
             <FiArrowLeft className="md:hidden cursor-pointer" />
           </Link>
@@ -136,7 +136,9 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
               src={data.thread.receiver.avatar}
               alt="avatar"
               className="w-8 h-8 rounded-full"
-              layout="fill"
+              objectFit="contain"
+              height={40}
+              width={40}
             />
           )}
 
@@ -199,13 +201,15 @@ function PersonDetails({ threadData, onClick }) {
   return (
     <>
       <div className="w-full px-4 py-8 flex flex-col items-center gap-4 border-b border-gray-100">
-        <div className="w-20">
+        <div className="w-20 relative">
           {threadData?.name && (
             <Image
               src={data.message.avatar}
               alt="avatar"
               className="rounded-full"
-              layout="fill"
+              objectFit="contain"
+              height={120}
+              width={120}
             />
           )}
         </div>
