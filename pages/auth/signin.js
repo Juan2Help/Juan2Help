@@ -1,27 +1,27 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   getProviders,
   signIn as signIntoProviders,
   useSession,
   signOut,
-} from 'next-auth/react';
-import Head from 'next/head';
-import Button from '../../components/Button';
-import { Input } from '../../components/Input';
-import ErrorMessage from '../../components/ErrorMessage';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
+} from "next-auth/react";
+import Head from "next/head";
+import Button from "../../components/Button";
+import { Input } from "../../components/Input";
+import ErrorMessage from "../../components/ErrorMessage";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 function Signin({ providers }) {
   const router = useRouter();
   const { data: session } = useSession();
   const [errorState, setErrorState] = useState({
     error: false,
-    message: '',
-    errorType: '',
+    message: "",
+    errorType: "",
   });
-  const [userDetails, setUserDetails] = useState({ email: '', password: '' });
+  const [userDetails, setUserDetails] = useState({ email: "", password: "" });
   const { email, password } = userDetails;
   const { error, message, errorType } = errorState;
 
@@ -30,17 +30,17 @@ function Signin({ providers }) {
 
     //check if fields are empty
     if (!email || !password) {
-      alert('Please enter email and password');
+      alert("Please enter email and password");
       return;
     }
 
     // try to sign in
     try {
-      const result = await signIntoProviders('credentials', {
+      const result = await signIntoProviders("credentials", {
         redirect: false,
         email: email,
         password: password,
-        callbackUrl: '/explore',
+        callbackUrl: "/explore",
       });
 
       if (result.error) {
@@ -54,9 +54,9 @@ function Signin({ providers }) {
       }
 
       //if no error, redirect to home page
-      router.push('/explore');
+      router.push("/explore");
     } catch (err) {
-      console.error('Error: ', err);
+      console.error("Error: ", err);
     }
 
     return;
@@ -72,11 +72,13 @@ function Signin({ providers }) {
     if (errorType === name) {
       setErrorState({
         error: false,
-        message: '',
-        errorType: '',
+        message: "",
+        errorType: "",
       });
     }
   };
+
+  console.log(providers);
 
   if (session) {
     return (
@@ -109,7 +111,8 @@ function Signin({ providers }) {
                 className="mx-auto h-12 w-auto"
                 src="/icon.png"
                 alt="Juan2Help"
-                layout="fill"
+                height={200}
+                width={200}
               />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 Sign in to your account
@@ -131,7 +134,7 @@ function Signin({ providers }) {
                   required
                   placeholder="Email address"
                   onChange={handleChange}
-                  hasError={errorType === 'email'}
+                  hasError={errorType === "email"}
                 />
                 <Input
                   id="password"
@@ -141,10 +144,10 @@ function Signin({ providers }) {
                   required
                   placeholder="Password"
                   onChange={handleChange}
-                  hasError={errorType === 'password'}
+                  hasError={errorType === "password"}
                 />
                 <ErrorMessage
-                  text={error ? 'Error: ' + message : ''}
+                  text={error ? "Error: " + message : ""}
                   isInformation={error}
                   hasError={error}
                 />
@@ -162,8 +165,8 @@ function Signin({ providers }) {
                     htmlFor="remember-me"
                     className="ml-2 block text-sm text-gray-900"
                   >
-                    {' '}
-                    Remember me{' '}
+                    {" "}
+                    Remember me{" "}
                   </label>
                 </div>
 
@@ -183,7 +186,7 @@ function Signin({ providers }) {
                   isGoogleSignIn={true}
                   onClick={() =>
                     signIntoProviders(providers.google.id, {
-                      callbackUrl: '/explore',
+                      callbackUrl: "/explore",
                     })
                   }
                 />

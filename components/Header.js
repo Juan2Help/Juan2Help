@@ -1,19 +1,19 @@
-import Link from 'next/link';
-import React, { useState } from 'react';
-import { FiBell, FiMessageCircle } from 'react-icons/fi';
-import { MdManageSearch } from 'react-icons/md';
-import { IoMdSettings } from 'react-icons/io';
-import { GoSignOut } from 'react-icons/go';
-import { FaUserCircle } from 'react-icons/fa';
-import { useSession, signOut } from 'next-auth/react';
-import { faker } from '@faker-js/faker';
-import { useEffect } from 'react';
-import { Notification } from './Notifications';
-import { useRecoilState } from 'recoil';
-import { notificationsState } from '../atoms/notificationsAtom';
-import { fetchJSON } from '../middleware/helper';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
+import Link from "next/link";
+import React, { useState } from "react";
+import { FiBell, FiMessageCircle } from "react-icons/fi";
+import { MdManageSearch } from "react-icons/md";
+import { IoMdSettings } from "react-icons/io";
+import { GoSignOut } from "react-icons/go";
+import { FaUserCircle } from "react-icons/fa";
+import { useSession, signOut } from "next-auth/react";
+import { faker } from "@faker-js/faker";
+import { useEffect, useCallback } from "react";
+import { Notification } from "./Notifications";
+import { useRecoilState } from "recoil";
+import { notificationsState } from "../atoms/notificationsAtom";
+import { fetchJSON } from "../middleware/helper";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
@@ -22,15 +22,15 @@ function Header({ session, socket }) {
 
   const router = useRouter();
 
-  const getNotification = async () => {
-    const data = await fetchJSON('/api/user/get-notifications', {
+  const getNotification = useCallback(async () => {
+    const data = await fetchJSON("/api/user/get-notifications", {
       id: session.user._id,
     });
 
     if (data.length > 0) {
       setNotifications(data);
     }
-  };
+  }, []);
 
   const handleNotificationClick = async () => {
     if (hasNotification) {
@@ -43,19 +43,19 @@ function Header({ session, socket }) {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, []);
+  }, [getNotification, notifications.length]);
 
   useEffect(() => {
-    socket?.emit('newUser', {
+    socket?.emit("newUser", {
       userID: session?.user?._id,
     });
 
     const listener = (data) => setHasNotification(true);
-    console.log('SOCKET INITIALIZED:', socket);
-    socket?.on('getNotification', listener);
+    console.log("SOCKET INITIALIZED:", socket);
+    socket?.on("getNotification", listener);
 
-    return () => socket?.off('getNotification', listener);
-  }, [socket, session?.user?._id]);
+    return () => socket?.off("getNotification");
+  }, [socket]);
 
   return (
     <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
@@ -76,7 +76,7 @@ function Header({ session, socket }) {
                 )}
                 <FiMessageCircle
                   onClick={() => {
-                    router.push('/t/messages');
+                    router.push("/t/messages");
                   }}
                 />
               </div>
@@ -110,6 +110,7 @@ function Header({ session, socket }) {
             <div
               tabIndex="0"
               className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-y-auto"
+              onClick={handleNotificationClick}
             >
               <div className="flex flex-col p-2 gap-4">
                 <div className="flex flex-row items-center justify-between">
@@ -145,14 +146,13 @@ function Header({ session, socket }) {
           </div>
           <div className="dropdown dropdown-end">
             <label tabIndex="0">
-              <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600 position-relative">
+              <div className="h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600 relative">
                 <Image
                   alt="avatar"
-                  width={32}
-                  height={32}
-                  className="rounded-full"
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-full h-full w-full"
                   src={faker.image.avatar()}
-                  
                 />
               </div>
             </label>
@@ -189,15 +189,15 @@ function Header({ session, socket }) {
                   <li>
                     <Link
                       href={
-                        session?.user?.role === 8 ? '/manage/admin' : '/manage'
+                        session?.user?.role === 8 ? "/manage/admin" : "/manage"
                       }
                       passHref
                     >
                       <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                         <MdManageSearch className="text-lg" />
                         <span className=" text-gray-700 text-sm text-left">
-                          Manage{' '}
-                          {session?.user.role === 8 ? 'App' : 'Initiatives'}
+                          Manage{" "}
+                          {session?.user.role === 8 ? "App" : "Initiatives"}
                         </span>
                       </div>
                     </Link>

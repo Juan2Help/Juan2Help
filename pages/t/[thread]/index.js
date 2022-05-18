@@ -1,15 +1,15 @@
-import Head from 'next/head';
-import Navbar from '../../../components/Navbar';
-import Header from '../../../components/Header';
-import faker from '@faker-js/faker';
-import { getSession } from 'next-auth/react';
-import ProtectedRoute from '../../../components/ProtectedRoute';
+import Head from "next/head";
+import Navbar from "../../../components/Navbar";
+import Header from "../../../components/Header";
+import faker from "@faker-js/faker";
+import { getSession } from "next-auth/react";
+import ProtectedRoute from "../../../components/ProtectedRoute";
 import {
   GrantAccess,
   redirectToLogin,
-} from '../../../middleware/ProtectedRoute';
-import Link from 'next/link';
-import moment from 'moment';
+} from "../../../middleware/ProtectedRoute";
+import Link from "next/link";
+import moment from "moment";
 import {
   FiChevronDown,
   FiMapPin,
@@ -17,19 +17,19 @@ import {
   FiMail,
   FiSend,
   FiArrowLeft,
-} from 'react-icons/fi';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { fetchJSON } from '../../../middleware/helper';
-import Button from '../../../components/Button';
-import Image from 'next/image';
+} from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { fetchJSON } from "../../../middleware/helper";
+import Button from "../../../components/Button";
+import Image from "next/image";
 
 function MessageItem({ threadData, onClick }) {
-  const time = moment(faker.time.recent(10, '12:00'));
+  const time = moment(faker.time.recent(10, "12:00"));
   const parsedTime =
-    time.startOf('hour').fromNow()[0] != 'i'
-      ? time.startOf('hour').fromNow()
-      : time.endOf('day').fromNow();
+    time.startOf("hour").fromNow()[0] != "i"
+      ? time.startOf("hour").fromNow()
+      : time.endOf("day").fromNow();
   const tileData = {
     message: {
       content: faker.lorem.sentence(),
@@ -51,12 +51,13 @@ function MessageItem({ threadData, onClick }) {
           src={tileData.message.avatar}
           alt="avatar"
           className="rounded-full w-12 h-12"
-          object-fit="cover"
-          layout="fill"
+          objectFit="cover"
+          height={40}
+          width={40}
         />
         <div className="flex flex-col w-9/12">
           <div>
-            <span className="font-bold">{tileData.message.name}</span>{' '}
+            <span className="font-bold">{tileData.message.name}</span>{" "}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
             <div className="max-w-min truncate">Connect with me!</div>
@@ -72,7 +73,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
     <>
       <div
         className={`absolute bg-white p-2 mt-16 w-full overflow-y-auto ${
-          nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
+          nameSearch?.length > 0 ? "min-h-[80vh] block" : "hidden"
         }`}
       >
         {nameSearch?.length > 0 && (
@@ -115,7 +116,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
   const data = {
     thread: {
       receiver: {
-        name: threadData.name || 'Send a Message',
+        name: threadData.name || "Send a Message",
         avatar: threadData.avatar,
       },
       messages: messages,
@@ -186,7 +187,7 @@ function PersonDetails({ threadData, onClick }) {
       content: faker.lorem.sentence(),
       author: threadData.name,
       organization: faker.company.companyName(),
-      location: threadData?.location?.address || '',
+      location: threadData?.location?.address || "",
       email: threadData.email,
       phone: threadData.mobileNumber,
       avatar: threadData.avatar,
@@ -233,7 +234,7 @@ function PersonDetails({ threadData, onClick }) {
           </div>
         </div>
         <div className="w-80% p-10">
-          <Button onClick={onClick} text={'Load Messages'} />
+          <Button onClick={onClick} text={"Load Messages"} />
         </div>
       </div>
     </>
@@ -244,10 +245,10 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   const router = useRouter();
   const session = sessionFromProp;
 
-  const [messageBody, setMessageBody] = useState('');
+  const [messageBody, setMessageBody] = useState("");
   const [activeThreads, setActiveThreads] = useState([]);
   const [fetchedSearch, setFetchedSearch] = useState([]);
-  const [searchName, setSearchName] = useState('');
+  const [searchName, setSearchName] = useState("");
   const [activeThread, setActiveThread] = useState({
     avatar: faker.image.avatar(),
     ...activeThreadData,
@@ -271,21 +272,25 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       threadID: threadData || activeThreadData.threadID,
     });
     setMessages(data);
-    socket?.emit('newUser', {
+    socket?.emit("newUser", {
       userID: session?.user?._id,
     });
   };
 
   useEffect(() => {
-    socket?.emit('newUser', {
+    socket?.emit("newUser", {
       userID: session?.user?._id,
     });
 
-    socket?.on('receive-message', ({ message: data }) => {
-      console.log('receive-message', data);
+    socket?.on("receive-message", ({ message: data }) => {
+      console.log("receive-message", data);
       setMessages((prev) => [...prev, data]);
     });
-  }, [socket, session?.user?._id]);
+
+    return () => {
+      socket?.off("receive-message");
+    };
+  }, [socket]);
 
   // on first render load all threads
   useEffect(() => {
@@ -295,22 +300,22 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   useEffect(() => {
     if (searchName.length > 0) getSearchNames();
     else setFetchedSearch([]);
-  }, [searchName, getSearchNames]);
+  }, [searchName]);
 
   const onClickMessageItem = (threadData) => {
     getMessages(threadData.threadID);
     router.push(`/t/${threadData.threadID}`);
     setActiveThread(threadData);
 
-    socket?.emit('newUser', {
+    socket?.emit("newUser", {
       userID: session?.user?._id,
     });
 
-    console.log('active thread', threadData);
+    console.log("active thread", threadData);
   };
 
   const sendMessageSocket = async (message, receiver) => {
-    socket?.emit('send-message', {
+    socket?.emit("send-message", {
       message,
       receiver,
       sender: session?.user?._id,
@@ -330,12 +335,12 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     const { reply } = await sendMessageDB(messagePacket);
     sendMessageSocket(messagePacket, activeThread.id || activeThread._id);
     setMessages([...messages, messagePacket]);
-    document.getElementById('message').value = '';
+    document.getElementById("message").value = "";
   };
 
   const onChangeText = (e) => {
     setMessageBody(e.target.value);
-    e.target.style.height = 'inherit';
+    e.target.style.height = "inherit";
     e.target.style.height = `${e.target.scrollHeight + 2}px`;
   };
 
@@ -356,8 +361,8 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
               <div
                 className={`py-4 gap-2 min-h-[10vh] z-10 shadow-md w-full relative ${
                   activeThreadData.threadID
-                    ? 'md:flex-col md:flex hidden'
-                    : 'flex flex-col'
+                    ? "md:flex-col md:flex hidden"
+                    : "flex flex-col"
                 }`}
               >
                 {/* Header */}
@@ -386,8 +391,8 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
               <div
                 className={`col-span-2 min-h-[10vh] ${
                   activeThreadData.threadID
-                    ? 'flex flex-col'
-                    : 'md:flex md:flex-col hidden'
+                    ? "flex flex-col"
+                    : "md:flex md:flex-col hidden"
                 }`}
               >
                 <MessageThread
@@ -417,7 +422,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
-  console.log('THREAD ID IN SERVERSIDEPROPS:', context.query);
+  console.log("THREAD ID IN SERVERSIDEPROPS:", context.query);
   return {
     props: {
       sessionFromProp: session,

@@ -1,11 +1,11 @@
-import faker from '@faker-js/faker';
-import moment from 'moment';
-import Link from 'next/link';
-import { fetchJSON } from '../middleware/helper';
-import { useEffect } from 'react';
-import { notificationsState } from '../atoms/notificationsAtom';
-import { useRecoilState } from 'recoil';
-import Image from 'next/image';
+import faker from "@faker-js/faker";
+import moment from "moment";
+import Link from "next/link";
+import { fetchJSON } from "../middleware/helper";
+import { useEffect, useCallback } from "react";
+import { notificationsState } from "../atoms/notificationsAtom";
+import { useRecoilState } from "recoil";
+import Image from "next/image";
 
 function Notification({ notificationData }) {
   const time = moment(notificationData?.dateCreated).fromNow();
@@ -23,16 +23,19 @@ function Notification({ notificationData }) {
     <>
       <Link href={data.notification.href} passHref>
         <div className="flex flex-row gap-3">
-          <Image
-            src={data.notification.avatar}
-            alt="avatar"
-            className="rounded-full w-12 h-12"
-            object-fit="cover"
-            layout="fill"
-          />
+          <div className="w-1/4 rounded-full flex justify-center">
+            <Image
+              src={data.notification.avatar}
+              alt="avatar"
+              objectFit="contain"
+              className="rounded-full w-full "
+              height={100}
+              width={100}
+            />
+          </div>
           <div className="flex flex-col">
             <div>
-              <span className="font-bold">{data.notification.name}</span>{' '}
+              <span className="font-bold">{data.notification.name}</span>{" "}
               <span className="text-sm">{data.notification.message}</span>
             </div>
             <div>
@@ -49,21 +52,21 @@ function Notification({ notificationData }) {
 
 function NotificationList({ session }) {
   const [notifications, setNotifications] = useRecoilState(notificationsState);
-  const getNotification = async () => {
-    const data = await fetchJSON('/api/user/get-notifications', {
+  const getNotification = useCallback(async () => {
+    const data = await fetchJSON("/api/user/get-notifications", {
       id: session.user._id,
     });
 
     if (data.length > 0) {
       setNotifications(data);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, []);
+  }, [getNotification, notifications.length]);
 
   console.log(notifications);
   return (

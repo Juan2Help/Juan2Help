@@ -1,25 +1,25 @@
-import Head from 'next/head';
-import { Input } from '../../components/Input';
-import Button from '../../components/Button';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import ErrorMessage from '../../components/ErrorMessage';
-import Image from 'next/image';
+import Head from "next/head";
+import { Input } from "../../components/Input";
+import Button from "../../components/Button";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import ErrorMessage from "../../components/ErrorMessage";
+import Image from "next/image";
 
 function Signup() {
   const router = useRouter();
   const [errorState, setErrorState] = useState({
     error: false,
-    message: '',
+    message: "",
   });
   const [userDetails, setUserDetails] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    mobileNumber: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    mobileNumber: "",
+    confirmPassword: "",
   });
 
   const {
@@ -40,15 +40,15 @@ function Signup() {
     if (password !== confirmPassword) {
       setErrorState({
         error: true,
-        message: 'Password and confirm password do not match',
+        message: "Password and confirm password do not match",
         type: 0,
       });
       return;
     }
 
     //try to sign up
-    const response = await fetch('/api/auth/signup', {
-      method: 'POST',
+    const response = await fetch("/api/auth/signup", {
+      method: "POST",
       body: JSON.stringify({
         firstName,
         lastName,
@@ -57,17 +57,17 @@ function Signup() {
         mobileNumber,
       }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push('/auth/signin');
+      router.push("/auth/signin");
     } else {
       const error = await response.json();
-      console.log('error', error);
+      console.log("error", error);
       setErrorState({ error: true, message: error.message });
     }
 
@@ -93,7 +93,8 @@ function Signup() {
                 className="mx-auto h-12 w-auto"
                 src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                 alt="Workflow"
-                layout="fill"
+                height={48}
+                width={48}
               />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 Create a new account
@@ -164,12 +165,12 @@ function Signup() {
               <ErrorMessage
                 hasError={error}
                 isInformation={error}
-                text={error ? `Error: ${message}` : ''}
+                text={error ? `Error: ${message}` : ""}
               />
               <Button text="Sign Up" />
             </form>
             <div className="w-full text-sm font-medium text-gray-400 text-center">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <span className="font-semibold text-primary hover:text-primary">
                 <Link href="/auth/signin">Sign In</Link>
               </span>
