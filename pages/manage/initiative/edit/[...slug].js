@@ -180,7 +180,7 @@ function edit({ sessionFromProp, data, socket }) {
               className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
-              defaultValue={initiativeData?.causeType || "Select cause"}
+              defaultValue={initiativeData?.causeType || "Food"}
             >
               <option value="Food">Food</option>
               <option value="Medicine">Medicine</option>

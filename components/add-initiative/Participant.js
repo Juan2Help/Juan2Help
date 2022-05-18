@@ -26,7 +26,7 @@ function Participants({ getParticipants, defaultValue }) {
           <div className="w-28 text-right">
             <Input
               type="number"
-              placeholder="1000"
+              placeholder={sliderValue}
               value={sliderValue}
               onChange={changeValue}
               defaultValue={defaultValue}

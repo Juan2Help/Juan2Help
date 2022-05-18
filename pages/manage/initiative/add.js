@@ -67,6 +67,7 @@ function add({ sessionFromProp }) {
       });
       return;
     }
+    console.log(value);
     setInitiativeData({ ...initiativeData, [name]: value });
   };
 
@@ -159,8 +160,9 @@ function add({ sessionFromProp }) {
               className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
-              defaultValue="Select Cause"
+              defaultValue = "null"
             >
+              <option value="null">Select Cause</option>
               <option value="Food">Food</option>
               <option value="Medicine">Medicine</option>
               <option value="Nature">Nature</option>

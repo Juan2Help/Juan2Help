@@ -1,33 +1,34 @@
-import Head from "next/head";
-import Navbar from "../../../components/Navbar";
-import Header from "../../../components/Header";
-import faker from "@faker-js/faker";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../../../components/ProtectedRoute";
+import Head from 'next/head';
+import Navbar from '../../../components/Navbar';
+import Header from '../../../components/Header';
+import faker from '@faker-js/faker';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 import {
   GrantAccess,
   redirectToLogin,
-} from "../../../middleware/ProtectedRoute";
-import Link from "next/link";
-import moment from "moment";
+} from '../../../middleware/ProtectedRoute';
+import Link from 'next/link';
+import moment from 'moment';
 import {
   FiChevronDown,
   FiMapPin,
   FiPhone,
   FiMail,
   FiSend,
-} from "react-icons/fi";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { fetchJSON } from "../../../middleware/helper";
-import Button from "../../../components/Button";
+  FiArrowLeft,
+} from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { fetchJSON } from '../../../middleware/helper';
+import Button from '../../../components/Button';
 
 function MessageItem({ threadData, onClick }) {
-  const time = moment(faker.time.recent(10, "12:00"));
+  const time = moment(faker.time.recent(10, '12:00'));
   const parsedTime =
-    time.startOf("hour").fromNow()[0] != "i"
-      ? time.startOf("hour").fromNow()
-      : time.endOf("day").fromNow();
+    time.startOf('hour').fromNow()[0] != 'i'
+      ? time.startOf('hour').fromNow()
+      : time.endOf('day').fromNow();
   const tileData = {
     message: {
       content: faker.lorem.sentence(),
@@ -43,7 +44,7 @@ function MessageItem({ threadData, onClick }) {
         onClick={() =>
           onClick({ avatar: tileData.message.avatar, ...threadData })
         }
-        className="w-full flex flex-row gap-4 py-2 px-2 hover:bg-[#e9eaeb] rounded-md cursor-pointer overflow-clip"
+        className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
         <img
           src={tileData.message.avatar}
@@ -53,7 +54,7 @@ function MessageItem({ threadData, onClick }) {
         />
         <div className="flex flex-col w-9/12">
           <div>
-            <span className="font-bold">{tileData.message.name}</span>{" "}
+            <span className="font-bold">{tileData.message.name}</span>{' '}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
             <div className="max-w-min truncate">Connect with me!</div>
@@ -67,24 +68,29 @@ function MessageItem({ threadData, onClick }) {
 function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
   return (
     <>
-      {nameSearch?.length > 0 && (
-          <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
-            Connect with them
-          </div>
-        ) &&
-        (fetchedSearch.length > 0 ? (
-          fetchedSearch.map((user) => (
-            <MessageItem
-              key={user.threadID}
-              threadData={user}
-              onClick={onClick}
-            />
-          ))
-        ) : (
-          <div className="text-center text-gray-500">No contacts found.</div>
-        ))}
-      <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
-        Active Messages
+      <div
+        className={`absolute bg-white p-2 mt-16 w-full overflow-y-auto ${
+          nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
+        }`}
+      >
+        {nameSearch?.length > 0 && (
+            <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
+              Connect with them
+            </div>
+          ) &&
+          (fetchedSearch.length > 0 ? (
+            fetchedSearch.map((user) => (
+              <MessageItem
+                key={user.threadID}
+                threadData={user}
+                onClick={onClick}
+              />
+            ))
+          ) : (
+            <div className="text-center text-gray-500 text-xs">
+              No contacts found.
+            </div>
+          ))}
       </div>
       <div>
         {activeThreads?.length > 0 ? (
@@ -96,7 +102,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
             />
           ))
         ) : (
-          <div className="text-center text-gray-500">No messages</div>
+          <div className="text-center text-gray-500 text-xs">No messages</div>
         )}
       </div>
     </>
@@ -107,7 +113,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
   const data = {
     thread: {
       receiver: {
-        name: threadData.name || "Send a Message",
+        name: threadData.name || 'Send a Message',
         avatar: threadData.avatar,
       },
       messages: messages,
@@ -118,7 +124,10 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
   return (
     <>
       <div className="w-full border-b border-gray-100">
-        <div className="py-3 px-4 flex flex-row gap-3">
+        <div className="py-3 px-4 flex flex-row items-center gap-3">
+          <Link href="/t/messages">
+            <FiArrowLeft className="md:hidden cursor-pointer" />
+          </Link>
           {threadData?.name && (
             <img
               src={data.thread.receiver.avatar}
@@ -130,7 +139,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           <h1 className="font-bold text-lg">{data.thread.receiver.name}</h1>
         </div>
       </div>
-      <div className="flex-1 max-h-[80vh] min-w-0 overflow-scroll flex flex-col gap-[2px] p-4">
+      <div className="flex-1 max-h-[80vh] min-w-0 overflow-y-auto flex flex-col gap-[2px] p-4">
         {messages?.length > 0 &&
           data.thread.messages?.map((packet) =>
             packet.sender === user ? (
@@ -149,17 +158,18 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           )}
       </div>
       <div className="flex flex-row gap-1 items-center justify-self-end w-full p-2">
-        <div className="flex-1 bg-gray-100 rounded-full">
+        <div className="flex-1 bg-gray-100 rounded-2xl h-min flex items-center">
           <textarea
             type="text"
             name="message"
             placeholder="Type here"
-            className="input input-ghost w-full"
+            className="input input-ghost w-full h-fit rounded-2xl overflow-y-auto px-4 py-1 max-h-32 resize-none"
+            rows="1"
             id="message"
             onChange={onChange}
           />
         </div>
-        <div className="p-4 cursor-pointer rounded-full hover:bg-gray-100">
+        <div className="p-4 cursor-pointer rounded-full hover:bg-gray-100 self-end">
           <FiSend className="text-primary text-lg" onClick={onClick} />
         </div>
       </div>
@@ -173,7 +183,7 @@ function PersonDetails({ threadData, onClick }) {
       content: faker.lorem.sentence(),
       author: threadData.name,
       organization: faker.company.companyName(),
-      location: threadData?.location?.address || "",
+      location: threadData?.location?.address || '',
       email: threadData.email,
       phone: threadData.mobileNumber,
       avatar: threadData.avatar,
@@ -219,7 +229,7 @@ function PersonDetails({ threadData, onClick }) {
           </div>
         </div>
         <div className="w-80% p-10">
-          <Button onClick={onClick} text={"Load Messages"} />
+          <Button onClick={onClick} text={'Load Messages'} />
         </div>
       </div>
     </>
@@ -230,10 +240,10 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   const router = useRouter();
   const session = sessionFromProp;
 
-  const [messageBody, setMessageBody] = useState("");
+  const [messageBody, setMessageBody] = useState('');
   const [activeThreads, setActiveThreads] = useState([]);
   const [fetchedSearch, setFetchedSearch] = useState([]);
-  const [searchName, setSearchName] = useState("");
+  const [searchName, setSearchName] = useState('');
   const [activeThread, setActiveThread] = useState({
     avatar: faker.image.avatar(),
     ...activeThreadData,
@@ -257,18 +267,18 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       threadID: threadData || activeThreadData.threadID,
     });
     setMessages(data);
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
   };
 
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
-    socket?.on("receive-message", ({ message: data }) => {
-      console.log("receive-message", data);
+    socket?.on('receive-message', ({ message: data }) => {
+      console.log('receive-message', data);
       setMessages((prev) => [...prev, data]);
     });
   }, [socket]);
@@ -288,15 +298,15 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     router.push(`/t/${threadData.threadID}`);
     setActiveThread(threadData);
 
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
-    console.log("active thread", threadData);
+    console.log('active thread', threadData);
   };
 
   const sendMessageSocket = async (message, receiver) => {
-    socket?.emit("send-message", {
+    socket?.emit('send-message', {
       message,
       receiver,
       sender: session?.user?._id,
@@ -316,11 +326,13 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     const { reply } = await sendMessageDB(messagePacket);
     sendMessageSocket(messagePacket, activeThread.id || activeThread._id);
     setMessages([...messages, messagePacket]);
-    document.getElementById("message").value = "";
+    document.getElementById('message').value = '';
   };
 
   const onChangeText = (e) => {
     setMessageBody(e.target.value);
+    e.target.style.height = 'inherit';
+    e.target.style.height = `${e.target.scrollHeight + 2}px`;
   };
 
   const onChangeSearchName = (e) => {
@@ -332,18 +344,24 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
         <div className="flex flex-col items-center">
           <Head>
-            <title>Welcome Explore!</title>
+            <title>Messages</title>
           </Head>
           <Header session={session} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <div className="w-full grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 grid-flow-row bg-white rounded-md min-h-[90vh] shadow-sm overflow-clip">
-              <div className="py-4 px-2 gap-2 flex flex-col min-h-[10vh] z-10 shadow-md">
+              <div
+                className={`py-4 gap-2 min-h-[10vh] z-10 shadow-md w-full relative ${
+                  activeThreadData.threadID
+                    ? 'md:flex-col md:flex hidden'
+                    : 'flex flex-col'
+                }`}
+              >
                 {/* Header */}
-                <div className="px-2">
+                <div className="px-4">
                   <h1 className="font-bold text-lg">Messages</h1>
                 </div>
                 {/* Search */}
-                <div className="px-2">
+                <div className="px-4">
                   <div className="lg:col-span-2 flex items-center w-full h-8 rounded-full bg-gray-100">
                     <input
                       type="text"
@@ -361,7 +379,13 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
                   onClick={onClickMessageItem}
                 />
               </div>
-              <div className="md:flex md:flex-col hidden col-span-2 min-h-[10vh] ">
+              <div
+                className={`col-span-2 min-h-[10vh] ${
+                  activeThreadData.threadID
+                    ? 'flex flex-col'
+                    : 'md:flex md:flex-col hidden'
+                }`}
+              >
                 <MessageThread
                   user={session?.user?._id}
                   onChange={onChangeText}
@@ -389,7 +413,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
-  console.log("THREAD ID IN SERVERSIDEPROPS:", context.query);
+  console.log('THREAD ID IN SERVERSIDEPROPS:', context.query);
   return {
     props: {
       sessionFromProp: session,
