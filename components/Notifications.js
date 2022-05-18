@@ -1,6 +1,10 @@
-import faker from "@faker-js/faker";
-import moment from "moment";
-import Link from "next/link";
+import faker from '@faker-js/faker';
+import moment from 'moment';
+import Link from 'next/link';
+import { fetchJSON } from '../middleware/helper';
+import { useEffect } from 'react';
+import { notificationsState } from '../atoms/notificationsAtom';
+import { useRecoilState } from 'recoil';
 
 function Notification({ notificationData }) {
   const time = moment(notificationData?.dateCreated).fromNow();
@@ -26,7 +30,7 @@ function Notification({ notificationData }) {
           />
           <div className="flex flex-col">
             <div>
-              <span className="font-bold">{data.notification.name}</span>{" "}
+              <span className="font-bold">{data.notification.name}</span>{' '}
               <span className="text-sm">{data.notification.message}</span>
             </div>
             <div>
@@ -41,15 +45,41 @@ function Notification({ notificationData }) {
   );
 }
 
-function NotificationList() {
+function NotificationList({ session }) {
+  const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const getNotification = async () => {
+    const data = await fetchJSON('/api/user/get-notifications', {
+      id: session.user._id,
+    });
+
+    if (data.length > 0) {
+      setNotifications(data);
+    }
+  };
+
+  useEffect(() => {
+    if (notifications.length === 0) {
+      getNotification();
+    }
+  }, []);
+
+  console.log(notifications);
   return (
     <div className="flex flex-col gap-5">
-      <Notification />
-      <hr />
-      <Notification />
-      <hr />
-      <Notification />
-      <hr />
+      {/* sort by time and map */}
+      {notifications.map((notification) => (
+        <>
+          <Notification
+            key={notification._id}
+            notificationData={notification}
+          />
+          <Notification
+            key={notification._id}
+            notificationData={notification}
+          />
+          <hr />
+        </>
+      ))}
     </div>
   );
 }

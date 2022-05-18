@@ -44,7 +44,7 @@ function MessageItem({ threadData, onClick }) {
         onClick={() =>
           onClick({ avatar: tileData.message.avatar, ...threadData })
         }
-        className="w-full flex flex-row gap-4 py-2 px-2 hover:bg-[#e9eaeb] rounded-md cursor-pointer overflow-clip"
+        className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
         <img
           src={tileData.message.avatar}
@@ -68,24 +68,29 @@ function MessageItem({ threadData, onClick }) {
 function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
   return (
     <>
-      {nameSearch?.length > 0 && (
-          <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
-            Connect with them
-          </div>
-        ) &&
-        (fetchedSearch.length > 0 ? (
-          fetchedSearch.map((user) => (
-            <MessageItem
-              key={user.threadID}
-              threadData={user}
-              onClick={onClick}
-            />
-          ))
-        ) : (
-          <div className="text-center text-gray-500">No contacts found.</div>
-        ))}
-      <div className="text-center text-gray-500 border-y-[0.5px] py-2 text-xs border-solid border-gray-200">
-        Active Messages
+      <div
+        className={`absolute bg-white p-2 mt-16 w-full overflow-y-auto ${
+          nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
+        }`}
+      >
+        {nameSearch?.length > 0 && (
+            <div className="text-center text-gray-500 border-y-[0.5px] border-solid border-gray-200">
+              Connect with them
+            </div>
+          ) &&
+          (fetchedSearch.length > 0 ? (
+            fetchedSearch.map((user) => (
+              <MessageItem
+                key={user.threadID}
+                threadData={user}
+                onClick={onClick}
+              />
+            ))
+          ) : (
+            <div className="text-center text-gray-500 text-xs">
+              No contacts found.
+            </div>
+          ))}
       </div>
       <div>
         {activeThreads?.length > 0 ? (
@@ -97,7 +102,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
             />
           ))
         ) : (
-          <div className="text-center text-gray-500">No messages</div>
+          <div className="text-center text-gray-500 text-xs">No messages</div>
         )}
       </div>
     </>
@@ -134,7 +139,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           <h1 className="font-bold text-lg">{data.thread.receiver.name}</h1>
         </div>
       </div>
-      <div className="flex-1 max-h-[80vh] min-w-0 overflow-scroll flex flex-col gap-[2px] p-4">
+      <div className="flex-1 max-h-[80vh] min-w-0 overflow-y-auto flex flex-col gap-[2px] p-4">
         {messages?.length > 0 &&
           data.thread.messages?.map((packet) =>
             packet.sender === user ? (
@@ -158,7 +163,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
             type="text"
             name="message"
             placeholder="Type here"
-            className="input input-ghost w-full h-min rounded-2xl overflow-hidden focis:outline-0 px-4 py-1"
+            className="input input-ghost w-full h-fit rounded-2xl overflow-y-auto px-4 py-1 max-h-32 resize-none"
             rows="1"
             id="message"
             onChange={onChange}
@@ -327,7 +332,7 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   const onChangeText = (e) => {
     setMessageBody(e.target.value);
     e.target.style.height = 'inherit';
-    e.target.style.height = `${e.target.scrollHeight}px`;
+    e.target.style.height = `${e.target.scrollHeight + 2}px`;
   };
 
   const onChangeSearchName = (e) => {
@@ -339,24 +344,24 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
         <div className="flex flex-col items-center">
           <Head>
-            <title>Welcome Explore!</title>
+            <title>Messages</title>
           </Head>
           <Header session={session} />
           <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
             <div className="w-full grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 grid-flow-row bg-white rounded-md min-h-[90vh] shadow-sm overflow-clip">
               <div
-                className={`py-4 px-2 gap-2 min-h-[10vh] z-10 shadow-md ${
+                className={`py-4 gap-2 min-h-[10vh] z-10 shadow-md w-full relative ${
                   activeThreadData.threadID
                     ? 'md:flex-col md:flex hidden'
                     : 'flex flex-col'
                 }`}
               >
                 {/* Header */}
-                <div className="px-2">
+                <div className="px-4">
                   <h1 className="font-bold text-lg">Messages</h1>
                 </div>
                 {/* Search */}
-                <div className="px-2">
+                <div className="px-4">
                   <div className="lg:col-span-2 flex items-center w-full h-8 rounded-full bg-gray-100">
                     <input
                       type="text"

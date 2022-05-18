@@ -108,7 +108,7 @@ function Header({ session, socket }) {
             </label>
             <div
               tabindex="0"
-              className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-scroll"
+              className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-y-auto"
             >
               <div className="flex flex-col p-2 gap-4">
                 <div className="flex flex-row items-center justify-between">
@@ -125,9 +125,8 @@ function Header({ session, socket }) {
                 <hr />
               </div>
               <div className="px-2 flex flex-row items-center justify-between">
-                <div className="font-medium">New</div>
                 <Link href="/notifications">
-                  <div className="text-primary text-xs curosr-pointer">
+                  <div className="text-primary text-xs cursor-pointer w-full text-right">
                     See All
                   </div>
                 </Link>
@@ -140,20 +139,6 @@ function Header({ session, socket }) {
                     notificationData={notification}
                   />
                 ))}
-              </ul>
-              <div className="px-2 flex flex-row items-center justify-between">
-                <div className="font-medium">Earlier</div>
-              </div>
-              <ul>
-                <li>
-                  <Notification />
-                </li>
-                <li>
-                  <Notification />
-                </li>
-                <li>
-                  <Notification />
-                </li>
               </ul>
             </div>
           </div>

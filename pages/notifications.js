@@ -32,7 +32,7 @@ function notifications({ sessionFromProp }) {
                 <div>Notifications</div>
               </div>
               <hr />
-              <NotificationList />
+              <NotificationList session={session} />
             </div>
             <div className="sticky top-[72px] h-fit hidden xl:flex xl:w-2/5">
               <Suggestions />
