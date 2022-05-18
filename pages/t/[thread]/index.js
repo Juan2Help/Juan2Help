@@ -121,7 +121,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
       <div className="w-full border-b border-gray-100">
         <div className="py-3 px-4 flex flex-row items-center gap-3">
           <Link href="/t/messages">
-            <FiArrowLeft className="md:hidden" />
+            <FiArrowLeft className="md:hidden cursor-pointer" />
           </Link>
           {threadData?.name && (
             <img

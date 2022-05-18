@@ -51,7 +51,6 @@ function TopOrganizers() {
 }
 
 function Initiative({ initiativeData, bookmarkList }) {
-  console.log(initiativeData);
   let initiativeLocation =
     typeof initiativeData?.location === 'string'
       ? initiativeData?.location
@@ -68,7 +67,8 @@ function Initiative({ initiativeData, bookmarkList }) {
       location: initiativeLocation,
       title: initiativeData?.title?.toUpperCase(),
       content: initiativeData?.description,
-      participants: initiativeData?.participantsList?.length,
+      participantcount: initiativeData?.participantsList?.length,
+      participants: initiativeData?.participants,
       isBookmarked: bookmarkList?.includes(initiativeData?._id),
     },
   };
@@ -114,7 +114,7 @@ function Initiative({ initiativeData, bookmarkList }) {
 
         <div className="flex flex-row items-center justify-between gap-2">
           <span className="text-sm font-medium text-gray-300">
-            {data.initiative.participants}/{initiativeData.participants} joined
+            {data.initiative.participantcount}/{data.initiative.participants} joined
           </span>
           <label className="swap swap-flip">
             <input
@@ -130,8 +130,8 @@ function Initiative({ initiativeData, bookmarkList }) {
         </div>
         <progress
           className="progress w-full progress-primary"
-          value={data.initiative.participants}
-          max="100"
+          value={data.initiative.participantcount}
+          max={data.initiative.participants}
         ></progress>
         <div
           className={`relative my-2 max-w-xs text-center text-xs font-bold text-gray-800 bg-yellow-200 rounded-full self-start px-2 py-1

@@ -117,17 +117,19 @@ function InitiativeList({ initiatives, onClickHandler }) {
 
 function AddInitiativeTile() {
   return (
-    <div
-      className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
-                    hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
-    >
-      <Link href="/manage/initiative/add">
-        <div className="flex flex-col items-center">
-          <FiPlusCircle className="text-2xl" />
-          <span>Create new initiative</span>
-        </div>
-      </Link>
-    </div>
+    <Link href="/manage/initiative/add">
+      <div
+        className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+                      hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
+      >
+        
+          <div className="flex flex-col items-center">
+            <FiPlusCircle className="text-2xl" />
+            <span>Create new initiative</span>
+          </div>
+        
+      </div>
+    </Link>
   );
 }
 

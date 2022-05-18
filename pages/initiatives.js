@@ -26,7 +26,6 @@ function InitiativesPage({
   const [Tab, setTab] = useState('ActiveInit');
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(1000);
-  const [participantstextValue, participantssettextValue] = useState('1000');
   const [activeInitiatives, setActiveInitiatives] =
     useState(activeInitiativeData);
   const [newInitiatives, setNewInitiatives] = useState(newInitiativeData);
@@ -51,7 +50,6 @@ function InitiativesPage({
   const participantschangeValue = (e) => {
     const { value } = e.target;
     participantssetSliderValue(value);
-    participantssettextValue(value);
     setActiveInitiatives(
       activeInitiativeData.filter(
         (initiative) =>
@@ -280,20 +278,20 @@ function InitiativesPage({
               {(Tab == 'ActiveInit' || Tab == 'NewInit') && (
                 <>
                   <div className="flex justify-between w-full">
-                    <div className="flex flex-row w-full items-center space-x-4">
+                    <div className="flex flex-row w-full items-center space-x-2">
                       <SearchBar handleChange={handleSearchBarChange} />
                       <button
                         className="hover:cursor-pointer w-1/8"
                         onClick={() => setFilterState(!FilterOpen)}
                       >
                         {FilterOpen == false && (
-                          <div className="p-4 rounded-md hover:bg-gray-100 flex flex-row items-center gap-1 text-gray-900 hover:text-gray-500">
+                          <div className="px-4 py-3 rounded-md hover:bg-gray-100 flex flex-row items-center gap-1 text-gray-900 hover:text-gray-500">
                             <FiFilter className="text-lg" />
                             <span className="hidden md:inline">Filters</span>
                           </div>
                         )}
                         {FilterOpen == true && (
-                          <div className="p-4 bg-purple-100 rounded-md text-primary flex flex-row items-center gap-1 hover:text-purple-400 items-center transition ease-in-out duration-300">
+                          <div className="px-4 py-3 bg-purple-100 rounded-md text-primary flex flex-row items-center gap-1 hover:text-purple-400 transition ease-in-out duration-300">
                             <FiFilter className="text-lg" />
                             <span className="hidden md:inline font-medium">
                               Filters
@@ -314,7 +312,7 @@ function InitiativesPage({
                         className="select select-bordered w-full bg-white"
                         onChange={categoryHandleChange}
                         name="causeType"
-                        defaultValue="Select Cause"
+                        defaultValue="All"
                       >
                         <option value="All">All</option>
                         <option value="Food">Food</option>
@@ -341,7 +339,7 @@ function InitiativesPage({
                           <div className="w-28 text-right">
                             <Input
                               type="number"
-                              placeholder={participantstextValue}
+                              placeholder={participantssliderValue}
                               value={participantssliderValue}
                               onChange={participantschangeValue}
                             />
