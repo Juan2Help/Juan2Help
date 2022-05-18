@@ -1,6 +1,10 @@
+import { useJsApiLoader } from "@react-google-maps/api";
+import Script from "next/script";
 import React from "react";
 import { MdSearch } from "react-icons/md";
 import PlacesAutocomplete from "react-places-autocomplete/dist/PlacesAutocomplete";
+import { useRecoilState } from "recoil";
+import { placesScript } from "../atoms/scriptsAtom";
 
 function Input({
   id,
@@ -23,8 +27,17 @@ function Input({
   let variant = hasError ? fail : nofail;
   let isClicked = false;
 
+  const [placesLoaded, setPlacesLoaded] = useRecoilState(placesScript);
+
   return (
     <>
+      {!placesLoaded && (
+        <Script
+          src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I&libraries=places"
+          strategy="beforeInteractive"
+          onLoad={() => setPlacesLoaded(true)}
+        ></Script>
+      )}
       {isLocation ? (
         <div>
           <span className="font-bold text-md">Location</span>
@@ -32,6 +45,7 @@ function Input({
             value={value}
             onChange={onChange}
             onSelect={onSelect}
+            googleCallbackName="myCallbackFunc"
           >
             {({
               getInputProps,

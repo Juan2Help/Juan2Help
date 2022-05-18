@@ -62,11 +62,16 @@ function fakeUser() {
 }
 
 function Body({ registrants, onClickHandler }) {
-  const fake = {
-    initiative: {
-      participants: registrants,
-    },
-  };
+  const [fake, setFake] = useState({});
+  useEffect(() => {
+    const data = {
+      initiative: {
+        participants: registrants,
+        avatar: faker.internet.avatar(),
+      },
+    };
+    setFake(data);
+  }, [registrants]);
   console.log("registrants: ", registrants);
 
   return (
@@ -87,10 +92,11 @@ function Body({ registrants, onClickHandler }) {
               <div className="w-20 overflow-clip rounded-full">
                 <Image
                   alt=""
-                  src={faker.internet.avatar()}
-                  layout="fill"
+                  src={fake.initiative.avatar}
                   objectFit="cover"
                   className="w-full pb-full"
+                  width={100}
+                  height={100}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -99,11 +105,9 @@ function Body({ registrants, onClickHandler }) {
                   <div className="text-sm text-slate-600">{`${participant.email}`}</div>
                 </div>
                 <div className="text-sm text-slate-600">
+                  <div>{`${participant?.mobileNumber || "No contact"}`}</div>
                   <div>{`${
-                    participant.phone ? participant.phone : "No contact"
-                  }`}</div>
-                  <div>{`${
-                    participant.city ? participant.city : "No location"
+                    participant?.location?.address || "No location"
                   } `}</div>
                 </div>
               </div>
@@ -162,7 +166,6 @@ function Search({
     });
     const { userEntries } = await req.json();
     setRegistrantList(userEntries);
-    return;
   };
 
   const onClickHandler = (e) => {

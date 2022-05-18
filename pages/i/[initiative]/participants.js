@@ -1,11 +1,11 @@
-import { React } from 'react';
-import { getSession } from 'next-auth/react';
-import { GrantAccess } from '../../../middleware/ProtectedRoute';
-import { FiArrowLeft } from 'react-icons/fi';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { faker } from '@faker-js/faker';
-import Image from 'next/image';
+import { React, useState } from "react";
+import { getSession } from "next-auth/react";
+import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import { FiArrowLeft } from "react-icons/fi";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { faker } from "@faker-js/faker";
+import Image from "next/image";
 
 function fakeUser() {
   const fake = {
@@ -19,12 +19,12 @@ function fakeUser() {
 }
 
 function Body({ participants, onClickHandler }) {
-  const fake = {
+  const [fake, setFake] = useState({
     initiative: {
       participants,
+      avatar: faker.internet.avatar(),
     },
-  };
-  console.log('participants: ', participants);
+  });
 
   return (
     <div className="px-4 flex flex-col gap-2">
@@ -44,10 +44,11 @@ function Body({ participants, onClickHandler }) {
               <div className="w-20 overflow-clip rounded-full">
                 <Image
                   alt=""
-                  src={faker.internet.avatar()}
-                  layout="fill"
+                  src={fake.initiative.avatar}
                   objectFit="cover"
                   className="w-full pb-full"
+                  width={100}
+                  height={100}
                 />
               </div>
               <div className="flex flex-col gap-1">
@@ -56,11 +57,9 @@ function Body({ participants, onClickHandler }) {
                   <div className="text-sm text-slate-600">{`${participant.email}`}</div>
                 </div>
                 <div className="text-sm text-slate-600">
+                  <div>{`${participant?.mobileNumber || "No contact"}`}</div>
                   <div>{`${
-                    participant.phone ? participant.phone : 'No contact'
-                  }`}</div>
-                  <div>{`${
-                    participant.city ? participant.city : 'No location'
+                    participant?.location?.address || "No location"
                   } `}</div>
                 </div>
               </div>
@@ -104,14 +103,14 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log('initiativeId', initiativeId);
+  console.log("initiativeId", initiativeId);
 
   const req = await fetch(
     `${process.env.NEXTAUTH_URL}/api/initiatives/get-participants`,
     {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: initiativeId,

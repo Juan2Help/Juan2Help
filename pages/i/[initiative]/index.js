@@ -24,9 +24,10 @@ function Header({ initiativeData, session }) {
       <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
         <Image
           alt=""
-          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-          layout="fill"
-          objectFit="cover"
+          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"  
+          objectFit="contain"
+          height={200}
+          width={200}
         />
       </div>
       <div className="-top-20 sticky flex flex-row justify-between p-4">
@@ -64,9 +65,11 @@ function Header({ initiativeData, session }) {
 
 function Body({ session, initiativeData, socket }) {
   console.log("initiativeData", initiativeData);
-  const [buttonToggle, setButtonToggle] = useState(false);
   const router = useRouter();
 
+  const [buttonToggle, setButtonToggle] = useState(false);
+  
+  
   const [hasApplied, setHasApplied] = useState(
     initiativeData?.registrantsList?.includes(session.user._id)
   );
@@ -74,9 +77,7 @@ function Body({ session, initiativeData, socket }) {
     initiativeData?.participantsList?.includes(session.user._id)
   );
 
-  console.log("hasJoined", hasJoined);
-
-  const fake = {
+  const [data, setData] = useState({
     author: {
       name: initiativeData?.publisherName,
       avatar: faker.image.avatar(),
@@ -108,8 +109,11 @@ function Body({ session, initiativeData, socket }) {
       description: initiativeData?.description,
       isBookmarked: Math.random() > 0.5,
     },
-  };
+  });
 
+  console.log("hasJoined", hasJoined);
+
+  
   useEffect(() => {
     socket?.emit("newUser", {
       userID: session?.user?._id,
@@ -201,21 +205,21 @@ function Body({ session, initiativeData, socket }) {
       {/* TITLE */}
       <div className="flex flex-row justify-between">
         <div className="flex flex-col">
-          <span className="text-2xl font-bold">{fake.initiative.title}</span>
+          <span className="text-2xl font-bold">{data.initiative.title}</span>
           <div className="flex flex-row items-center space-x-2">
             <span className="text-sm text-gray-400 font-bold inline">
-              {fake.author.name}
+              {data.author.name}
             </span>
             <span>·</span>
             <label className="swap text-xs font-bold">
-              <input type="checkbox" value={fake.initiative.isBookmarked} />
+              <input type="checkbox" value={data.initiative.isBookmarked} />
               <span className="swap-on text-primary">Follow</span>
               <span className="swap-off text-primary">Unfollow</span>
             </label>
           </div>
         </div>
         <label className="swap swap-flip text-lg">
-          <input type="checkbox" value={fake.initiative.isBookmarked} />
+          <input type="checkbox" value={data.initiative.isBookmarked} />
           <FiBookmark className="swap-on text-primary fill-current" />
           <FiBookmark className="swap-off" />
         </label>
@@ -228,10 +232,10 @@ function Body({ session, initiativeData, socket }) {
           </div>
           <div className="flex flex-col">
             <span className="text-sm text-gray-400 font-medium overflow-clip truncate">
-              {fake.initiative.date}
+              {data.initiative.date}
             </span>
             <span className="text-sm font-medium overflow-clip truncate">
-              {fake.initiative.time.start} - {fake.initiative.time.end}
+              {data.initiative.time.start} - {data.initiative.time.end}
             </span>
           </div>
         </div>
@@ -241,7 +245,7 @@ function Body({ session, initiativeData, socket }) {
           </div>
           <div className="flex flex-col overflow-clip truncate">
             <span className="text-sm text-gray-400 font-medium">
-              {fake.initiative.location.city}
+              {data.initiative.location.city}
             </span>
           </div>
         </div>
@@ -262,13 +266,13 @@ function Body({ session, initiativeData, socket }) {
         <div className="flex flex-row gap-4 items-center">
           <progress
             className="progress progress-primary w-full"
-            value={fake.initiative.participants.current}
-            max={fake.initiative.participants.end}
+            value={data.initiative.participants.current}
+            max={data.initiative.participants.end}
           />
           <div className="w-fit">
             <span className="text-sm text-slate-500 font-bold">
-              {fake.initiative.participants.current}/
-              {fake.initiative.participants.end}
+              {data.initiative.participants.current}/
+              {data.initiative.participants.end}
             </span>
           </div>
         </div>
@@ -277,7 +281,7 @@ function Body({ session, initiativeData, socket }) {
       <div className="flex flex-col gap-2">
         <div className="text-xl font-bold">Description</div>
         <div className="text-justify text-slate-700 text-sm">
-          <p>{fake.initiative.description}</p>
+          <p>{data.initiative.description}</p>
         </div>
       </div>
 
@@ -309,7 +313,7 @@ function Body({ session, initiativeData, socket }) {
         ) : (
           <></>
         )}
-        <div className="text-l font-bold">{fake.initiative.location.city}</div>
+        <div className="text-l font-bold">{data.initiative.location.city}</div>
       </div>
       {/* Join */}
       {hasJoined ? (

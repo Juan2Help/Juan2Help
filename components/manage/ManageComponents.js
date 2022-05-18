@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from "react";
 import {
   FiCalendar,
   FiLink,
@@ -7,12 +7,12 @@ import {
   FiMapPin,
   FiPlusCircle,
   FiEdit3,
-} from 'react-icons/fi';
-import faker from '@faker-js/faker';
-import moment from 'moment';
-import Link from 'next/link';
-import Button from '../Button';
-import Image from 'next/image';
+} from "react-icons/fi";
+import faker from "@faker-js/faker";
+import moment from "moment";
+import Link from "next/link";
+import Button from "../Button";
+import Image from "next/image";
 
 function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
   return (
@@ -61,10 +61,10 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
   console.log(initiative);
   const { title, startDate, description, location } = initiative;
   const details = {
-    date: moment(startDate).format('ddd, DD MMM YYYY').toUpperCase(),
+    date: moment(startDate).format("ddd, DD MMM YYYY").toUpperCase(),
     title: title,
     description: description,
-    location: location,
+    location: location?.address,
   };
   return (
     <label htmlFor="initiative-modal" name="tile" key={id}>
@@ -95,7 +95,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
           </div>
           <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
             <FiMapPin />
-            <span>Location</span>
+            <span>{details.location || "Location"}</span>
           </div>
         </div>
       </div>
@@ -136,7 +136,7 @@ function AddInitiativeTile() {
 }
 
 function ModeratorTile({ moderator, onClickHandler }) {
-  const details = {
+  const [details, setDetails] = useState({
     moderator: {
       id: moderator._id,
       name: moderator.name,
@@ -144,7 +144,8 @@ function ModeratorTile({ moderator, onClickHandler }) {
       location: faker.address.city(),
       level: moderator.role / 2,
     },
-  };
+  });
+
   return (
     <label htmlFor="moderator-modal" name="tile" key={details.moderator.id}>
       <div
@@ -185,7 +186,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
   );
 }
 
-function ModeratorList({ moderators, onClickHandler, id = '', admin = false }) {
+function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <>
@@ -202,13 +203,13 @@ function ModeratorList({ moderators, onClickHandler, id = '', admin = false }) {
   );
 }
 
-function AddModeratorTile({ admin = false, id = '' }) {
+function AddModeratorTile({ admin = false, id = "" }) {
   return (
     <div
       className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
                     hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
     >
-      <Link href={`/manage/moderator/add/${admin ? id : ''}`} passHref>
+      <Link href={`/manage/moderator/add/${admin ? id : ""}`} passHref>
         <div className="flex flex-col items-center space-y-2">
           <FiPlusCircle className="text-2xl" />
           <span>Add a moderator</span>
@@ -262,7 +263,7 @@ function NGODetails({ router, details, session, override = false }) {
         <span className="text-lg font-bold">Organization Details</span>
       )}
       <div className={`w-full flex flex-row items-center gap-4`}>
-        <div className={override ? 'w-1/5' : 'w-1/4'}>
+        <div className={override ? "w-1/5" : "w-1/4"}>
           <div className="w-full pb-full">
             <Image
               alt="Organization Logo"
@@ -276,12 +277,12 @@ function NGODetails({ router, details, session, override = false }) {
         <div className="w-3/4 flex flex-col gap-2">
           <div className="flex flex-col">
             <span className="text-lg font-bold">
-              {session && details?.name ? `${details.name}` : 'NGO NAME'}
+              {session && details?.name ? `${details.name}` : "NGO NAME"}
             </span>
             <span className="text-xs text-gray-400 truncate">
               {session && details?.description
                 ? `${details.description}`
-                : 'The NGO description goes here.'}
+                : "The NGO description goes here."}
             </span>
           </div>
           {(override || session?.user?.role <= 4) && (
@@ -289,7 +290,7 @@ function NGODetails({ router, details, session, override = false }) {
               className="text-xs flex items-center flex-row gap-2"
               onClick={() => {
                 router.push(
-                  `/manage/edit-admin/${override ? details?.id : ''}`
+                  `/manage/edit-admin/${override ? details?.id : ""}`
                 );
               }}
             >

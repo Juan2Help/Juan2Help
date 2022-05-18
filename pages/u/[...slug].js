@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { React, useState } from 'react';
-import { faker } from '@faker-js/faker';
+import Head from "next/head";
+import Link from "next/link";
+import { React, useState } from "react";
+import { faker } from "@faker-js/faker";
 import {
   FiChevronLeft,
   FiMoreVertical,
@@ -10,16 +10,17 @@ import {
   FiMapPin,
   FiPhone,
   FiCalendar,
-} from 'react-icons/fi';
-import { getSession } from 'next-auth/react';
-import ProtectedRoute from '../../components/ProtectedRoute';
-import { GrantAccess, redirectToLogin } from '../../middleware/ProtectedRoute';
-import { fetchUserDetails } from '../../middleware/helper';
-import Image from 'next/image';
+} from "react-icons/fi";
+import { getSession } from "next-auth/react";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
+import { fetchUserDetails } from "../../middleware/helper";
+import Image from "next/image";
 
 function Profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
   const [isOpen, setOpenState] = useState(false);
+  const [avatar, setAvatar] = useState(faker.image.avatar());
 
   return (
     <ProtectedRoute session={session}>
@@ -66,19 +67,20 @@ function Profile({ sessionFromProp, userDetails }) {
               <div className="rounded-full overflow-clip h-40 w-40">
                 <Image
                   alt="avatar"
-                  src={faker.image.avatar()}
+                  src={avatar || "/images/avatar.png"}
                   className="min-h-full min-w-full"
-                  layout="fill"
+                  width={200}
+                  height={200}
                 />
               </div>
               <div className="w-full p-2 flex flex-col text-center justify-center">
                 <h2 className="font-bold text-3xl">{userDetails?.name}</h2>
                 <h3 className="text-gray-400 text-sm">
-                  {'@' +
-                    userDetails?.name.split(' ').join('').toLocaleLowerCase()}
+                  {"@" +
+                    userDetails?.name.split(" ").join("").toLocaleLowerCase()}
                 </h3>
                 <h3 className="text-neutral text-sm p-2">
-                  {userDetails?.bio || 'This user has no bio.'}
+                  {userDetails?.bio || "This user has no bio."}
                 </h3>
                 <hr className="mt-2" />
               </div>
@@ -88,8 +90,8 @@ function Profile({ sessionFromProp, userDetails }) {
                     <FiAtSign />
                     <span>
                       {userDetails?.name
-                        .split(' ')
-                        .join('')
+                        .split(" ")
+                        .join("")
                         .toLocaleLowerCase()}
                     </span>
                   </li>
@@ -99,7 +101,7 @@ function Profile({ sessionFromProp, userDetails }) {
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiMapPin />
-                    <span>{userDetails?.location}</span>
+                    <span>{userDetails?.location?.address}</span>
                   </li>
                   <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
                     <FiPhone />
@@ -122,7 +124,7 @@ function Profile({ sessionFromProp, userDetails }) {
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   const userId = context.params.slug;
-  console.log('userId', userId);
+  console.log("userId", userId);
 
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
