@@ -1,32 +1,32 @@
-import Head from "next/head";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
+import Head from 'next/head';
+import Header from '../../components/Header';
+import Navbar from '../../components/Navbar';
 import {
   InitiativeList,
   ModeratorList,
   InitiativeModal,
   ModeratorModal,
   NGODetails,
-} from "../../components/manage/ManageComponents";
-import Sidebar from "../../components/Sidebar";
-import { getSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../components/ProtectedRoute";
-import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
-import { fetchJSON, fetchNGODetails } from "../../middleware/helper";
-import { useRecoilState } from "recoil";
-import { managedInitiatives } from "../../atoms/initiatives";
+} from '../../components/manage/ManageComponents';
+import Sidebar from '../../components/Sidebar';
+import { getSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { GrantAccess, redirectToLogin } from '../../middleware/ProtectedRoute';
+import { fetchJSON, fetchNGODetails } from '../../middleware/helper';
+import { useRecoilState } from 'recoil';
+import { managedInitiatives } from '../../atoms/initiatives';
 
-function index({ sessionFromProp, organizationDetails, socket }) {
+function Index({ sessionFromProp, organizationDetails, socket }) {
   const session = sessionFromProp;
 
   const [handledInitiatives, setHandledInitiatives] =
     useRecoilState(managedInitiatives);
 
   const [handledModerators, setHandledModerators] = useState([]);
-  const [selectedInitiative, setSelectedInitiative] = useState("");
-  const [selectedModerator, setSelectedModerator] = useState("");
+  const [selectedInitiative, setSelectedInitiative] = useState('');
+  const [selectedModerator, setSelectedModerator] = useState('');
   const [newData, setNewData] = useState(false);
 
   const router = useRouter();
@@ -34,7 +34,7 @@ function index({ sessionFromProp, organizationDetails, socket }) {
   // DATA FETCHING
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedInitiatives = await fetchJSON("/api/handled-initiatives", {
+      const fetchedInitiatives = await fetchJSON('/api/handled-initiatives', {
         email: session.user.email,
       });
       setHandledInitiatives(fetchedInitiatives);
@@ -42,14 +42,20 @@ function index({ sessionFromProp, organizationDetails, socket }) {
     if (session?.user?.role >= 2) fetchData();
 
     // log fetchedInitiatives
-    console.log("Fetched:", handledInitiatives);
-  }, [newData]);
+    console.log('Fetched:', handledInitiatives);
+  }, [
+    newData,
+    handledInitiatives,
+    session.user.email,
+    session.user?.role,
+    setHandledInitiatives,
+  ]);
 
   //fetch data for moderator list
   useEffect(() => {
     const fetchData = async () => {
       const fetchedModerators = await fetchJSON(
-        "/api/organizations/moderator-list",
+        '/api/organizations/moderator-list',
         {
           email: session.user.email,
           NGOid: session.user.NGOid,
@@ -60,7 +66,7 @@ function index({ sessionFromProp, organizationDetails, socket }) {
 
     if (session?.user?.role >= 4) fetchData();
     // log fetchedModerators
-  }, [newData]);
+  }, [newData, session.user.NGOid, session.user.email, session.user?.role]);
 
   // END OF DATA FETCHING
 
@@ -83,11 +89,11 @@ function index({ sessionFromProp, organizationDetails, socket }) {
 
   const deleteInitiativeHandler = async (e) => {
     try {
-      const req = await fetch("/api/delete-initiative", {
-        method: "POST",
+      const req = await fetch('/api/delete-initiative', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           email: session.user.email,
@@ -108,7 +114,7 @@ function index({ sessionFromProp, organizationDetails, socket }) {
 
   const deleteModeratorHandler = async (e) => {
     try {
-      const body = await fetchJSON("/api/organizations/delete-moderator", {
+      const body = await fetchJSON('/api/organizations/delete-moderator', {
         email: session.user.email,
         id: selectedModerator,
         NGOid: session.user.NGOid,
@@ -183,7 +189,7 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   if (session?.user?.role === 8)
-    return context.res.writeHead(302, { Location: "/manage/admin" });
+    return context.res.writeHead(302, { Location: '/manage/admin' });
   return {
     props: {
       sessionFromProp: session,
@@ -192,4 +198,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default index;
+export default Index;

@@ -1,10 +1,10 @@
-import React from "react";
-import { signIn } from "next-auth/react";
-import Button from "./Button";
+import React from 'react';
+import { signIn } from 'next-auth/react';
+import Button from './Button';
 
 function ProtectedRoute({ children, session, authority = 1, router }) {
   const goBack = () => {
-    router.push("/explore");
+    router.push('/explore');
   };
 
   if (session?.user?.role < authority) {
@@ -13,8 +13,8 @@ function ProtectedRoute({ children, session, authority = 1, router }) {
         <div className="min-h-screen flex items-center justify-center">
           <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
-              <div>"You have no permission to perform the action."</div>
-              <Button text={"Go back"} onClick={() => goBack()} />
+              <div>You have no permission to perform the action.</div>
+              <Button text={'Go back'} onClick={() => goBack()} />
             </div>
           </div>
         </div>
@@ -30,7 +30,7 @@ function ProtectedRoute({ children, session, authority = 1, router }) {
         <div className="min-h-screen flex items-center justify-center">
           <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
-              <div>"You are not signed in."</div>
+              <div>You are not signed in.</div>
             </div>
           </div>
         </div>

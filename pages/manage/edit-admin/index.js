@@ -1,18 +1,18 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../../components/Input";
-import Button from "../../../components/Button";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input, TextArea } from '../../../components/Input';
+import Button from '../../../components/Button';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   GrantAccess,
   redirectToLogin,
-} from "../../../middleware/ProtectedRoute";
-import { fetchNGODetails } from "../../../middleware/helper";
+} from '../../../middleware/ProtectedRoute';
+import { fetchNGODetails } from '../../../middleware/helper';
 
-function edit({ sessionFromProp, organizationDetailsProp }) {
+function Edit({ sessionFromProp, organizationDetailsProp }) {
   const session = sessionFromProp;
 
   const [organizationDetails, setOrganizationDetails] = useState(
@@ -31,22 +31,22 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
       NGOid: session.user.NGOid,
     };
 
-    console.log("data", data);
+    console.log('data', data);
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/edit-details", {
-      method: "POST",
+    const response = await fetch('/api/organizations/edit-details', {
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
     return;
   };
@@ -61,7 +61,7 @@ function edit({ sessionFromProp, organizationDetailsProp }) {
     <ProtectedRoute session={session} authority={4}>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage">
+          <Link href="/manage" passHref>
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">Edit Partner Organization Details</span>
@@ -110,4 +110,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default edit;
+export default Edit;

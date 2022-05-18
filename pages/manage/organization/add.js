@@ -1,14 +1,14 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../../components/Input";
-import Button from "../../../components/Button";
-import { getSession, useSession } from "next-auth/react";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input, TextArea } from '../../../components/Input';
+import Button from '../../../components/Button';
+import { getSession, useSession } from 'next-auth/react';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
 
-function add({ sessionFromProp }) {
+function Add({ sessionFromProp }) {
   const session = sessionFromProp;
 
   const [organizationDetails, setOrganizationDetails] = useState({});
@@ -24,19 +24,19 @@ function add({ sessionFromProp }) {
     };
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/add-organization", {
-      method: "POST",
+    const response = await fetch('/api/organizations/add-organization', {
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     if (response.ok) {
       //redirect to login
-      router.push("/manage/admin");
+      router.push('/manage/admin');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
     return;
   };
@@ -51,7 +51,7 @@ function add({ sessionFromProp }) {
     <>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/explore">
+          <Link href="/explore" passHref>
             <FiArrowLeft />
           </Link>
           <span className="font-bold">Add Partner Organization</span>
@@ -104,4 +104,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default add;
+export default Add;

@@ -22,6 +22,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { fetchJSON } from '../../../middleware/helper';
 import Button from '../../../components/Button';
+import Image from 'next/image';
 
 function MessageItem({ threadData, onClick }) {
   const time = moment(faker.time.recent(10, '12:00'));
@@ -46,7 +47,7 @@ function MessageItem({ threadData, onClick }) {
         }
         className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
-        <img
+        <Image
           src={tileData.message.avatar}
           alt="avatar"
           className="rounded-full w-12 h-12"
@@ -125,11 +126,11 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
     <>
       <div className="w-full border-b border-gray-100">
         <div className="py-3 px-4 flex flex-row items-center gap-3">
-          <Link href="/t/messages">
+          <Link href="/t/messages" passHref>
             <FiArrowLeft className="md:hidden cursor-pointer" />
           </Link>
           {threadData?.name && (
-            <img
+            <Image
               src={data.thread.receiver.avatar}
               alt="avatar"
               className="w-8 h-8 rounded-full"
@@ -197,7 +198,7 @@ function PersonDetails({ threadData, onClick }) {
       <div className="w-full px-4 py-8 flex flex-col items-center gap-4 border-b border-gray-100">
         <div className="w-20">
           {threadData?.name && (
-            <img
+            <Image
               src={data.message.avatar}
               alt="avatar"
               className="rounded-full"
@@ -236,7 +237,7 @@ function PersonDetails({ threadData, onClick }) {
   );
 }
 
-function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
+function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   const router = useRouter();
   const session = sessionFromProp;
 
@@ -281,7 +282,7 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       console.log('receive-message', data);
       setMessages((prev) => [...prev, data]);
     });
-  }, [socket]);
+  }, [socket, session?.user?._id]);
 
   // on first render load all threads
   useEffect(() => {
@@ -291,7 +292,7 @@ function thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   useEffect(() => {
     if (searchName.length > 0) getSearchNames();
     else setFetchedSearch([]);
-  }, [searchName]);
+  }, [searchName, getSearchNames]);
 
   const onClickMessageItem = (threadData) => {
     getMessages(threadData.threadID);
@@ -434,4 +435,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default thread;
+export default Thread;

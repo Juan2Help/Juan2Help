@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   FiAlertTriangle,
   FiBookmark,
@@ -8,9 +8,10 @@ import {
   FiSend,
   FiShare2,
   FiThumbsUp,
-} from "react-icons/fi";
-import moment from "moment";
-import { faker } from "@faker-js/faker";
+} from 'react-icons/fi';
+import moment from 'moment';
+import { faker } from '@faker-js/faker';
+import Image from 'next/image';
 
 function ModalToggle() {
   return (
@@ -31,7 +32,7 @@ function ModalToggle() {
           </div>
           <div className="flex flex-col space-y-4">
             <hr />
-            <a>Why you're seeing this post</a>
+            <a>Why you&apos;re seeing this post</a>
             <hr />
           </div>
           <ul className="bg-base-100 w-full space-y-4 mt-4">
@@ -55,7 +56,7 @@ function Post() {
       avatar: faker.image.avatar(),
     },
     post: {
-      time: moment(faker.date.recent(), "YYYYMMDD").fromNow(),
+      time: moment(faker.date.recent(), 'YYYYMMDD').fromNow(),
       location: faker.address.city(),
       title: faker.name.title(),
       image: `https://api.lorem.space/image/album?w=1500&h=1500&r=${Math.random()}`,
@@ -69,15 +70,19 @@ function Post() {
         <div className="flex flex-row justify-between">
           <div className="flex flex-row space-x-2">
             <div className="h-10 w-10 text-primary text-5xl flex items-center justify-center">
-              <img src={fake.author.avatar} className="rounded-full" />
+              <Image
+                alt="avatar"
+                src={fake.author.avatar}
+                className="rounded-full"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-bold">
-                {fake.author.name || "John Doe"}
+                {fake.author.name || 'John Doe'}
               </span>
               <span className="text-xs">
-                {[fake.post.time, fake.post.location].join(" · ") ||
-                  "4h · Pasay City"}
+                {[fake.post.time, fake.post.location].join(' · ') ||
+                  '4h · Pasay City'}
               </span>
             </div>
           </div>
@@ -94,10 +99,15 @@ function Post() {
           </p>
         </div>
         <div className="grow w-full sm:w-full bg-slate-500 relative rounded-3xl overflow-clip">
-          <img src={fake.post.image} layout="fill" objectFit="cover" />
+          <Image
+            alt="cover"
+            src={fake.post.image}
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <div className="flex flex-row space-x-4 text-2xl p-2 text-gray-700">
-          <label class="swap swap-rotate">
+          <label className="swap swap-rotate">
             <input type="checkbox" value={fake.post.isBookmarked} />
             <FiThumbsUp className="swap-on text-white fill-primary stroke-1" />
             <FiThumbsUp className="swap-off" />

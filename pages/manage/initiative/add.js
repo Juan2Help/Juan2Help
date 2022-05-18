@@ -1,20 +1,20 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import Participants from "../../../components/add-initiative/Participant";
-import { Input, TextArea, Date } from "../../../components/Input";
-import Button from "../../../components/Button";
-import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import Participants from '../../../components/add-initiative/Participant';
+import { Input, TextArea, Date } from '../../../components/Input';
+import Button from '../../../components/Button';
+import Head from 'next/head';
+import { getSession, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 
-function add({ sessionFromProp }) {
+function Add({ sessionFromProp }) {
   const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState({});
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
 
@@ -28,26 +28,26 @@ function add({ sessionFromProp }) {
     // add user email and NGO to initiative data
     initiativeData.NGOid = session.user.NGOid;
     initiativeData.location = {
-      type: "Point",
+      type: 'Point',
       address,
       coordinates: [longitude, latitude],
     };
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/add-initiative", {
-      method: "POST",
+    const response = await fetch('/api/add-initiative', {
+      method: 'POST',
       body: JSON.stringify(initiativeData),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
 
     return;
@@ -60,10 +60,10 @@ function add({ sessionFromProp }) {
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
-    if (name === "publish") {
+    if (name === 'publish') {
       setInitiativeData({
         ...initiativeData,
-        [name]: value === "on",
+        [name]: value === 'on',
       });
       return;
     }
@@ -77,8 +77,8 @@ function add({ sessionFromProp }) {
     setAddress(results[0].formatted_address);
     setLatitude(lat);
     setLongitude(lng);
-    console.log("results", results);
-    console.log("latLng", lat, lng);
+    console.log('results', results);
+    console.log('latLng', lat, lng);
   };
 
   return (
@@ -88,7 +88,7 @@ function add({ sessionFromProp }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage">
+          <Link href="/manage" passHref>
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">New Initiative</span>
@@ -160,7 +160,7 @@ function add({ sessionFromProp }) {
               className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
-              defaultValue = "null"
+              defaultValue="null"
             >
               <option value="null">Select Cause</option>
               <option value="Food">Food</option>
@@ -195,4 +195,4 @@ export async function getServerSideProps(context) {
     },
   };
 }
-export default add;
+export default Add;

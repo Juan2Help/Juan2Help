@@ -1,13 +1,13 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../../../components/ProtectedRoute";
-import ConfirmAction from "../../../../components/manage/ConfirmAction";
-import Button from "../../../../components/Button";
-import { GrantAccess } from "../../../../middleware/ProtectedRoute";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import Head from 'next/head';
+import { getSession, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
+import ConfirmAction from '../../../../components/manage/ConfirmAction';
+import Button from '../../../../components/Button';
+import { GrantAccess } from '../../../../middleware/ProtectedRoute';
 
 function EditModerator({ sessionFromProp }) {
   const session = sessionFromProp;
@@ -26,21 +26,21 @@ function EditModerator({ sessionFromProp }) {
     moderatorData.id = router.query.slug[0];
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/edit-moderator", {
-      method: "POST",
+    const response = await fetch('/api/organizations/edit-moderator', {
+      method: 'POST',
       body: JSON.stringify(moderatorData),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push(session?.user?.role === 8 ? "/manage/admin" : "/manage");
+      router.push(session?.user?.role === 8 ? '/manage/admin' : '/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
 
     return;
@@ -58,8 +58,8 @@ function EditModerator({ sessionFromProp }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+          <Link href="/manage" passHref>
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">Edit Role of Moderator</span>
         </div>

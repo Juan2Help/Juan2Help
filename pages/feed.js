@@ -1,13 +1,13 @@
-import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Header from "../components/Header";
-import Post from "../components/feed/Post";
-import Sidebar from "../components/Sidebar";
-import Suggestions from "../components/feed/Suggestions";
-import ProtectedRoute from "../components/ProtectedRoute";
-import { getSession, useSession } from "next-auth/react";
-import { GrantAccess, redirectToLogin } from "../middleware/ProtectedRoute";
-import { FiSend } from "react-icons/fi";
+import Head from 'next/head';
+import Navbar from '../components/Navbar';
+import Header from '../components/Header';
+import Post from '../components/feed/Post';
+import Sidebar from '../components/Sidebar';
+import Suggestions from '../components/feed/Suggestions';
+import ProtectedRoute from '../components/ProtectedRoute';
+import { getSession, useSession } from 'next-auth/react';
+import { GrantAccess, redirectToLogin } from '../middleware/ProtectedRoute';
+import { FiSend } from 'react-icons/fi';
 
 function PostInput({ onSubmit }) {
   return (
@@ -67,7 +67,7 @@ function Feed({ sessionFromProp, socket }) {
           </div>
         </div>
         <Navbar active="feed" />
-        <input type="checkbox" id="my-modal-4" class="modal-toggle" />
+        <input type="checkbox" id="my-modal-4" className="modal-toggle" />
       </div>
     </>
   );

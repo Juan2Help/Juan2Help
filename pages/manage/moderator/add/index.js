@@ -1,16 +1,16 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input } from "../../../../components/Input";
-import Head from "next/head";
-import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../../../components/ProtectedRoute";
-import ConfirmAction from "../../../../components/manage/ConfirmAction";
-import Button from "../../../../components/Button";
-import { GrantAccess } from "../../../../middleware/ProtectedRoute";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input } from '../../../../components/Input';
+import Head from 'next/head';
+import { getSession, useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
+import ConfirmAction from '../../../../components/manage/ConfirmAction';
+import Button from '../../../../components/Button';
+import { GrantAccess } from '../../../../middleware/ProtectedRoute';
 
-function add({ sessionFromProp }) {
+function Add({ sessionFromProp }) {
   const session = sessionFromProp;
   const [moderatorData, setModeratorData] = useState({});
   const router = useRouter();
@@ -24,21 +24,21 @@ function add({ sessionFromProp }) {
     moderatorData.email = session.user.email;
     moderatorData.NGOid = session.user.NGOid;
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/organizations/add-moderator", {
-      method: "POST",
+    const response = await fetch('/api/organizations/add-moderator', {
+      method: 'POST',
       body: JSON.stringify(moderatorData),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
       setErrorState({ error: true, message: error.message });
     }
 
@@ -58,8 +58,8 @@ function add({ sessionFromProp }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage">
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500"/>
+          <Link href="/manage" passHref>
+            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
           <span className="font-bold">New Moderator</span>
         </div>
@@ -110,4 +110,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default add;
+export default Add;
