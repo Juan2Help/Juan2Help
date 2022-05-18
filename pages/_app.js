@@ -3,6 +3,7 @@ import { RecoilRoot } from "recoil";
 import { SessionProvider } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+
 let socket1;
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   const [socket, setSocket] = useState(null);

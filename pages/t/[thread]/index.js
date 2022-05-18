@@ -25,15 +25,19 @@ import Button from "../../../components/Button";
 import Image from "next/image";
 
 function MessageItem({ threadData, onClick }) {
-  const [tileData,setTileData] = useState({
-    message: {
-      content: faker.lorem.sentence(),
-      name: threadData.name,
-      avatar: faker.image.avatar(),
-      href: threadData.threadID,
-      id: faker.datatype.uuid(),
-    },
-  });
+  const [tileData, setTileData] = useState({});
+  useEffect(() => {
+    const newData = {
+      message: {
+        content: faker.lorem.sentence(),
+        name: threadData.name,
+        avatar: faker.image.avatar(),
+        href: threadData.threadID,
+        id: faker.datatype.uuid(),
+      },
+    };
+    setTileData(newData);
+  }, [threadData]);
 
   return (
     <>
@@ -109,16 +113,21 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
 }
 
 function MessageThread({ user, onClick, onChange, threadData, messages }) {
-  const [data, setData] = useEffect({
-    thread: {
-      receiver: {
-        name: threadData.name || "Send a Message",
-        avatar: threadData.avatar,
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const newData = {
+      thread: {
+        receiver: {
+          name: threadData.name || "Send a Message",
+          avatar: threadData.avatar,
+        },
+        messages: messages,
+        href: faker.internet.domainName(),
       },
-      messages: messages,
-      href: faker.internet.domainName(),
-    },
-  });
+    };
+    setData(newData);
+  }, [threadData]);
 
   return (
     <>
@@ -129,7 +138,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           </Link>
           {threadData?.name && (
             <Image
-              src={data.thread.receiver.avatar || "/images/avatar.png"}
+              src={data?.thread?.receiver?.avatar || "/images/avatar.png"}
               alt="avatar"
               className="w-8 h-8 rounded-full"
               objectFit="contain"
@@ -138,22 +147,22 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
             />
           )}
 
-          <h1 className="font-bold text-lg">{data.thread.receiver.name}</h1>
+          <h1 className="font-bold text-lg">{data?.thread?.receiver?.name}</h1>
         </div>
       </div>
       <div className="flex-1 max-h-[80vh] min-w-0 overflow-y-auto flex flex-col gap-[2px] p-4">
         {messages?.length > 0 &&
-          data.thread.messages?.map((packet) =>
-            packet.sender === user ? (
+          data?.thread?.messages?.map((packet) =>
+            packet?.sender === user ? (
               <div className="w-full flex flex-row justify-end">
                 <div className="max-w-[50%] flex flex-row rounded-xl bg-primary p-4 text-white text-sm">
-                  {packet.message}
+                  {packet?.message}
                 </div>
               </div>
             ) : (
               <div className="w-full flex flex-row">
                 <div className="max-w-[50%] flex flex-row rounded-xl bg-gray-100 p-4 text-sm">
-                  {packet.message}
+                  {packet?.message}
                 </div>
               </div>
             )
@@ -180,27 +189,33 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
 }
 
 function PersonDetails({ threadData, onClick }) {
-  const [data,setData] = useState({
-    message: {
-      content: faker.lorem.sentence(),
-      author: threadData.name,
-      organization: faker.company.companyName(),
-      location: threadData?.location?.address || "/images/avatar.png",
-      email: threadData.email,
-      phone: threadData.mobileNumber,
-      avatar: threadData.avatar,
-      date: faker.date.recent(),
-      href: faker.internet.domainName(),
-      id: threadData._id,
-    },
-  });
+  const [data, setData] = useState({});
+
+  useEffect(() => {
+    const newData = {
+      message: {
+        content: faker.lorem.sentence(),
+        author: threadData.name,
+        organization: faker.company.companyName(),
+        location: threadData?.location?.address || "No location",
+        email: threadData.email,
+        phone: threadData.mobileNumber,
+        avatar: threadData.avatar,
+        date: faker.date.recent(),
+        href: faker.internet.domainName(),
+        id: threadData._id,
+      },
+    };
+    setData(newData);
+  }, [threadData]);
+
   return (
     <>
       <div className="w-full px-4 py-8 flex flex-col items-center gap-4 border-b border-gray-100">
         <div className="w-20 relative">
           {threadData?.name && (
             <Image
-              src={data.message.avatar || "/images/avatar.png"}
+              src={data?.message?.avatar || "/images/avatar.png"}
               alt="avatar"
               className="rounded-full"
               objectFit="contain"
@@ -210,7 +225,7 @@ function PersonDetails({ threadData, onClick }) {
           )}
         </div>
         <div className="flex flex-col items-center">
-          <div className="font-bold text-lg">{data.message.author}</div>
+          <div className="font-bold text-lg">{data?.message?.author}</div>
         </div>
       </div>
       <div className="collapse w-full border-b border-gray-100">
@@ -222,15 +237,15 @@ function PersonDetails({ threadData, onClick }) {
         <div className="collapse-content flex flex-col gap-4 text-sm">
           <div className="flex flex-row gap-3 items-center">
             <FiMapPin className="text-gray-400 text-lg" />
-            <div>{data.message.location}</div>
+            <div>{data?.message?.location}</div>
           </div>
           <div className="flex flex-row gap-3 items-center">
             <FiPhone className="text-gray-400 text-lg" />
-            <div>{data.message.phone}</div>
+            <div>{data?.message?.phone}</div>
           </div>
           <div className="flex flex-row gap-3 items-center">
             <FiMail className="text-gray-400 text-lg" />
-            <div>{data.message.email}</div>
+            <div>{data?.message?.email}</div>
           </div>
         </div>
         <div className="w-80% p-10">
@@ -303,6 +318,7 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   }, [searchName]);
 
   const onClickMessageItem = (threadData) => {
+    setMessages([]);
     getMessages(threadData.threadID);
     router.push(`/t/${threadData.threadID}`);
     setActiveThread(threadData);

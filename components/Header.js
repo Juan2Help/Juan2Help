@@ -19,7 +19,7 @@ function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
   const [notifications, setNotifications] = useRecoilState(notificationsState);
-  const [avatar, setAvatar] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(faker.image.avatar());
 
   const router = useRouter();
 
@@ -154,7 +154,7 @@ function Header({ session, socket }) {
                   layout="fill"
                   objectFit="contain"
                   className="rounded-full h-full w-full"
-                  src={avatar || "/images/avatar.png"}
+                  src={profilePicture || "/images/avatar.png"}
                 />
               </div>
             </label>

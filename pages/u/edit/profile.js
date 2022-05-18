@@ -1,19 +1,24 @@
-import Link from 'next/link';
-import { getSession } from 'next-auth/react';
-import Head from 'next/head';
-import { FiArrowLeft } from 'react-icons/fi';
-import { Input, TextArea } from '../../../components/Input';
-import Button from '../../../components/Button';
-import ProtectedRoute from '../../../components/ProtectedRoute';
-import { GrantAccess } from '../../../middleware/ProtectedRoute';
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { fetchUserDetails } from '../../../middleware/helper';
+import Link from "next/link";
+import { getSession } from "next-auth/react";
+import Head from "next/head";
+import { FiArrowLeft } from "react-icons/fi";
+import { Input, TextArea } from "../../../components/Input";
+import Button from "../../../components/Button";
+import ProtectedRoute from "../../../components/ProtectedRoute";
+import { GrantAccess } from "../../../middleware/ProtectedRoute";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { fetchUserDetails } from "../../../middleware/helper";
+import { geocodeByAddress } from "react-places-autocomplete";
+import { getLatLng } from "react-places-autocomplete";
 
 function Profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
 
   const [accountDetails, setAccountDetails] = useState(userDetails);
+  const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState(0);
+  const [longitude, setLongitude] = useState(0);
   const router = useRouter();
 
   // submit initiative data to api
@@ -25,24 +30,39 @@ function Profile({ sessionFromProp, userDetails }) {
       ...accountDetails,
     };
 
-    console.log(data);
+    (data.location = {
+      type: "Point",
+      address,
+      coordinates: [longitude, latitude],
+    }),
+      console.log("SENDING", data);
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch('/api/user/update-account', {
-      method: 'POST',
+    const response = await fetch("/api/user/update-account", {
+      method: "POST",
       body: JSON.stringify(data),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
     if (response.ok) {
       //redirect to login
-      router.push(`/u/${session.user._id}`);
+      // router.push(`/u/${session.user._id}`);
     } else {
       const error = await response.json();
-      console.log('error', error);
+      console.log("error", error);
     }
     return;
+  };
+
+  const handlePlacesChange = async (address) => {
+    const results = await geocodeByAddress(address);
+    const { lat, lng } = await getLatLng(results[0]);
+    setAddress(results[0].formatted_address);
+    setLatitude(lat);
+    setLongitude(lng);
+    console.log("results", results);
+    console.log("latLng", lat, lng);
   };
 
   const handleChange = (e) => {
@@ -92,10 +112,12 @@ function Profile({ sessionFromProp, userDetails }) {
               name="location"
               type="text"
               required
-              placeholder="Location"
               className="min-h-96"
-              defaultValue={userDetails.location}
-              onChange={handleChange}
+              placeholder="Location"
+              isLocation={true}
+              onChange={setAddress}
+              value={address}
+              onSelect={handlePlacesChange}
             />
             <span className="font-semibold">Phone Number</span>
             <Input
