@@ -5,6 +5,7 @@ import { fetchJSON } from '../middleware/helper';
 import { useEffect } from 'react';
 import { notificationsState } from '../atoms/notificationsAtom';
 import { useRecoilState } from 'recoil';
+import Image from 'next/image';
 
 function Notification({ notificationData }) {
   const time = moment(notificationData?.dateCreated).fromNow();
@@ -20,9 +21,9 @@ function Notification({ notificationData }) {
   };
   return (
     <>
-      <Link href={data.notification.href}>
+      <Link href={data.notification.href} passHref>
         <div className="flex flex-row gap-3">
-          <img
+          <Image
             src={data.notification.avatar}
             alt="avatar"
             className="rounded-full w-12 h-12"
@@ -61,7 +62,7 @@ function NotificationList({ session }) {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, []);
+  }, [getNotification, notifications]);
 
   console.log(notifications);
   return (

@@ -19,7 +19,7 @@ function account({ sessionFromProp }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href={`/u/${session?.user?.username}`}>
+          <Link href={`/u/${session?.user?.username}`} passHref>
             <FiArrowLeft className="cursor-pointer" />
           </Link>
           <span className="font-bold">Edit Profile</span>

@@ -1,41 +1,41 @@
-import Head from "next/head";
-import { React } from "react";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
+import Head from 'next/head';
+import { React } from 'react';
+import Header from '../../components/Header';
+import Navbar from '../../components/Navbar';
 import {
   ModeratorList,
   ModeratorModal,
   NGODetails,
   OrganizationList,
-} from "../../components/manage/ManageComponents";
-import Sidebar from "../../components/Sidebar";
-import { getSession } from "next-auth/react";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import ProtectedRoute from "../../components/ProtectedRoute";
-import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
-import { fetchOrganizationList } from "../../middleware/helper";
-import Button from "../../components/Button";
+} from '../../components/manage/ManageComponents';
+import Sidebar from '../../components/Sidebar';
+import { getSession } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import ProtectedRoute from '../../components/ProtectedRoute';
+import { GrantAccess, redirectToLogin } from '../../middleware/ProtectedRoute';
+import { fetchOrganizationList } from '../../middleware/helper';
+import Button from '../../components/Button';
 
-function admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
+function Admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
   const session = sessionFromProp;
 
   const [handledModerators, setHandledModerators] = useState([]);
   const [selectedOrganization, setSelectedOrganization] = useState({});
-  const [selectedModerator, setSelectedModerator] = useState("");
+  const [selectedModerator, setSelectedModerator] = useState('');
   const [newData, setNewData] = useState(false);
 
   const router = useRouter();
 
-  console.log("Handled Orgs:", handledOrganizations);
+  console.log('Handled Orgs:', handledOrganizations);
 
   //fetch data for moderator list
   const fetchModeratorData = async () => {
-    const req = await fetch("/api/organizations/moderator-list", {
-      method: "POST",
+    const req = await fetch('/api/organizations/moderator-list', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
       },
       body: JSON.stringify({
         NGOid: selectedOrganization.id,
@@ -63,11 +63,11 @@ function admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
 
   const deleteOrganizationHandler = async (e) => {
     try {
-      const req = await fetch("/api/organizations/delete-organization", {
-        method: "POST",
+      const req = await fetch('/api/organizations/delete-organization', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           NGOid: selectedOrganization.id,
@@ -90,11 +90,11 @@ function admin({ sessionFromProp, organizationDetails, handledOrganizations }) {
 
   const deleteModeratorHandler = async (e) => {
     try {
-      const req = await fetch("/api/organizations/delete-moderator", {
-        method: "POST",
+      const req = await fetch('/api/organizations/delete-moderator', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           id: selectedModerator,
@@ -197,12 +197,12 @@ export async function getServerSideProps(context) {
     props: {
       sessionFromProp: session,
       organizationDetails: {
-        name: "Juan 2 Help Admin",
-        description: "Administrator of Juan 2 Help",
+        name: 'Juan 2 Help Admin',
+        description: 'Administrator of Juan 2 Help',
       },
       handledOrganizations: await fetchOrganizationList(),
     },
   };
 }
 
-export default admin;
+export default Admin;

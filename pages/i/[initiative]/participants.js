@@ -1,11 +1,11 @@
-import { React } from "react";
-import { getSession } from "next-auth/react";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
-import { FiArrowLeft } from "react-icons/fi";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { faker } from "@faker-js/faker";
-import Image from "next/image";
+import { React } from 'react';
+import { getSession } from 'next-auth/react';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import { FiArrowLeft } from 'react-icons/fi';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { faker } from '@faker-js/faker';
+import Image from 'next/image';
 
 function fakeUser() {
   const fake = {
@@ -24,14 +24,14 @@ function Body({ participants, onClickHandler }) {
       participants,
     },
   };
-  console.log("participants: ", participants);
+  console.log('participants: ', participants);
 
   return (
     <div className="px-4 flex flex-col gap-2">
       <hr />
       {fake.initiative?.participants?.map((participant) => (
         <label
-          for="registrant-options"
+          htmlFor="registrant-options"
           className="text-xl"
           key={participant._id}
         >
@@ -42,7 +42,8 @@ function Body({ participants, onClickHandler }) {
           >
             <div className="flex flex-row gap-4 items-center">
               <div className="w-20 overflow-clip rounded-full">
-                <img
+                <Image
+                  alt=""
                   src={faker.internet.avatar()}
                   layout="fill"
                   objectFit="cover"
@@ -56,10 +57,10 @@ function Body({ participants, onClickHandler }) {
                 </div>
                 <div className="text-sm text-slate-600">
                   <div>{`${
-                    participant.phone ? participant.phone : "No contact"
+                    participant.phone ? participant.phone : 'No contact'
                   }`}</div>
                   <div>{`${
-                    participant.city ? participant.city : "No location"
+                    participant.city ? participant.city : 'No location'
                   } `}</div>
                 </div>
               </div>
@@ -103,14 +104,14 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log("initiativeId", initiativeId);
+  console.log('initiativeId', initiativeId);
 
   const req = await fetch(
     `${process.env.NEXTAUTH_URL}/api/initiatives/get-participants`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         id: initiativeId,

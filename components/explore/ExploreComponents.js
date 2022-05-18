@@ -10,7 +10,8 @@ function OrganizerTile({ name }) {
   return (
     <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center gap-2">
       <div className="w-full pb-full">
-        <img
+        <Image
+          alt=""
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
           className="rounded-xl"
           objectFit="cover"
@@ -88,8 +89,9 @@ function Initiative({ initiativeData, bookmarkList }) {
   return (
     <div className="rounded-xl bg-white w-72 overflow-hidden flex-none hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
       <div className="h-36 w-full sm:w-96 bg-slate-500 relative cursor-pointer ">
-        <Link href={`/i/${initiativeData._id}`}>
+        <Link href={`/i/${initiativeData._id}`} passHref>
           <Image
+            alt="initiative"
             src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
             layout="fill"
             objectFit="cover"
@@ -114,7 +116,8 @@ function Initiative({ initiativeData, bookmarkList }) {
 
         <div className="flex flex-row items-center justify-between gap-2">
           <span className="text-sm font-medium text-gray-300">
-            {data.initiative.participantcount}/{data.initiative.participants} joined
+            {data.initiative.participantcount}/{data.initiative.participants}{' '}
+            joined
           </span>
           <label className="swap swap-flip">
             <input

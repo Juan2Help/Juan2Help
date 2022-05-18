@@ -13,6 +13,7 @@ import { useRecoilState } from 'recoil';
 import { notificationsState } from '../atoms/notificationsAtom';
 import { fetchJSON } from '../middleware/helper';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
@@ -42,7 +43,7 @@ function Header({ session, socket }) {
     if (notifications.length === 0) {
       getNotification();
     }
-  }, []);
+  }, [getNotification, notifications]);
 
   useEffect(() => {
     socket?.emit('newUser', {
@@ -54,18 +55,18 @@ function Header({ session, socket }) {
     socket?.on('getNotification', listener);
 
     return () => socket?.off('getNotification', listener);
-  }, [socket]);
+  }, [socket, session?.user?._id]);
 
   return (
     <div className="sticky top-0 flex flex-row items-center justify-center w-screen z-50 backdrop-filter backdrop-blur-sm bg-slate-100/95">
       <div className="flex flex-row items-center justify-center relative py-4 px-4 xl:px-8 xl:max-w-screen-xl w-screen">
-        <Link href="/explore">
+        <Link href="/explore" passHref>
           <h1 className="cursor-pointer w-1/12 text-primary font-bold text-3xl flex-auto">
             JUAN2HELP
           </h1>
         </Link>
         <div className="flex flex-row items-center justify-center space-x-2">
-          <Link href="/t/messages">
+          <Link href="/t/messages" passHref>
             <div className="rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl">
               <div className="indicator flex cursor-pointer">
                 {hasMessage && (
@@ -81,7 +82,7 @@ function Header({ session, socket }) {
               </div>
             </div>
           </Link>
-          <Link href="/notifications">
+          <Link href="/notifications" passHref>
             <div className="md:hidden rounded-full flex items-center justify-center h-10 w-10 bg-purple-100 text-primary text-xl cursor-pointer">
               <div className="indicator">
                 {hasNotification && (
@@ -107,7 +108,7 @@ function Header({ session, socket }) {
               </div>
             </label>
             <div
-              tabindex="0"
+              tabIndex="0"
               className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-y-auto"
             >
               <div className="flex flex-col p-2 gap-4">
@@ -125,7 +126,7 @@ function Header({ session, socket }) {
                 <hr />
               </div>
               <div className="px-2 flex flex-row items-center justify-between">
-                <Link href="/notifications">
+                <Link href="/notifications" passHref>
                   <div className="text-primary text-xs cursor-pointer w-full text-right">
                     See All
                   </div>
@@ -143,13 +144,17 @@ function Header({ session, socket }) {
             </div>
           </div>
           <div className="dropdown dropdown-end">
-            <label tabindex="0">
+            <label tabIndex="0">
               <div className="className=h-10 w-10 flex cursor-pointer rounded-full hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
-                <img className="rounded-full" src={faker.image.avatar()} />
+                <Image
+                  alt="avatar"
+                  className="rounded-full"
+                  src={faker.image.avatar()}
+                />
               </div>
             </label>
             <ul
-              tabindex="0"
+              tabIndex="0"
               className="dropdown-content menu menu-compact p-2 mt-2 w-56 rounded-md shadow-lg bg-white divide-y divide-gray-200"
             >
               <div className="text-gray-700 px-4 py-2 text-sm text-left ">
@@ -158,7 +163,7 @@ function Header({ session, socket }) {
               </div>
               <div>
                 <li>
-                  <Link href={`/u/${session?.user?._id}`}>
+                  <Link href={`/u/${session?.user?._id}`} passHref>
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <FaUserCircle className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left">
@@ -168,7 +173,7 @@ function Header({ session, socket }) {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/">
+                  <Link href="/" passHref>
                     <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                       <IoMdSettings className="text-lg" />
                       <span className=" text-gray-700 text-sm text-left">
@@ -183,6 +188,7 @@ function Header({ session, socket }) {
                       href={
                         session?.user?.role === 8 ? '/manage/admin' : '/manage'
                       }
+                      passHref
                     >
                       <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                         <MdManageSearch className="text-lg" />

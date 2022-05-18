@@ -15,7 +15,7 @@ function Navbar({ active }) {
   const { data: session } = useSession();
   return (
     <div className="sticky w-screen bottom-0 p-4 bg-white rounded-t-3xl flex flex-row items-center space-x-4 md:hidden">
-      <Link href="/explore">
+      <Link href="/explore" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
             active == 'explore'
@@ -26,7 +26,7 @@ function Navbar({ active }) {
           <FiCompass className="text-2xl" />
         </div>
       </Link>
-      <Link href="/feed">
+      <Link href="/feed" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
             active == 'feed'
@@ -37,7 +37,7 @@ function Navbar({ active }) {
           <FiCopy className="text-2xl" />
         </div>
       </Link>
-      <Link href="/initiatives">
+      <Link href="/initiatives" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
             active == 'initiatives'
@@ -48,7 +48,7 @@ function Navbar({ active }) {
           <RiHandHeartLine className="text-2xl" />
         </div>
       </Link>
-      <Link href="/bookmarks">
+      <Link href="/bookmarks" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
             active == 'bookmarks'
@@ -59,7 +59,7 @@ function Navbar({ active }) {
           <FiBookmark className="text-2xl" />
         </div>
       </Link>
-      <Link href="/schedule">
+      <Link href="/schedule" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
             active == 'schedule'

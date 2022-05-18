@@ -1,26 +1,27 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   getProviders,
   signIn as signIntoProviders,
   useSession,
   signOut,
-} from "next-auth/react";
-import Head from "next/head";
-import Button from "../../components/Button";
-import { Input } from "../../components/Input";
-import ErrorMessage from "../../components/ErrorMessage";
-import Link from "next/link";
-import { useRouter } from "next/router";
+} from 'next-auth/react';
+import Head from 'next/head';
+import Button from '../../components/Button';
+import { Input } from '../../components/Input';
+import ErrorMessage from '../../components/ErrorMessage';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
-function signin({ providers }) {
+function Signin({ providers }) {
   const router = useRouter();
   const { data: session } = useSession();
   const [errorState, setErrorState] = useState({
     error: false,
-    message: "",
-    errorType: "",
+    message: '',
+    errorType: '',
   });
-  const [userDetails, setUserDetails] = useState({ email: "", password: "" });
+  const [userDetails, setUserDetails] = useState({ email: '', password: '' });
   const { email, password } = userDetails;
   const { error, message, errorType } = errorState;
 
@@ -29,17 +30,17 @@ function signin({ providers }) {
 
     //check if fields are empty
     if (!email || !password) {
-      alert("Please enter email and password");
+      alert('Please enter email and password');
       return;
     }
 
     // try to sign in
     try {
-      const result = await signIntoProviders("credentials", {
+      const result = await signIntoProviders('credentials', {
         redirect: false,
         email: email,
         password: password,
-        callbackUrl: "/explore",
+        callbackUrl: '/explore',
       });
 
       if (result.error) {
@@ -53,9 +54,9 @@ function signin({ providers }) {
       }
 
       //if no error, redirect to home page
-      router.push("/explore");
+      router.push('/explore');
     } catch (err) {
-      console.error("Error: ", err);
+      console.error('Error: ', err);
     }
 
     return;
@@ -71,8 +72,8 @@ function signin({ providers }) {
     if (errorType === name) {
       setErrorState({
         error: false,
-        message: "",
-        errorType: "",
+        message: '',
+        errorType: '',
       });
     }
   };
@@ -104,7 +105,7 @@ function signin({ providers }) {
         <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-6">
             <div>
-              <img
+              <Image
                 className="mx-auto h-12 w-auto"
                 src="/icon.png"
                 alt="Juan2Help"
@@ -129,7 +130,7 @@ function signin({ providers }) {
                   required
                   placeholder="Email address"
                   onChange={handleChange}
-                  hasError={errorType === "email"}
+                  hasError={errorType === 'email'}
                 />
                 <Input
                   id="password"
@@ -139,10 +140,10 @@ function signin({ providers }) {
                   required
                   placeholder="Password"
                   onChange={handleChange}
-                  hasError={errorType === "password"}
+                  hasError={errorType === 'password'}
                 />
                 <ErrorMessage
-                  text={error ? "Error: " + message : ""}
+                  text={error ? 'Error: ' + message : ''}
                   isInformation={error}
                   hasError={error}
                 />
@@ -160,8 +161,8 @@ function signin({ providers }) {
                     htmlFor="remember-me"
                     className="ml-2 block text-sm text-gray-900"
                   >
-                    {" "}
-                    Remember me{" "}
+                    {' '}
+                    Remember me{' '}
                   </label>
                 </div>
 
@@ -181,14 +182,14 @@ function signin({ providers }) {
                   isGoogleSignIn={true}
                   onClick={() =>
                     signIntoProviders(providers.google.id, {
-                      callbackUrl: "/explore",
+                      callbackUrl: '/explore',
                     })
                   }
                 />
               </div>
             </form>
             <div className="w-full text-sm font-medium text-gray-400 text-center">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{` `}
               <span className="font-semibold text-primary hover:text-primary">
                 <Link href="/auth/signup">Sign Up</Link>
               </span>
@@ -210,4 +211,4 @@ export async function getServerSideProps() {
   };
 }
 
-export default signin;
+export default Signin;

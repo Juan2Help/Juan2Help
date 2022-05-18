@@ -1,16 +1,16 @@
-import Link from "next/link";
-import { getSession } from "next-auth/react";
-import Head from "next/head";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../../components/Input";
-import Button from "../../../components/Button";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { fetchUserDetails } from "../../../middleware/helper";
+import Link from 'next/link';
+import { getSession } from 'next-auth/react';
+import Head from 'next/head';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input, TextArea } from '../../../components/Input';
+import Button from '../../../components/Button';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { fetchUserDetails } from '../../../middleware/helper';
 
-function profile({ sessionFromProp, userDetails }) {
+function Profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
 
   const [accountDetails, setAccountDetails] = useState(userDetails);
@@ -28,11 +28,11 @@ function profile({ sessionFromProp, userDetails }) {
     console.log(data);
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/user/update-account", {
-      method: "POST",
+    const response = await fetch('/api/user/update-account', {
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     if (response.ok) {
@@ -40,7 +40,7 @@ function profile({ sessionFromProp, userDetails }) {
       router.push(`/u/${session.user._id}`);
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
     return;
   };
@@ -58,7 +58,7 @@ function profile({ sessionFromProp, userDetails }) {
       </Head>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href={`/u/${session?.user?._id}`}>
+          <Link href={`/u/${session?.user?._id}`} passHref>
             <FiArrowLeft className="cursor-pointer" />
           </Link>
           <span className="font-bold">Edit Profile</span>
@@ -146,4 +146,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default profile;
+export default Profile;

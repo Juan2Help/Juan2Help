@@ -224,12 +224,15 @@ function InitiativesPage({
     lng: latlng[1] || 0,
   };
 
-  const onLoad = useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-    map.setZoom(2);
-    setMap(map);
-  }, []);
+  const onLoad = useCallback(
+    function callback(map) {
+      const bounds = new window.google.maps.LatLngBounds(center);
+      map.fitBounds(bounds);
+      map.setZoom(2);
+      setMap(map);
+    },
+    [center]
+  );
 
   const onUnmount = useCallback(function callback(map) {
     setMap(null);

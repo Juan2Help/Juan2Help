@@ -1,21 +1,22 @@
-import { React, useState, useEffect } from "react";
-import { getSession } from "next-auth/react";
+import { React, useState, useEffect } from 'react';
+import { getSession } from 'next-auth/react';
 import {
   GrantAccess,
   redirectToLogin,
-} from "../../../middleware/ProtectedRoute";
-import { FiArrowLeft } from "react-icons/fi";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { faker } from "@faker-js/faker";
-import { FiLink, FiShare2, FiAlertTriangle } from "react-icons/fi";
+} from '../../../middleware/ProtectedRoute';
+import { FiArrowLeft } from 'react-icons/fi';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { faker } from '@faker-js/faker';
+import { FiLink, FiShare2, FiAlertTriangle } from 'react-icons/fi';
+import Image from 'next/image';
 
 function ModalToggle({ acceptHandler, rejectHandler, visitHandler }) {
   return (
     <>
-      <input type="checkbox" id="registrant-options" class="modal-toggle" />
-      <label for="registrant-options" class="modal cursor-pointer">
-        <label class="modal-box relative" for="">
+      <input type="checkbox" id="registrant-options" className="modal-toggle" />
+      <label htmlFor="registrant-options" className="modal cursor-pointer">
+        <label className="modal-box relative" htmlFor="">
           <div className="flex flex-row justify-around pb-4">
             <div className="btn btn-outline btn-circle text-xl">
               <FiLink />
@@ -35,7 +36,7 @@ function ModalToggle({ acceptHandler, rejectHandler, visitHandler }) {
             <a>Visit profile</a>
             <hr />
           </div>
-          <ul class="bg-base-100 w-full space-y-4 mt-4 hover:cursor-pointer">
+          <ul className="bg-base-100 w-full space-y-4 mt-4 hover:cursor-pointer">
             <li onClick={acceptHandler}>
               <a>Accept</a>
             </li>
@@ -66,14 +67,14 @@ function Body({ registrants, onClickHandler }) {
       participants: registrants,
     },
   };
-  console.log("registrants: ", registrants);
+  console.log('registrants: ', registrants);
 
   return (
     <div className="px-4 flex flex-col gap-2">
       <hr />
       {fake.initiative?.participants?.map((participant) => (
         <label
-          for="registrant-options"
+          htmlFor="registrant-options"
           className="text-xl"
           key={participant._id}
         >
@@ -84,7 +85,8 @@ function Body({ registrants, onClickHandler }) {
           >
             <div className="flex flex-row gap-4 items-center">
               <div className="w-20 overflow-clip rounded-full">
-                <img
+                <Image
+                  alt=""
                   src={faker.internet.avatar()}
                   layout="fill"
                   objectFit="cover"
@@ -98,10 +100,10 @@ function Body({ registrants, onClickHandler }) {
                 </div>
                 <div className="text-sm text-slate-600">
                   <div>{`${
-                    participant.phone ? participant.phone : "No contact"
+                    participant.phone ? participant.phone : 'No contact'
                   }`}</div>
                   <div>{`${
-                    participant.city ? participant.city : "No location"
+                    participant.city ? participant.city : 'No location'
                   } `}</div>
                 </div>
               </div>
@@ -135,7 +137,7 @@ function Header({ initiativeTitle }) {
   );
 }
 
-function search({
+function Search({
   sessionFromProp,
   registrants,
   initiativeId,
@@ -149,10 +151,10 @@ function search({
   const [registrantList, setRegistrantList] = useState(registrants);
 
   const grabRegistrants = async () => {
-    const req = await fetch("/api/initiatives/get-registants", {
-      method: "POST",
+    const req = await fetch('/api/initiatives/get-registants', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         id: initiativeId,
@@ -165,46 +167,46 @@ function search({
 
   const onClickHandler = (e) => {
     setSelectedRegistrant(e.currentTarget.id);
-    console.log("selectedRegistrant: ", selectedRegistrant);
+    console.log('selectedRegistrant: ', selectedRegistrant);
   };
 
   const acceptHandler = async () => {
-    const req = await fetch("/api/initiatives/approve-application", {
-      method: "POST",
+    const req = await fetch('/api/initiatives/approve-application', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         registrantId: selectedRegistrant,
         initiativeId: initiativeId,
-        name: session?.user?.name.split(" ")[0],
+        name: session?.user?.name.split(' ')[0],
       }),
     });
 
-    socket?.emit("application-decision", {
+    socket?.emit('application-decision', {
       registrantId: selectedRegistrant,
-      decision: "accepted",
+      decision: 'accepted',
     });
 
     grabRegistrants();
   };
 
   const rejectHandler = async () => {
-    const req = await fetch("/api/initiatives/reject-application", {
-      method: "POST",
+    const req = await fetch('/api/initiatives/reject-application', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         registrantId: selectedRegistrant,
         initiativeId: initiativeId,
-        name: session?.user?.name.split(" ")[0],
+        name: session?.user?.name.split(' ')[0],
       }),
     });
 
-    socket?.emit("application-decision", {
+    socket?.emit('application-decision', {
       registrantId: selectedRegistrant,
-      decision: "rejected",
+      decision: 'rejected',
     });
     grabRegistrants();
   };
@@ -214,11 +216,11 @@ function search({
   };
 
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
-    console.log("SOCKET INITIALIZED:", socket);
-  }, [socket]);
+    console.log('SOCKET INITIALIZED:', socket);
+  }, [socket, session?.user?._id]);
 
   return (
     <div className="flex relative flex-col min-h-screen">
@@ -237,14 +239,14 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log("initiativeId", initiativeId);
+  console.log('initiativeId', initiativeId);
 
   const req = await fetch(
     `${process.env.NEXTAUTH_URL}/api/initiatives/get-registants`,
     {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         id: initiativeId,
@@ -264,4 +266,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default search;
+export default Search;
