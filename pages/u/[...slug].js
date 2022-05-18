@@ -20,6 +20,7 @@ import Image from 'next/image';
 function Profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
   const [isOpen, setOpenState] = useState(false);
+  const [avatar, setAvatar] = useState(faker.image.avatar());
 
   return (
     <ProtectedRoute session={session}>
@@ -66,7 +67,7 @@ function Profile({ sessionFromProp, userDetails }) {
               <div className="rounded-full overflow-clip h-40 w-40">
                 <Image
                   alt="avatar"
-                  src={faker.image.avatar()}
+                  src={avatar || "/images/avatar.png"}
                   className="min-h-full min-w-full"
                   layout="fill"
                 />

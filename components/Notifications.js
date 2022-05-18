@@ -10,7 +10,7 @@ import Image from "next/image";
 function Notification({ notificationData }) {
   const time = moment(notificationData?.dateCreated).fromNow();
 
-  const data = {
+  const [data, setData] = useState({
     notification: {
       name: notificationData?.name,
       message: notificationData?.message,
@@ -18,14 +18,15 @@ function Notification({ notificationData }) {
       avatar: faker.image.avatar(),
       href: `/i/${notificationData?.initiativeID}`,
     },
-  };
+  });
+
   return (
     <>
       <Link href={data.notification.href} passHref>
         <div className="flex flex-row gap-3">
           <div className="w-1/4 rounded-full flex justify-center">
             <Image
-              src={data.notification.avatar}
+              src={data.notification.avatar || "/images/avatar.png"}
               alt="avatar"
               objectFit="contain"
               className="rounded-full w-full "

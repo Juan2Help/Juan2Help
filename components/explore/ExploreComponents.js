@@ -58,10 +58,10 @@ function Initiative({ initiativeData, bookmarkList }) {
     typeof initiativeData?.location === "string"
       ? initiativeData?.location
       : initiativeData?.location?.address;
+
   const data = {
     author: {
       name: initiativeData?.publisherName,
-      avatar: faker.image.avatar(),
     },
     initiative: {
       date: moment(initiativeData?.startDate)

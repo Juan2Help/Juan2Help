@@ -25,12 +25,7 @@ import Button from "../../../components/Button";
 import Image from "next/image";
 
 function MessageItem({ threadData, onClick }) {
-  const time = moment(faker.time.recent(10, "12:00"));
-  const parsedTime =
-    time.startOf("hour").fromNow()[0] != "i"
-      ? time.startOf("hour").fromNow()
-      : time.endOf("day").fromNow();
-  const tileData = {
+  const [tileData,setTileData] = useState({
     message: {
       content: faker.lorem.sentence(),
       name: threadData.name,
@@ -38,7 +33,8 @@ function MessageItem({ threadData, onClick }) {
       href: threadData.threadID,
       id: faker.datatype.uuid(),
     },
-  };
+  });
+
   return (
     <>
       <div
@@ -48,7 +44,7 @@ function MessageItem({ threadData, onClick }) {
         className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
         <Image
-          src={tileData.message.avatar}
+          src={tileData.message.avatar || "/images/avatar.png"}
           alt="avatar"
           className="rounded-full w-12 h-12"
           objectFit="cover"
@@ -113,7 +109,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
 }
 
 function MessageThread({ user, onClick, onChange, threadData, messages }) {
-  const data = {
+  const [data, setData] = useEffect({
     thread: {
       receiver: {
         name: threadData.name || "Send a Message",
@@ -122,7 +118,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
       messages: messages,
       href: faker.internet.domainName(),
     },
-  };
+  });
 
   return (
     <>
@@ -133,7 +129,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           </Link>
           {threadData?.name && (
             <Image
-              src={data.thread.receiver.avatar}
+              src={data.thread.receiver.avatar || "/images/avatar.png"}
               alt="avatar"
               className="w-8 h-8 rounded-full"
               objectFit="contain"
@@ -184,12 +180,12 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
 }
 
 function PersonDetails({ threadData, onClick }) {
-  const data = {
+  const [data,setData] = useState({
     message: {
       content: faker.lorem.sentence(),
       author: threadData.name,
       organization: faker.company.companyName(),
-      location: threadData?.location?.address || "",
+      location: threadData?.location?.address || "/images/avatar.png",
       email: threadData.email,
       phone: threadData.mobileNumber,
       avatar: threadData.avatar,
@@ -197,14 +193,14 @@ function PersonDetails({ threadData, onClick }) {
       href: faker.internet.domainName(),
       id: threadData._id,
     },
-  };
+  });
   return (
     <>
       <div className="w-full px-4 py-8 flex flex-col items-center gap-4 border-b border-gray-100">
         <div className="w-20 relative">
           {threadData?.name && (
             <Image
-              src={data.message.avatar}
+              src={data.message.avatar || "/images/avatar.png"}
               alt="avatar"
               className="rounded-full"
               objectFit="contain"

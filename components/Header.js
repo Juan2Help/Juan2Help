@@ -19,6 +19,7 @@ function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
   const [notifications, setNotifications] = useRecoilState(notificationsState);
+  const [avatar, setAvatar] = useState(null);
 
   const router = useRouter();
 
@@ -30,6 +31,7 @@ function Header({ session, socket }) {
     if (data.length > 0) {
       setNotifications(data);
     }
+    setAvatar(faker.internet.avatar());
   }, []);
 
   const handleNotificationClick = async () => {
@@ -152,7 +154,7 @@ function Header({ session, socket }) {
                   layout="fill"
                   objectFit="contain"
                   className="rounded-full h-full w-full"
-                  src={faker.image.avatar()}
+                  src={avatar || "/images/avatar.png"}
                 />
               </div>
             </label>

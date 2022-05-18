@@ -62,11 +62,11 @@ function fakeUser() {
 }
 
 function Body({ registrants, onClickHandler }) {
-  const fake = {
+  const [fake, setFake] = useState({
     initiative: {
       participants: registrants,
     },
-  };
+  });
   console.log("registrants: ", registrants);
 
   return (

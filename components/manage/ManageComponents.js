@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 import {
   FiCalendar,
   FiLink,
@@ -136,7 +136,7 @@ function AddInitiativeTile() {
 }
 
 function ModeratorTile({ moderator, onClickHandler }) {
-  const details = {
+  const [details, setDetails] = useState({
     moderator: {
       id: moderator._id,
       name: moderator.name,
@@ -144,7 +144,8 @@ function ModeratorTile({ moderator, onClickHandler }) {
       location: faker.address.city(),
       level: moderator.role / 2,
     },
-  };
+  });
+
   return (
     <label htmlFor="moderator-modal" name="tile" key={details.moderator.id}>
       <div
@@ -158,7 +159,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
               <Image
                 alt="moderator-avatar"
                 className="min-w-full min-h-full"
-                src={details.moderator.avatar}
+                src={details.moderator.avatar || "/images/avatar.png"}
                 height={200}
                 width={200}
                 objectFit="cover"

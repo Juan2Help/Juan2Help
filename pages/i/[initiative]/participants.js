@@ -1,4 +1,4 @@
-import { React } from 'react';
+import { React, useState } from 'react';
 import { getSession } from 'next-auth/react';
 import { GrantAccess } from '../../../middleware/ProtectedRoute';
 import { FiArrowLeft } from 'react-icons/fi';
@@ -19,12 +19,11 @@ function fakeUser() {
 }
 
 function Body({ participants, onClickHandler }) {
-  const fake = {
+  const [fake, setFake] = useState({
     initiative: {
       participants,
     },
-  };
-  console.log('participants: ', participants);
+  });
 
   return (
     <div className="px-4 flex flex-col gap-2">
@@ -44,7 +43,7 @@ function Body({ participants, onClickHandler }) {
               <div className="w-20 overflow-clip rounded-full">
                 <Image
                   alt=""
-                  src={faker.internet.avatar()}
+                  src={faker.internet.avatar() }
                   layout="fill"
                   objectFit="cover"
                   className="w-full pb-full"
