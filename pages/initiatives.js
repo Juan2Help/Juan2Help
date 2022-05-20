@@ -15,37 +15,28 @@ import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { fetchJSON } from '../middleware/helper';
 import { useRouter } from 'next/router';
 
-
 const getInitiatives = async (type, session) => {
-  const req = await fetch(
-    `/api/initiatives/get-initiatives`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        page: 1,
-        type: type,
-        userId: session?.user?._id,
-      }),
-    }
-  );
+  const req = await fetch(`/api/initiatives/get-initiatives`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      page: 1,
+      type: type,
+      userId: session?.user?._id,
+    }),
+  });
   const data = await req.json();
   return data;
 };
 
-function InitiativesPage({
-  sessionFromProp,
-  socket,
-  bookmarkList,
-}) {
+function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
   const session = sessionFromProp;
   const [Tab, setTab] = useState('ActiveInit');
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(1000);
-  const [activeInitiatives, setActiveInitiatives] =
-    useState([]);
+  const [activeInitiatives, setActiveInitiatives] = useState([]);
   const [newInitiatives, setNewInitiatives] = useState([]);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
   const [searchquery, setSearchQuery] = useState('');
@@ -54,10 +45,10 @@ function InitiativesPage({
   const [latlng, setLatLng] = useState([0, 0]);
   const router = useRouter();
 
-  const initializeData = async () =>{
+  const initializeData = async () => {
     setActiveInitiatives(await getInitiatives('3', session));
     setNewInitiatives(await getInitiatives('1', session));
-  }
+  };
 
   const fetchNearByInitiatives = async () => {
     const data = await fetchJSON('/api/initiatives/get-initiatives', {
@@ -200,8 +191,8 @@ function InitiativesPage({
   };
 
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I",
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I',
   });
 
   const grabLatLng = () => {
@@ -245,7 +236,7 @@ function InitiativesPage({
   useEffect(() => {
     grabLatLng();
     initializeData();
-    }, []);
+  }, []);
 
   return (
     <ProtectedRoute session={session}>
@@ -382,7 +373,7 @@ function InitiativesPage({
               )}
               {Tab == 'ActiveInit' && (
                 <>
-                  <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
+                  <div className="grid min-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {activeInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
@@ -395,7 +386,7 @@ function InitiativesPage({
               )}
               {Tab == 'NewInit' && (
                 <>
-                  <div className="grid min-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
+                  <div className="grid min-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
                     {newInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
@@ -434,7 +425,7 @@ function InitiativesPage({
                               lat: initiative?.location?.coordinates[1],
                               lng: initiative?.location?.coordinates[0],
                             }}
-                            label={initiative?.title}
+                            // label={initiative?.title}
                             onClick={() => onClickMarker(initiative)}
                           />
                         ))}
@@ -454,8 +445,6 @@ function InitiativesPage({
     </ProtectedRoute>
   );
 }
-
-
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
