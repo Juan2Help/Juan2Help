@@ -31,7 +31,7 @@ function Header({ session, socket }) {
     if (data.length > 0) {
       setNotifications(data);
     }
-    setAvatar(faker.internet.avatar());
+    setProfilePicture(faker.internet.avatar());
   }, []);
 
   const handleNotificationClick = async () => {

@@ -2,7 +2,7 @@ import faker from "@faker-js/faker";
 import moment from "moment";
 import Link from "next/link";
 import { fetchJSON } from "../middleware/helper";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { notificationsState } from "../atoms/notificationsAtom";
 import { useRecoilState } from "recoil";
 import Image from "next/image";
