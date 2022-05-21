@@ -1,22 +1,22 @@
-import Link from "next/link";
-import { getSession } from "next-auth/react";
-import Head from "next/head";
-import { FiArrowLeft } from "react-icons/fi";
-import { Input, TextArea } from "../../../components/Input";
-import Button from "../../../components/Button";
-import ProtectedRoute from "../../../components/ProtectedRoute";
-import { GrantAccess } from "../../../middleware/ProtectedRoute";
-import { useState } from "react";
-import { useRouter } from "next/router";
-import { fetchUserDetails } from "../../../middleware/helper";
-import { geocodeByAddress } from "react-places-autocomplete";
-import { getLatLng } from "react-places-autocomplete";
+import Link from 'next/link';
+import { getSession } from 'next-auth/react';
+import Head from 'next/head';
+import { FiArrowLeft } from 'react-icons/fi';
+import { Input, TextArea } from '../../../components/Input';
+import Button from '../../../components/Button';
+import ProtectedRoute from '../../../components/ProtectedRoute';
+import { GrantAccess } from '../../../middleware/ProtectedRoute';
+import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { fetchUserDetails } from '../../../middleware/helper';
+import { geocodeByAddress } from 'react-places-autocomplete';
+import { getLatLng } from 'react-places-autocomplete';
 
 function Profile({ sessionFromProp, userDetails }) {
   const session = sessionFromProp;
 
   const [accountDetails, setAccountDetails] = useState(userDetails);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState(userDetails.location.address);
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const router = useRouter();
@@ -31,18 +31,18 @@ function Profile({ sessionFromProp, userDetails }) {
     };
 
     (data.location = {
-      type: "Point",
+      type: 'Point',
       address,
       coordinates: [longitude, latitude],
     }),
-      console.log("SENDING", data);
+      console.log('SENDING', data);
 
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/user/update-account", {
-      method: "POST",
+    const response = await fetch('/api/user/update-account', {
+      method: 'POST',
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
     if (response.ok) {
@@ -50,7 +50,7 @@ function Profile({ sessionFromProp, userDetails }) {
       // router.push(`/u/${session.user._id}`);
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
     return;
   };
@@ -61,8 +61,8 @@ function Profile({ sessionFromProp, userDetails }) {
     setAddress(results[0].formatted_address);
     setLatitude(lat);
     setLongitude(lng);
-    console.log("results", results);
-    console.log("latLng", lat, lng);
+    console.log('results', results);
+    console.log('latLng', lat, lng);
   };
 
   const handleChange = (e) => {
@@ -106,7 +106,6 @@ function Profile({ sessionFromProp, userDetails }) {
               defaultValue={userDetails.bio}
               onChange={handleChange}
             />
-            <span className="font-semibold">Location</span>
             <Input
               id="location"
               name="location"
@@ -150,7 +149,12 @@ function Profile({ sessionFromProp, userDetails }) {
             />
           </div>
 
-          <Button text="Save" />
+          <Button
+            text="Save"
+            onClick={function () {
+              router.push(`/u/${userDetails._id}`);
+            }}
+          />
         </form>
       </div>
     </ProtectedRoute>

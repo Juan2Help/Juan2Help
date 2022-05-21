@@ -74,8 +74,8 @@ function Post() {
                 alt="avatar"
                 src={fake.author.avatar || "/images/avatar.png"}
                 className="rounded-full"
-                layout="fill"
-                
+                height={50}
+                width={50}
               />
             </div>
             <div className="flex flex-col">

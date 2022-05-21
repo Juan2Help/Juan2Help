@@ -1,22 +1,22 @@
-import { faker } from "@faker-js/faker";
-import moment from "moment";
-import { getSession, useSession } from "next-auth/react";
-import Image from "next/image";
-import { React, useState, useEffect, useCallback } from "react";
-import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
+import { faker } from '@faker-js/faker';
+import moment from 'moment';
+import { getSession, useSession } from 'next-auth/react';
+import Image from 'next/image';
+import { React, useState, useEffect, useCallback } from 'react';
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import {
   FiArrowLeft,
   FiMoreHorizontal,
   FiBookmark,
   FiClock,
   FiMapPin,
-} from "react-icons/fi";
+} from 'react-icons/fi';
 import {
   GrantAccess,
   redirectToLogin,
-} from "../../../middleware/ProtectedRoute";
-import Link from "next/link";
-import { useRouter } from "next/router";
+} from '../../../middleware/ProtectedRoute';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 function Header({ initiativeData, session }) {
   return (
@@ -24,10 +24,9 @@ function Header({ initiativeData, session }) {
       <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
         <Image
           alt=""
-          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"  
-          objectFit="contain"
-          height={200}
-          width={200}
+          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+          objectFit="cover"
+          layout="fill"
         />
       </div>
       <div className="-top-20 sticky flex flex-row justify-between p-4">
@@ -64,12 +63,11 @@ function Header({ initiativeData, session }) {
 }
 
 function Body({ session, initiativeData, socket }) {
-  console.log("initiativeData", initiativeData);
+  console.log('initiativeData', initiativeData);
   const router = useRouter();
 
   const [buttonToggle, setButtonToggle] = useState(false);
-  
-  
+
   const [hasApplied, setHasApplied] = useState(
     initiativeData?.registrantsList?.includes(session.user._id)
   );
@@ -84,19 +82,19 @@ function Body({ session, initiativeData, socket }) {
     },
     initiative: {
       date: moment(initiativeData?.startDate)
-        .format("ddd, DD MMM YYYY")
+        .format('ddd, DD MMM YYYY')
         .toUpperCase(),
       time: {
         start: initiativeData?.startTime
           ? initiativeData?.startTime
-          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
+          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
         end: initiativeData?.endTime
           ? initiativeData?.endTime
-          : moment(faker.time.recent(10, "12:00")).format("HH:mm"),
+          : moment(faker.time.recent(10, '12:00')).format('HH:mm'),
       },
       location: {
         city:
-          typeof initiativeData?.location === "string"
+          typeof initiativeData?.location === 'string'
             ? initiativeData?.location
             : initiativeData?.location?.address,
       },
@@ -111,70 +109,69 @@ function Body({ session, initiativeData, socket }) {
     },
   });
 
-  console.log("hasJoined", hasJoined);
+  console.log('hasJoined', hasJoined);
 
-  
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
-    console.log("SOCKET INITIALIZED:", socket);
-    socket?.on("application-decision", ({ decision }) => {
-      console.log("DECISION RECEIVED:", decision);
-      if (decision === "accepted") {
+    console.log('SOCKET INITIALIZED:', socket);
+    socket?.on('application-decision', ({ decision }) => {
+      console.log('DECISION RECEIVED:', decision);
+      if (decision === 'accepted') {
         setHasJoined(true);
         setHasApplied(false);
       }
-      if (decision === "rejected") {
+      if (decision === 'rejected') {
         setHasApplied(false);
         setHasJoined(false);
       }
     });
 
-    return () => socket?.off("application-decision");
+    return () => socket?.off('application-decision');
   }, [socket]);
 
   const handleJoin = async () => {
     const req = await fetch(`/api/initiatives/join-initiative`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log("Joined initiative");
+      console.log('Joined initiative');
     } else {
-      console.log("Failed to join initiative");
+      console.log('Failed to join initiative');
     }
     setButtonToggle(!buttonToggle);
   };
 
   const handleLeave = async () => {
     const req = await fetch(`/api/initiatives/leave-initiative`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ initiativeId: initiativeData._id }),
     });
     const res = await req.json();
 
     if (res.ok) {
-      console.log("Left initiative");
+      console.log('Left initiative');
     } else {
-      console.log("Failed to leave initiative");
+      console.log('Failed to leave initiative');
     }
     setHasJoined(false);
     setHasApplied(false);
   };
 
   const { isLoaded } = useJsApiLoader({
-    id: "google-map-script",
-    googleMapsApiKey: "AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I",
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyD0aFIFNCP1-7FKoikAz1pHE33zS1FHn9I',
   });
 
   const [map, setMap] = useState(null);
@@ -184,7 +181,7 @@ function Body({ session, initiativeData, socket }) {
     lng: initiativeData?.location?.coordinates[0] || 0,
   };
 
-  console.log("location", initiativeData?.location);
+  console.log('location', initiativeData?.location);
 
   const onLoad = useCallback(
     function callback(map) {
@@ -291,8 +288,8 @@ function Body({ session, initiativeData, socket }) {
         {isLoaded ? (
           <GoogleMap
             mapContainerStyle={{
-              height: "400px",
-              width: "100%",
+              height: '400px',
+              width: '100%',
             }}
             center={center}
             onLoad={onLoad}
@@ -302,7 +299,7 @@ function Body({ session, initiativeData, socket }) {
             <>
               <Marker
                 icon={{
-                  url: "/images/custom-marker.svg",
+                  url: '/images/custom-marker.svg',
                   anchor: new google.maps.Point(17, 46),
                   scaledSize: new google.maps.Size(37, 64),
                 }}
@@ -357,12 +354,12 @@ export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
   const initiativeId = context.params.initiative;
-  console.log("initiativeId", initiativeId);
+  console.log('initiativeId', initiativeId);
 
   const req = await fetch(`${process.env.NEXTAUTH_URL}/api/get-initiative`, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       id: initiativeId,
