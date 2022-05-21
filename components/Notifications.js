@@ -7,7 +7,7 @@ import { notificationsState } from "../atoms/notificationsAtom";
 import { useRecoilState } from "recoil";
 import Image from "next/image";
 
-function Notification({ notificationData }) {
+function Notification({ notificationData, key }) {
   const time = moment(notificationData?.dateCreated).fromNow();
 
   const [data, setData] = useState({
@@ -21,8 +21,8 @@ function Notification({ notificationData }) {
   });
 
   return (
-    <>
-      <Link href={data.notification.href} passHref>
+    <div key={key}>
+      <Link href={data.notification.href} key={key} passHref>
         <div className="flex flex-row gap-3">
           <div className="w-1/4 rounded-full flex justify-center">
             <Image
@@ -47,7 +47,7 @@ function Notification({ notificationData }) {
           </div>
         </div>
       </Link>
-    </>
+    </div>
   );
 }
 

@@ -14,12 +14,14 @@ import { notificationsState } from "../atoms/notificationsAtom";
 import { fetchJSON } from "../middleware/helper";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { profilePictureState } from "../atoms/userAtom";
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
   const [notifications, setNotifications] = useRecoilState(notificationsState);
-  const [profilePicture, setProfilePicture] = useState(faker.image.avatar());
+  const [profilePicture, setProfilePicture] =
+    useRecoilState(profilePictureState);
 
   const router = useRouter();
 
@@ -31,7 +33,6 @@ function Header({ session, socket }) {
     if (data.length > 0) {
       setNotifications(data);
     }
-    setProfilePicture(faker.internet.avatar());
   }, []);
 
   const handleNotificationClick = async () => {
@@ -40,6 +41,10 @@ function Header({ session, socket }) {
       await getNotification();
     }
   };
+
+  useEffect(() => {
+    if (profilePicture === "") setProfilePicture(faker.internet.avatar());
+  }, []);
 
   useEffect(() => {
     if (notifications.length === 0) {

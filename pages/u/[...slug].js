@@ -1,7 +1,7 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import { React, useState, useEffect } from 'react';
-import { faker } from '@faker-js/faker';
+import Head from "next/head";
+import Link from "next/link";
+import { React, useState, useEffect } from "react";
+import { faker } from "@faker-js/faker";
 import {
   FiChevronLeft,
   FiEdit3,
@@ -10,21 +10,23 @@ import {
   FiMapPin,
   FiPhone,
   FiCalendar,
-} from 'react-icons/fi';
-import { getSession } from 'next-auth/react';
-import ProtectedRoute from '../../components/ProtectedRoute';
-import { GrantAccess, redirectToLogin } from '../../middleware/ProtectedRoute';
-import { fetchUserDetails } from '../../middleware/helper';
-import Image from 'next/image';
-import { Initiative } from '../../components/explore/ExploreComponents';
-import { fetchJSON } from '../../middleware/helper';
-import Header from '../../components/Header';
+} from "react-icons/fi";
+import { getSession } from "next-auth/react";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import { GrantAccess, redirectToLogin } from "../../middleware/ProtectedRoute";
+import { fetchUserDetails } from "../../middleware/helper";
+import Image from "next/image";
+import { Initiative } from "../../components/explore/ExploreComponents";
+import { fetchJSON } from "../../middleware/helper";
+import Header from "../../components/Header";
+import { useRecoilValue } from "recoil";
+import { profilePictureState } from "../../atoms/userAtom";
 
 const getInitiatives = async (type, session) => {
   const req = await fetch(`/api/initiatives/get-initiatives`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       page: 1,
@@ -41,9 +43,10 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
   const [isOpen, setOpenState] = useState(false);
   const [avatar, setAvatar] = useState(faker.image.avatar());
   const [activeInitiatives, setActiveInitiatives] = useState([]);
+  const profilePicture = useRecoilValue(profilePictureState);
 
   const initializeData = async () => {
-    setActiveInitiatives(await getInitiatives('3', session));
+    setActiveInitiatives(await getInitiatives("3", session));
   };
 
   useEffect(() => {
@@ -65,7 +68,11 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                 <div className="rounded-full overflow-clip h-40 w-40">
                   <Image
                     alt="avatar"
-                    src={avatar || '/images/avatar.png'}
+                    src={
+                      session?.user?._id === userDetails._id
+                        ? profilePicture || "/images/avatar.png"
+                        : avatar || "/images/avatar.png"
+                    }
                     className="min-h-full min-w-full"
                     width={200}
                     height={200}
@@ -102,11 +109,11 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                     )}
                   </div>
                   <h3 className="text-gray-400 text-sm">
-                    {'@' +
-                      userDetails?.name.split(' ').join('').toLocaleLowerCase()}
+                    {"@" +
+                      userDetails?.name.split(" ").join("").toLocaleLowerCase()}
                   </h3>
                   <h3 className="text-neutral text-sm p-2">
-                    {userDetails?.bio || 'This user has no bio.'}
+                    {userDetails?.bio || "This user has no bio."}
                   </h3>
                 </div>
               </div>
@@ -116,8 +123,8 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                     <FiAtSign />
                     <span>
                       {userDetails?.name
-                        .split(' ')
-                        .join('')
+                        .split(" ")
+                        .join("")
                         .toLocaleLowerCase()}
                     </span>
                   </li>
@@ -161,7 +168,7 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   const userId = context.params.slug;
-  console.log('userId', userId);
+  console.log("userId", userId);
 
   if (!GrantAccess(context, session)) return redirectToLogin(context);
 
