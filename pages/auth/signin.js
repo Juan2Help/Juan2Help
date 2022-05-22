@@ -106,13 +106,13 @@ function Signin({ providers }) {
       <div className="min-h-screen flex items-center justify-center text-neutral bg-white">
         <div className="min-h-full py-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-md w-full space-y-6">
-            <div>
+            <div className="flex flex-col items-center">
               <Image
-                className="mx-auto h-12 w-auto"
+                className="mx-auto"
                 src="/icon.png"
                 alt="Juan2Help"
-                height={200}
-                width={200}
+                height={100}
+                width={100}
               />
               <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
                 Sign in to your account

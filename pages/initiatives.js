@@ -8,7 +8,6 @@ import { GrantAccess, redirectToLogin } from '../middleware/ProtectedRoute';
 import { SearchBar } from '../components/Input';
 import { Initiative } from '../components/explore/ExploreComponents';
 import { FiFilter, FiMap, FiStar, FiTarget } from 'react-icons/fi';
-import { FaFilter } from 'react-icons/fa';
 import { useState, useCallback, useEffect } from 'react';
 import { Input } from '../components/Input';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
@@ -37,6 +36,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
   const [FilterOpen, setFilterState] = useState(false);
   const [participantssliderValue, participantssetSliderValue] = useState(1000);
   const [activeInitiatives, setActiveInitiatives] = useState([]);
+  const [filteredactiveInitiatives, filterActiveInitiatives] = useState([]);
+  const [filterednewInitiatives, filterNewInitiatives] = useState([]);
   const [newInitiatives, setNewInitiatives] = useState([]);
   const [nearByInitiatives, setNearByInitiatives] = useState([]);
   const [searchquery, setSearchQuery] = useState('');
@@ -46,10 +47,19 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
   const router = useRouter();
 
   const initializeData = async () => {
-    setActiveInitiatives(await getInitiatives('3', session));
-    setNewInitiatives(await getInitiatives('1', session));
+    let activeinit = await getInitiatives('3', session);
+    let newinit = await getInitiatives('1', session);
+    setActiveInitiatives(activeinit);
+    filterActiveInitiatives(activeinit);
+    setNewInitiatives(newinit);
+    filterNewInitiatives(newinit);
   };
 
+  const resetFilters = () => {
+    filterActiveInitiatives(activeInitiatives);
+    filterNewInitiatives(newInitiatives);
+    setSearchQuery('');
+  };
   const fetchNearByInitiatives = async () => {
     const data = await fetchJSON('/api/initiatives/get-initiatives', {
       type: '2',
@@ -60,12 +70,12 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
     });
     setNearByInitiatives(data);
   };
-
+  
   const participantschangeValue = (e) => {
     const { value } = e.target;
     participantssetSliderValue(value);
-    setActiveInitiatives(
-      activeInitiativeData.filter(
+    filterActiveInitiatives(
+      activeInitiatives.filter(
         (initiative) =>
           initiative?.title?.toLowerCase().includes(searchquery) &&
           initiative?.participants <= value &&
@@ -74,8 +84,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
             : 1)
       )
     );
-    setNewInitiatives(
-      newInitiativeData.filter(
+    filterNewInitiatives(
+      newInitiatives.filter(
         (initiative) =>
           initiative?.title?.toLowerCase().includes(searchquery) &&
           initiative?.participants <= value &&
@@ -91,16 +101,16 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
     value = value.toLowerCase();
     setCategory(value);
     if (value == 'all') {
-      setActiveInitiatives(
-        activeInitiativeData.filter((initiative) => {
+      filterActiveInitiatives(
+        activeInitiatives.filter((initiative) => {
           return (
             initiative?.title?.toLowerCase().includes(searchquery) &&
             initiative?.participants <= participantssliderValue
           );
         })
       );
-      setNewInitiatives(
-        newInitiativeData.filter((initiative) => {
+      filterNewInitiatives(
+        newInitiatives.filter((initiative) => {
           return (
             initiative?.title?.toLowerCase().includes(searchquery) &&
             initiative?.participants <= participantssliderValue
@@ -108,8 +118,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
         })
       );
     } else {
-      setActiveInitiatives(
-        activeInitiativeData.filter((initiative) => {
+      filterActiveInitiatives(
+        activeInitiatives.filter((initiative) => {
           return (
             initiative?.title?.toLowerCase().includes(searchquery) &&
             initiative?.causeType?.toLowerCase().includes(value) &&
@@ -117,8 +127,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
           );
         })
       );
-      setNewInitiatives(
-        newInitiativeData.filter((initiative) => {
+      filterNewInitiatives(
+        newInitiatives.filter((initiative) => {
           return (
             initiative?.title?.toLowerCase().includes(searchquery) &&
             initiative?.causeType?.toLowerCase().includes(value) &&
@@ -134,8 +144,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
     value = value.toLowerCase();
     setSearchQuery(value);
     if (value.length > 0) {
-      setActiveInitiatives(
-        activeInitiativeData.filter((initiative) => {
+      filterActiveInitiatives(
+        activeInitiatives.filter((initiative) => {
           const loc =
             typeof initiative.location === 'string'
               ? initiative.location.toLowerCase()
@@ -151,8 +161,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
           );
         })
       );
-      setNewInitiatives(
-        newInitiativeData.filter((initiative) => {
+      filterNewInitiatives(
+        newInitiatives.filter((initiative) => {
           const loc =
             typeof initiative.location === 'string'
               ? initiative.location.toLowerCase()
@@ -169,8 +179,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
         })
       );
     } else {
-      setActiveInitiatives(
-        activeInitiativeData.filter((initiative) => {
+      filterActiveInitiatives(
+        activeInitiatives.filter((initiative) => {
           return (
             (category != 'all'
               ? initiative?.causeType?.toLowerCase().includes(category)
@@ -178,8 +188,8 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
           );
         })
       );
-      setNewInitiatives(
-        newInitiativeData.filter((initiative) => {
+      filterNewInitiatives(
+        newInitiatives.filter((initiative) => {
           return (
             (category != 'all'
               ? initiative?.causeType?.toLowerCase().includes(category)
@@ -256,7 +266,7 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
                     Tab == 'ActiveInit' &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
-                  onClick={() => setTab('ActiveInit')}
+                  onClick={() => {setTab('ActiveInit');resetFilters();}}
                 >
                   <div className="flex flex-row items-center gap-2 ">
                     <FiStar />
@@ -269,7 +279,7 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
                     Tab == 'NewInit' &&
                     ` border-violet-700 border-b-4 text-violet-700`
                   }`}
-                  onClick={() => setTab('NewInit')}
+                  onClick={() => {setTab('NewInit');resetFilters();}}
                 >
                   <div className="flex flex-row items-center gap-2">
                     <FiTarget />
@@ -299,10 +309,10 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
                 <>
                   <div className="flex justify-between w-full">
                     <div className="flex flex-row w-full items-center space-x-2">
-                      <SearchBar handleChange={handleSearchBarChange} />
+                      <SearchBar text = {searchquery} handleChange={handleSearchBarChange} />
                       <button
                         className="hover:cursor-pointer w-1/8"
-                        onClick={() => setFilterState(!FilterOpen)}
+                        onClick={() => {setFilterState(!FilterOpen);resetFilters();}}
                       >
                         {FilterOpen == false && (
                           <div className="px-4 py-3 rounded-md hover:bg-gray-100 flex flex-row items-center gap-1 text-gray-900 hover:text-gray-500">
@@ -323,7 +333,7 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
                   </div>
                 </>
               )}
-              {FilterOpen == true && (
+              {(FilterOpen == true && (Tab == 'ActiveInit' || Tab == 'NewInit')) && (
                 <>
                   <div className="sm:flex sm:gap-10 gap-5 flex-row grid grid-flow-row grid-cols-1 justify-left w-full">
                     <div className="sm:w-1/6 flex flex-col gap-3">
@@ -374,7 +384,7 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
               {Tab == 'ActiveInit' && (
                 <>
                   <div className="grid min-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    {activeInitiatives?.map((initiative) => (
+                    {filteredactiveInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
@@ -387,7 +397,7 @@ function InitiativesPage({ sessionFromProp, socket, bookmarkList }) {
               {Tab == 'NewInit' && (
                 <>
                   <div className="grid min-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 justify-items-center">
-                    {newInitiatives?.map((initiative) => (
+                    {filterednewInitiatives?.map((initiative) => (
                       <Initiative
                         key={initiative.id}
                         initiativeData={initiative}
