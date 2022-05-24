@@ -20,6 +20,9 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   };
   useEffect(() => initializeSocket(), [socket]);
 
+  if (process.env.NODE_ENV === "production")
+    console.log = function no_console() {};
+
   return (
     <>
       <SessionProvider session={session}>

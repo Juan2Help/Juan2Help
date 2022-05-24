@@ -18,7 +18,7 @@ import {
   FiSend,
   FiArrowLeft,
 } from 'react-icons/fi';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { fetchJSON } from '../../../middleware/helper';
 import Button from '../../../components/Button';
@@ -56,7 +56,7 @@ function MessageItem({ threadData, onClick }) {
         className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
         <Image
-          src={tileData.message.avatar || '/images/avatar.png'}
+          src={tileData?.message?.avatar || '/images/avatar.png'}
           alt="avatar"
           className="rounded-full w-12 h-12"
           objectFit="cover"
@@ -65,7 +65,7 @@ function MessageItem({ threadData, onClick }) {
         />
         <div className="flex flex-col w-9/12">
           <div>
-            <span className="font-bold">{tileData.message.name}</span>{' '}
+            <span className="font-bold">{tileData?.message?.name}</span>{' '}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
             <div className="max-w-min truncate">Connect with me!</div>
@@ -120,22 +120,40 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
   );
 }
 
-function MessageThread({ user, onClick, onChange, threadData, messages }) {
+function MessageThread({
+  user,
+  onClick,
+  onChange,
+  threadData,
+  messages,
+  onKeyDown,
+}) {
   const [data, setData] = useState({});
+  const messagesEndRef = useRef(null);
+  const [newMessage, setNewMessage] = useState(false);
+
+  const scrollToBottom = () => {
+    if (newMessage) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(scrollToBottom);
 
   useEffect(() => {
     const newData = {
       thread: {
         receiver: {
-          name: threadData.name || 'Send a Message',
-          avatar: threadData.avatar,
+          name: threadData?.name || 'Send a Message',
+          avatar: threadData?.avatar,
         },
         messages: messages,
         receiverID: threadData.receiverID,
       },
     };
     setData(newData);
-  }, [threadData]);
+    setNewMessage(true);
+  }, [threadData, messages]);
 
   return (
     <>
@@ -179,6 +197,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
               </div>
             )
           )}
+        <div ref={messagesEndRef} />
       </div>
       <div className="flex flex-row gap-1 items-center justify-self-end w-full p-2">
         <div className="flex-1 bg-gray-100 rounded-2xl h-min flex items-center">
@@ -190,6 +209,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
             rows="1"
             id="message"
             onChange={onChange}
+            onKeyDown={onKeyDown}
           />
         </div>
         <div className="p-4 cursor-pointer rounded-full hover:bg-gray-100 self-end">
@@ -212,7 +232,7 @@ function PersonDetails({ threadData, onClick }) {
         location: threadData?.location?.address || 'No location',
         email: threadData.email,
         phone: threadData.mobileNumber,
-        avatar: threadData.avatar,
+        avatar: threadData?.avatar,
         date: faker.date.recent(),
         href: faker.internet.domainName(),
         id: threadData._id,
@@ -334,7 +354,6 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   }, [searchName]);
 
   const onClickMessageItem = (threadData) => {
-    setMessages([]);
     getMessages(threadData.threadID);
     router.push(`/t/${threadData.threadID}`);
     setActiveThread(threadData);
@@ -358,7 +377,9 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     return await fetchJSON(`/api/t/send-message`, message);
   };
 
-  const onClickSubmit = async (e) => {
+  const sendMessage = async () => {
+    if (messageBody.length === 0) return;
+
     const messagePacket = {
       message: messageBody,
       sender: session?.user?._id,
@@ -368,6 +389,19 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     sendMessageSocket(messagePacket, activeThread.id || activeThread._id);
     setMessages([...messages, messagePacket]);
     document.getElementById('message').value = '';
+    setMessageBody('');
+  };
+
+  const onEnterPress = (e) => {
+    if (e.keyCode == 13 && e.shiftKey == false) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
+  const onClickSubmit = async (e) => {
+    e.preventDefault();
+    sendMessage();
   };
 
   const onChangeText = (e) => {
@@ -433,6 +467,7 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
                   onClick={onClickSubmit}
                   threadData={activeThread}
                   messages={messages}
+                  onKeyDown={onEnterPress}
                 />
               </div>
               <div className="min-h-[10vh] lg:block hidden z-10 shadow-md">

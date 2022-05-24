@@ -72,7 +72,7 @@ function Post() {
             <div className="h-10 w-10 text-primary text-5xl flex items-center justify-center">
               <Image
                 alt="avatar"
-                src={fake.author.avatar}
+                src={fake.author.avatar || "/images/avatar.png"}
                 className="rounded-full"
                 height={50}
                 width={50}
@@ -103,7 +103,7 @@ function Post() {
         <div className="grow w-full sm:w-full bg-slate-500 relative rounded-3xl overflow-clip">
           <Image
             alt="cover"
-            src={fake.post.image}
+            src={fake.post.image || "/images/avatar.png"}
             layout="fill"
             objectFit="cover"
           />

@@ -43,6 +43,10 @@ function Header({ session, socket }) {
   };
 
   useEffect(() => {
+    if (profilePicture === '') setProfilePicture(faker.internet.avatar());
+  }, []);
+
+  useEffect(() => {
     if (notifications.length === 0) {
       getNotification();
     }
@@ -155,7 +159,7 @@ function Header({ session, socket }) {
                   layout="fill"
                   objectFit="contain"
                   className="rounded-full h-full w-full"
-                  src={profilePicture}
+                  src={profilePicture || '/images/avatar.png'}
                 />
               </div>
             </label>

@@ -1,23 +1,23 @@
 import Link from 'next/link';
-import { React } from 'react';
+import { React, useState } from 'react';
 import { faker } from '@faker-js/faker';
 import { MdVerified } from 'react-icons/md';
 import Image from 'next/image';
 
 function SuggestedPerson() {
-  const fake = {
+  const [fake,setFake] = useState({
     avatar: faker.image.avatar(),
     name: `${faker.name.firstName()} ${faker.name.lastName()}`,
     initiative: faker.company.companyName(1),
     isVerified: Math.random() > 0.5,
-  };
+  });
 
   return (
     <div className="flex flex-row items-center justify-between space-x-2">
       <div className="flex flex-row items-center space-x-4">
         <div className="avatar">
           <div className="w-10">
-            <Image alt="" src={fake.avatar} className="rounded-full" layout="fill" />
+            <Image alt="" src={fake.avatar || "/images/avatar.png"} className="rounded-full" layout="fill" />
           </div>
         </div>
         <div className="flex flex-col">

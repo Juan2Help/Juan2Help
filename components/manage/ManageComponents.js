@@ -159,7 +159,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
               <Image
                 alt="moderator-avatar"
                 className="min-w-full min-h-full"
-                src={details.moderator.avatar}
+                src={details.moderator.avatar || "/images/avatar.png"}
                 height={200}
                 width={200}
                 objectFit="cover"

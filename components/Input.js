@@ -169,7 +169,7 @@ function Date({ handleChange, defaultValue }) {
   );
 }
 
-function SearchBar({ handleChange }) {
+function SearchBar({ handleChange,text }) {
   return (
     <div className="w-full flex flex-row rounded-md border border-gray-300 hover:border-purple-700 bg-white">
       <div className="relative px-2 pt-2.5">
@@ -180,6 +180,7 @@ function SearchBar({ handleChange }) {
           className="relative block w-full py-3 placeholder-gray-400 text-gray-900 font-medium rounded-md sm:text-sm focus:outline-none"
           type="text"
           name="searchbar"
+          value = {text}
           placeholder="Search"
           onChange={handleChange}
         />

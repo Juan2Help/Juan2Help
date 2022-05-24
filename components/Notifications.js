@@ -2,15 +2,15 @@ import faker from "@faker-js/faker";
 import moment from "moment";
 import Link from "next/link";
 import { fetchJSON } from "../middleware/helper";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState } from "react";
 import { notificationsState } from "../atoms/notificationsAtom";
 import { useRecoilState } from "recoil";
 import Image from "next/image";
 
-function Notification({ notificationData }) {
+function Notification({ notificationData, key }) {
   const time = moment(notificationData?.dateCreated).fromNow();
 
-  const data = {
+  const [data, setData] = useState({
     notification: {
       name: notificationData?.name,
       message: notificationData?.message,
@@ -18,14 +18,15 @@ function Notification({ notificationData }) {
       avatar: faker.image.avatar(),
       href: `/i/${notificationData?.initiativeID}`,
     },
-  };
+  });
+
   return (
-    <>
-      <Link href={data.notification.href} passHref>
+    <div key={key}>
+      <Link href={data.notification.href} key={key} passHref>
         <div className="flex flex-row gap-3">
           <div className="w-1/4 rounded-full flex justify-center">
             <Image
-              src={data.notification.avatar}
+              src={data.notification.avatar || "/images/avatar.png"}
               alt="avatar"
               objectFit="contain"
               className="rounded-full w-full "
@@ -46,7 +47,7 @@ function Notification({ notificationData }) {
           </div>
         </div>
       </Link>
-    </>
+    </div>
   );
 }
 

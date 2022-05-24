@@ -19,6 +19,8 @@ import Image from 'next/image';
 import { Initiative } from '../../components/explore/ExploreComponents';
 import { fetchJSON } from '../../middleware/helper';
 import Header from '../../components/Header';
+import { useRecoilValue } from 'recoil';
+import { profilePictureState } from '../../atoms/userAtom';
 
 const getInitiatives = async (type, session) => {
   const req = await fetch(`/api/initiatives/get-initiatives`, {
@@ -67,7 +69,11 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                 <div className="rounded-full overflow-clip h-40 w-40">
                   <Image
                     alt="avatar"
-                    src={avatar || '/images/avatar.png'}
+                    src={
+                      session?.user?._id === userDetails._id
+                        ? profilePicture || '/images/avatar.png'
+                        : avatar || '/images/avatar.png'
+                    }
                     className="min-h-full min-w-full"
                     width={200}
                     height={200}
