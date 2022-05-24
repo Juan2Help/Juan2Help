@@ -133,13 +133,6 @@ function Header({ session, socket }) {
                 </div>
                 <hr />
               </div>
-              <div className="px-2 flex flex-row items-center justify-between">
-                <Link href="/notifications" passHref>
-                  <div className="text-primary text-xs cursor-pointer w-full text-right">
-                    See All
-                  </div>
-                </Link>
-              </div>
               <ul>
                 {/* sort by time and map */}
                 {notifications.map((notification) => (
@@ -149,6 +142,13 @@ function Header({ session, socket }) {
                   />
                 ))}
               </ul>
+              <div className="px-2 flex flex-row items-center justify-between">
+                <Link href="/notifications" passHref>
+                  <div className="text-primary text-xs cursor-pointer w-full text-right">
+                    See All
+                  </div>
+                </Link>
+              </div>
             </div>
           </div>
           <div className="dropdown dropdown-end">

@@ -64,8 +64,8 @@ function MessageItem({ threadData, onClick }) {
           width={40}
         />
         <div className="flex flex-col w-9/12">
-          <div>
-            <span className="font-bold">{tileData?.message?.name}</span>{' '}
+          <div className="w-full font-bold truncate">
+            {tileData?.message?.name}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
             <div className="max-w-min truncate">Connect with me!</div>
@@ -80,7 +80,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
   return (
     <>
       <div
-        className={`absolute bg-white p-2 mt-16 w-full overflow-y-auto ${
+        className={`absolute z-10 bg-white p-2 mt-16 w-full overflow-y-auto ${
           nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
         }`}
       >
