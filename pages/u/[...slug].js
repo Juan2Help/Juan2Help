@@ -39,11 +39,13 @@ const getInitiatives = async (type, session) => {
 function Profile({ sessionFromProp, userDetails, bookmarkList }) {
   const session = sessionFromProp;
   const [isOpen, setOpenState] = useState(false);
-  const [avatar, setAvatar] = useState(faker.image.avatar());
-  const [activeInitiatives, setActiveInitiatives] = useState([]);
+  const [avatar, setAvatar] = useState(
+    `http://www.gravatar.com/avatar/${userDetails._id}?d=retro&f=y`
+  );
+  const [activeInitiatives, setActiveInitiatives] = useState();
 
   const initializeData = async () => {
-    setActiveInitiatives(await getInitiatives('3', session));
+    setActiveInitiatives(await getInitiatives('3', { user: userDetails }));
   };
 
   useEffect(() => {

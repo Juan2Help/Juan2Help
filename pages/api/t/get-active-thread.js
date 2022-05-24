@@ -1,23 +1,23 @@
-import { ObjectId } from "mongodb";
-import { getSession } from "next-auth/react";
-import { ConnectDB } from "../../../config/connectDB";
+import { ObjectId } from 'mongodb';
+import { getSession } from 'next-auth/react';
+import { ConnectDB } from '../../../config/connectDB';
 
 async function handler(req, res) {
   //Only POST mothod is accepted
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     // Pull sender, message, receiver from request body
     const { threadID, userID } = req.body;
 
     const conn = await ConnectDB();
     const db = conn.db();
-    const users = db.collection("users");
+    const users = db.collection('users');
 
-    const receiverID = threadID?.replace(userID, "");
+    const receiverID = threadID?.replace(userID, '');
     // get receiverData
 
-    console.log("ThreadID: ", threadID);
-    console.log("UserID: ", userID);
-    console.log("receiverID", receiverID);
+    console.log('ThreadID: ', threadID);
+    console.log('UserID: ', userID);
+    console.log('receiverID', receiverID);
 
     let receiverData;
     try {
@@ -27,9 +27,9 @@ async function handler(req, res) {
     } catch (e) {
       receiverData = null;
     }
-    console.log("Receiver Data", receiverData);
+    console.log('Receiver Data', receiverData);
     if (!receiverData) {
-      console.log("No receiver data");
+      console.log('No receiver data');
       res.status(500).json({});
       return;
     }
@@ -38,13 +38,14 @@ async function handler(req, res) {
 
     const activeThread = {
       threadID,
+      receiverID,
       name,
       email,
       mobileNumber,
       id: _id,
     };
 
-    console.log("RETURNING ACTIVE THREAD: ", activeThread);
+    console.log('RETURNING ACTIVE THREAD: ', activeThread);
     // respond with activeThreads
     res.status(200).json(activeThread);
 

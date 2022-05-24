@@ -1,30 +1,32 @@
-import Link from "next/link";
-import React, { useState } from "react";
-import { FiBell, FiMessageCircle } from "react-icons/fi";
-import { MdManageSearch } from "react-icons/md";
-import { IoMdSettings } from "react-icons/io";
-import { GoSignOut } from "react-icons/go";
-import { FaUserCircle } from "react-icons/fa";
-import { useSession, signOut } from "next-auth/react";
-import { faker } from "@faker-js/faker";
-import { useEffect, useCallback } from "react";
-import { Notification } from "./Notifications";
-import { useRecoilState } from "recoil";
-import { notificationsState } from "../atoms/notificationsAtom";
-import { fetchJSON } from "../middleware/helper";
-import { useRouter } from "next/router";
-import Image from "next/image";
+import Link from 'next/link';
+import React, { useState } from 'react';
+import { FiBell, FiMessageCircle } from 'react-icons/fi';
+import { MdManageSearch } from 'react-icons/md';
+import { IoMdSettings } from 'react-icons/io';
+import { GoSignOut } from 'react-icons/go';
+import { FaUserCircle } from 'react-icons/fa';
+import { useSession, signOut } from 'next-auth/react';
+import { faker } from '@faker-js/faker';
+import { useEffect, useCallback } from 'react';
+import { Notification } from './Notifications';
+import { useRecoilState } from 'recoil';
+import { notificationsState } from '../atoms/notificationsAtom';
+import { fetchJSON } from '../middleware/helper';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
 
 function Header({ session, socket }) {
   const [hasMessage, setHasMessage] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
   const [notifications, setNotifications] = useRecoilState(notificationsState);
-  const [profilePicture, setProfilePicture] = useState(faker.image.avatar());
+  const [profilePicture, setProfilePicture] = useState(
+    `http://www.gravatar.com/avatar/${session.user._id}?d=retro&f=y`
+  );
 
   const router = useRouter();
 
   const getNotification = useCallback(async () => {
-    const data = await fetchJSON("/api/user/get-notifications", {
+    const data = await fetchJSON('/api/user/get-notifications', {
       id: session.user._id,
     });
 
@@ -47,15 +49,15 @@ function Header({ session, socket }) {
   }, [getNotification, notifications.length]);
 
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
     const listener = (data) => setHasNotification(true);
-    console.log("SOCKET INITIALIZED:", socket);
-    socket?.on("getNotification", listener);
+    console.log('SOCKET INITIALIZED:', socket);
+    socket?.on('getNotification', listener);
 
-    return () => socket?.off("getNotification");
+    return () => socket?.off('getNotification');
   }, [socket]);
 
   return (
@@ -77,7 +79,7 @@ function Header({ session, socket }) {
                 )}
                 <FiMessageCircle
                   onClick={() => {
-                    router.push("/t/messages");
+                    router.push('/t/messages');
                   }}
                 />
               </div>
@@ -190,15 +192,15 @@ function Header({ session, socket }) {
                   <li>
                     <Link
                       href={
-                        session?.user?.role === 8 ? "/manage/admin" : "/manage"
+                        session?.user?.role === 8 ? '/manage/admin' : '/manage'
                       }
                       passHref
                     >
                       <div className="flex px-4 py-2 hover:bg-purple-300 cursor-pointer">
                         <MdManageSearch className="text-lg" />
                         <span className=" text-gray-700 text-sm text-left">
-                          Manage{" "}
-                          {session?.user.role === 8 ? "App" : "Initiatives"}
+                          Manage{' '}
+                          {session?.user.role === 8 ? 'App' : 'Initiatives'}
                         </span>
                       </div>
                     </Link>

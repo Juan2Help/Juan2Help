@@ -1,15 +1,15 @@
-import Head from "next/head";
-import Navbar from "../../../components/Navbar";
-import Header from "../../../components/Header";
-import faker from "@faker-js/faker";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../../../components/ProtectedRoute";
+import Head from 'next/head';
+import Navbar from '../../../components/Navbar';
+import Header from '../../../components/Header';
+import faker from '@faker-js/faker';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../../../components/ProtectedRoute';
 import {
   GrantAccess,
   redirectToLogin,
-} from "../../../middleware/ProtectedRoute";
-import Link from "next/link";
-import moment from "moment";
+} from '../../../middleware/ProtectedRoute';
+import Link from 'next/link';
+import moment from 'moment';
 import {
   FiChevronDown,
   FiMapPin,
@@ -17,27 +17,35 @@ import {
   FiMail,
   FiSend,
   FiArrowLeft,
-} from "react-icons/fi";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { fetchJSON } from "../../../middleware/helper";
-import Button from "../../../components/Button";
-import Image from "next/image";
+} from 'react-icons/fi';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { fetchJSON } from '../../../middleware/helper';
+import Button from '../../../components/Button';
+import Image from 'next/image';
 
 function MessageItem({ threadData, onClick }) {
-  const [tileData, setTileData] = useState({});
-  useEffect(() => {
-    const newData = {
-      message: {
-        content: faker.lorem.sentence(),
-        name: threadData.name,
-        avatar: faker.image.avatar(),
-        href: threadData.threadID,
-        id: faker.datatype.uuid(),
-      },
-    };
-    setTileData(newData);
-  }, [threadData]);
+  const [tileData, setTileData] = useState({
+    message: {
+      content: faker.lorem.sentence(),
+      name: threadData.name,
+      avatar: `http://www.gravatar.com/avatar/${threadData._id}?d=retro&f=y`,
+      href: threadData.threadID,
+      id: faker.datatype.uuid(),
+    },
+  });
+  // useEffect(() => {
+  //   const newData = {
+  //     message: {
+  //       content: faker.lorem.sentence(),
+  //       name: threadData.name,
+  //       avatar: `http://www.gravatar.com/avatar/${threadData.threadID}?d=retro&f=y`,
+  //       href: threadData.threadID,
+  //       id: faker.datatype.uuid(),
+  //     },
+  //   };
+  //   setTileData(newData);
+  // }, [threadData]);
 
   return (
     <>
@@ -48,7 +56,7 @@ function MessageItem({ threadData, onClick }) {
         className="w-full flex flex-row gap-4 py-2 px-4 hover:bg-[#e9eaeb] rounded-xl cursor-pointer overflow-clip"
       >
         <Image
-          src={tileData.message.avatar || "/images/avatar.png"}
+          src={tileData.message.avatar || '/images/avatar.png'}
           alt="avatar"
           className="rounded-full w-12 h-12"
           objectFit="cover"
@@ -57,7 +65,7 @@ function MessageItem({ threadData, onClick }) {
         />
         <div className="flex flex-col w-9/12">
           <div>
-            <span className="font-bold">{tileData.message.name}</span>{" "}
+            <span className="font-bold">{tileData.message.name}</span>{' '}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
             <div className="max-w-min truncate">Connect with me!</div>
@@ -73,7 +81,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
     <>
       <div
         className={`absolute bg-white p-2 mt-16 w-full overflow-y-auto ${
-          nameSearch?.length > 0 ? "min-h-[80vh] block" : "hidden"
+          nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
         }`}
       >
         {nameSearch?.length > 0 && (
@@ -119,11 +127,11 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
     const newData = {
       thread: {
         receiver: {
-          name: threadData.name || "Send a Message",
+          name: threadData.name || 'Send a Message',
           avatar: threadData.avatar,
         },
         messages: messages,
-        href: faker.internet.domainName(),
+        receiverID: threadData.receiverID,
       },
     };
     setData(newData);
@@ -138,7 +146,7 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
           </Link>
           {threadData?.name && (
             <Image
-              src={data?.thread?.receiver?.avatar || "/images/avatar.png"}
+              src={data?.thread?.receiver?.avatar || '/images/avatar.png'}
               alt="avatar"
               className="w-8 h-8 rounded-full"
               objectFit="contain"
@@ -147,7 +155,11 @@ function MessageThread({ user, onClick, onChange, threadData, messages }) {
             />
           )}
 
-          <h1 className="font-bold text-lg">{data?.thread?.receiver?.name}</h1>
+          <Link href={`/u/${threadData.receiverID}`} passHref>
+            <h1 className="font-bold text-lg cursor-pointer">
+              {data?.thread?.receiver?.name}
+            </h1>
+          </Link>
         </div>
       </div>
       <div className="flex-1 max-h-[80vh] min-w-0 overflow-y-auto flex flex-col gap-[2px] p-4">
@@ -197,7 +209,7 @@ function PersonDetails({ threadData, onClick }) {
         content: faker.lorem.sentence(),
         author: threadData.name,
         organization: faker.company.companyName(),
-        location: threadData?.location?.address || "No location",
+        location: threadData?.location?.address || 'No location',
         email: threadData.email,
         phone: threadData.mobileNumber,
         avatar: threadData.avatar,
@@ -215,7 +227,7 @@ function PersonDetails({ threadData, onClick }) {
         <div className="w-20 relative">
           {threadData?.name && (
             <Image
-              src={data?.message?.avatar || "/images/avatar.png"}
+              src={data?.message?.avatar || '/images/avatar.png'}
               alt="avatar"
               className="rounded-full"
               objectFit="contain"
@@ -225,7 +237,11 @@ function PersonDetails({ threadData, onClick }) {
           )}
         </div>
         <div className="flex flex-col items-center">
-          <div className="font-bold text-lg">{data?.message?.author}</div>
+          <Link href={`/u/${threadData.receiverID}`} passHref>
+            <div className="font-bold text-lg cursor-pointer">
+              {data?.message?.author}
+            </div>
+          </Link>
         </div>
       </div>
       <div className="collapse w-full border-b border-gray-100">
@@ -249,7 +265,7 @@ function PersonDetails({ threadData, onClick }) {
           </div>
         </div>
         <div className="w-80% p-10">
-          <Button onClick={onClick} text={"Load Messages"} />
+          <Button onClick={onClick} text={'Load Messages'} />
         </div>
       </div>
     </>
@@ -260,12 +276,12 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
   const router = useRouter();
   const session = sessionFromProp;
 
-  const [messageBody, setMessageBody] = useState("");
+  const [messageBody, setMessageBody] = useState('');
   const [activeThreads, setActiveThreads] = useState([]);
   const [fetchedSearch, setFetchedSearch] = useState([]);
-  const [searchName, setSearchName] = useState("");
+  const [searchName, setSearchName] = useState('');
   const [activeThread, setActiveThread] = useState({
-    avatar: faker.image.avatar(),
+    avatar: `http://www.gravatar.com/avatar/${activeThreadData.receiverID}?d=retro&f=y`,
     ...activeThreadData,
   });
   const [messages, setMessages] = useState(threadMessages);
@@ -287,23 +303,23 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
       threadID: threadData || activeThreadData.threadID,
     });
     setMessages(data);
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
   };
 
   useEffect(() => {
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
-    socket?.on("receive-message", ({ message: data }) => {
-      console.log("receive-message", data);
+    socket?.on('receive-message', ({ message: data }) => {
+      console.log('receive-message', data);
       setMessages((prev) => [...prev, data]);
     });
 
     return () => {
-      socket?.off("receive-message");
+      socket?.off('receive-message');
     };
   }, [socket]);
 
@@ -323,15 +339,15 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     router.push(`/t/${threadData.threadID}`);
     setActiveThread(threadData);
 
-    socket?.emit("newUser", {
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
 
-    console.log("active thread", threadData);
+    console.log('active thread', threadData);
   };
 
   const sendMessageSocket = async (message, receiver) => {
-    socket?.emit("send-message", {
+    socket?.emit('send-message', {
       message,
       receiver,
       sender: session?.user?._id,
@@ -351,12 +367,12 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
     const { reply } = await sendMessageDB(messagePacket);
     sendMessageSocket(messagePacket, activeThread.id || activeThread._id);
     setMessages([...messages, messagePacket]);
-    document.getElementById("message").value = "";
+    document.getElementById('message').value = '';
   };
 
   const onChangeText = (e) => {
     setMessageBody(e.target.value);
-    e.target.style.height = "inherit";
+    e.target.style.height = 'inherit';
     e.target.style.height = `${e.target.scrollHeight + 2}px`;
   };
 
@@ -377,8 +393,8 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
               <div
                 className={`py-4 gap-2 min-h-[10vh] z-10 shadow-md w-full relative ${
                   activeThreadData.threadID
-                    ? "md:flex-col md:flex hidden"
-                    : "flex flex-col"
+                    ? 'md:flex-col md:flex hidden'
+                    : 'flex flex-col'
                 }`}
               >
                 {/* Header */}
@@ -407,8 +423,8 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
               <div
                 className={`col-span-2 min-h-[10vh] ${
                   activeThreadData.threadID
-                    ? "flex flex-col"
-                    : "md:flex md:flex-col hidden"
+                    ? 'flex flex-col'
+                    : 'md:flex md:flex-col hidden'
                 }`}
               >
                 <MessageThread
@@ -437,8 +453,9 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
 export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!GrantAccess(context, session)) return redirectToLogin(context);
+  console.log('session:', session?.user?._id);
 
-  console.log("THREAD ID IN SERVERSIDEPROPS:", context.query);
+  console.log('THREAD ID IN SERVERSIDEPROPS:', context.query);
   return {
     props: {
       sessionFromProp: session,

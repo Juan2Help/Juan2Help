@@ -7,6 +7,7 @@ const nextConfig = {
       'cloudflare-ipfs.com',
       'tailwindui.com',
       'api.lorem.space',
+      'www.gravatar.com',
     ],
   },
 };
