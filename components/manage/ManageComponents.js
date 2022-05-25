@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState } from 'react';
 import {
   FiCalendar,
   FiLink,
@@ -7,12 +7,12 @@ import {
   FiMapPin,
   FiPlusCircle,
   FiEdit3,
-} from "react-icons/fi";
-import faker from "@faker-js/faker";
-import moment from "moment";
-import Link from "next/link";
-import Button from "../Button";
-import Image from "next/image";
+} from 'react-icons/fi';
+import faker from '@faker-js/faker';
+import moment from 'moment';
+import Link from 'next/link';
+import Button from '../Button';
+import Image from 'next/image';
 
 function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
   return (
@@ -61,7 +61,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
   console.log(initiative);
   const { title, startDate, description, location } = initiative;
   const details = {
-    date: moment(startDate).format("ddd, DD MMM YYYY").toUpperCase(),
+    date: moment(startDate).format('ddd, DD MMM YYYY').toUpperCase(),
     title: title,
     description: description,
     location: location?.address,
@@ -69,20 +69,18 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
   return (
     <label htmlFor="initiative-modal" name="tile" key={id}>
       <div
-        className="min-h-16 bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600"
+        className="min-h-16 bg-white flex flex-row items-center space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600"
         id={id}
         onClick={onClickHandler}
       >
-        <div className="h-full min-w-[4rem] w-2/12 relative rounded-xl overflow-clip">
-          <div className="w-full pb-full">
-            <Image
-              alt="initiative-image"
-              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-              height={200}
-              width={200}
-              objectFit="cover"
-            />
-          </div>
+        <div className="min-w-[4rem] w-2/12 relative overflow-hidden">
+          <Image
+            alt="Organization Logo"
+            src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+            height={200}
+            width={200}
+            objectFit="cover"
+          />
         </div>
         <div className="flex flex-col space-y-1 grow">
           <div className="font-bold truncate w-11/12">{details.title}</div>
@@ -95,7 +93,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
           </div>
           <div className="flex flex-row items-center text-gray-400 text-sm font-medium space-x-2">
             <FiMapPin />
-            <span>{details.location || "Location"}</span>
+            <span>{details.location || 'Location'}</span>
           </div>
         </div>
       </div>
@@ -123,7 +121,7 @@ function AddInitiativeTile() {
   return (
     <Link href="/manage/initiative/add" passHref>
       <div
-        className="w-full pb-full h-16 min-h-16 flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+        className="w-full pb-full h-16 min-h-[8rem] flex items-center justify-center utline outline-dotted outline-gray-300 text-gray-400 cursor-pointer
                       hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
       >
         <div className="flex flex-col items-center">
@@ -153,13 +151,13 @@ function ModeratorTile({ moderator, onClickHandler }) {
         id={details.moderator.id}
         onClick={onClickHandler}
       >
-        <div className="w-full bg-white flex flex-row items-center rounded-xl overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
+        <div className="w-full bg-white flex flex-row items-center overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
           <div className="h-full w-full relative rounded-xl overflow-clip">
             <div className="rounded-xl w-full pb-full flex justify-center items-center overflow-clip">
               <Image
                 alt="moderator-avatar"
                 className="min-w-full min-h-full"
-                src={details.moderator.avatar || "/images/avatar.png"}
+                src={details.moderator.avatar || '/images/avatar.png'}
                 height={200}
                 width={200}
                 objectFit="cover"
@@ -186,7 +184,7 @@ function ModeratorTile({ moderator, onClickHandler }) {
   );
 }
 
-function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
+function ModeratorList({ moderators, onClickHandler, id = '', admin = false }) {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <>
@@ -203,13 +201,13 @@ function ModeratorList({ moderators, onClickHandler, id = "", admin = false }) {
   );
 }
 
-function AddModeratorTile({ admin = false, id = "" }) {
+function AddModeratorTile({ admin = false, id = '' }) {
   return (
     <div
-      className="w-full pb-full flex items-center justify-center rounded-xl outline outline-dashed outline-gray-300 text-gray-400 cursor-pointer
+      className="w-full min-h-[9rem] flex items-center justify-center outline outline-dotted outline-gray-300 text-gray-400 cursor-pointer
                     hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
     >
-      <Link href={`/manage/moderator/add/${admin ? id : ""}`} passHref>
+      <Link href={`/manage/moderator/add/${admin ? id : ''}`} passHref>
         <div className="flex flex-col items-center space-y-2">
           <FiPlusCircle className="text-2xl" />
           <span>Add a moderator</span>
@@ -263,12 +261,12 @@ function NGODetails({ router, details, session, override = false }) {
         <span className="text-lg font-bold">Organization Details</span>
       )}
       <div className={`w-full flex flex-row items-center gap-4`}>
-        <div className={override ? "w-1/5" : "w-1/4"}>
+        <div className={override ? 'w-1/5' : 'w-1/4'}>
           <div className="w-full pb-full">
             <Image
               alt="Organization Logo"
               src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
-              className="rounded-full"
+              className="rounded-lg"
               height={200}
               width={200}
             />
@@ -277,12 +275,12 @@ function NGODetails({ router, details, session, override = false }) {
         <div className="w-3/4 flex flex-col gap-2">
           <div className="flex flex-col">
             <span className="text-lg font-bold">
-              {session && details?.name ? `${details.name}` : "NGO NAME"}
+              {session && details?.name ? `${details.name}` : 'NGO NAME'}
             </span>
             <span className="text-xs text-gray-400 truncate">
               {session && details?.description
                 ? `${details.description}`
-                : "The NGO description goes here."}
+                : 'The NGO description goes here.'}
             </span>
           </div>
           {(override || session?.user?.role <= 4) && (
@@ -290,7 +288,7 @@ function NGODetails({ router, details, session, override = false }) {
               className="text-xs flex items-center flex-row gap-2"
               onClick={() => {
                 router.push(
-                  `/manage/edit-admin/${override ? details?.id : ""}`
+                  `/manage/edit-admin/${override ? details?.id : ''}`
                 );
               }}
             >

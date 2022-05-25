@@ -116,7 +116,7 @@ function Header({ session, socket }) {
             </label>
             <div
               tabIndex="0"
-              className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-y-auto"
+              className="dropdown-content menu p-2 rounded-box w-96 mt-2 shadow-lg bg-white max-h-[80vh] overflow-y-auto z-50"
               onClick={handleNotificationClick}
             >
               <div className="flex flex-col p-2 gap-4">

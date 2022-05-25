@@ -1,11 +1,11 @@
-import faker from "@faker-js/faker";
-import moment from "moment";
-import Link from "next/link";
-import { fetchJSON } from "../middleware/helper";
-import { useEffect, useCallback, useState } from "react";
-import { notificationsState } from "../atoms/notificationsAtom";
-import { useRecoilState } from "recoil";
-import Image from "next/image";
+import faker from '@faker-js/faker';
+import moment from 'moment';
+import Link from 'next/link';
+import { fetchJSON } from '../middleware/helper';
+import { useEffect, useCallback, useState } from 'react';
+import { notificationsState } from '../atoms/notificationsAtom';
+import { useRecoilState } from 'recoil';
+import Image from 'next/image';
 
 function Notification({ notificationData, key }) {
   const time = moment(notificationData?.dateCreated).fromNow();
@@ -25,18 +25,20 @@ function Notification({ notificationData, key }) {
       <Link href={data.notification.href} key={key} passHref>
         <div className="flex flex-row gap-3">
           <div className="w-1/4 rounded-full flex justify-center">
-            <Image
-              src={data.notification.avatar || "/images/avatar.png"}
-              alt="avatar"
-              objectFit="contain"
-              className="rounded-full w-full "
-              height={100}
-              width={100}
-            />
+            <div className="flex items-center">
+              <Image
+                src={data.notification.avatar || '/images/avatar.png'}
+                alt="avatar"
+                objectFit="contain"
+                className="rounded-full w-full "
+                height={100}
+                width={100}
+              />
+            </div>
           </div>
           <div className="flex flex-col">
             <div>
-              <span className="font-bold">{data.notification.name}</span>{" "}
+              <span className="font-bold">{data.notification.name}</span>{' '}
               <span className="text-sm">{data.notification.message}</span>
             </div>
             <div>
@@ -54,7 +56,7 @@ function Notification({ notificationData, key }) {
 function NotificationList({ session }) {
   const [notifications, setNotifications] = useRecoilState(notificationsState);
   const getNotification = useCallback(async () => {
-    const data = await fetchJSON("/api/user/get-notifications", {
+    const data = await fetchJSON('/api/user/get-notifications', {
       id: session.user._id,
     });
 

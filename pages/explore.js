@@ -27,7 +27,6 @@ function Explore({ sessionFromProp, socket }) {
             <Sidebar active="explore" />
             <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col space-y-6">
               <Featured />
-              <TopOrganizers />
               <Causes />
               <Initiatives />
             </div>

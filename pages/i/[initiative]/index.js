@@ -17,11 +17,13 @@ import {
 } from '../../../middleware/ProtectedRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
+import Header from '../../../components/Header';
 
-function Header({ initiativeData, session }) {
+function Navbar({ initiativeData, session }) {
   return (
     <>
-      <div className="flex-auto absolute h-56 w-full sm:w-96 bg-slate-500">
+      <div className="flex-auto w-full md:min-h-[40vh] bg-slate-500 overflow-hidden">
         <Image
           alt=""
           src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
@@ -29,8 +31,8 @@ function Header({ initiativeData, session }) {
           layout="fill"
         />
       </div>
-      <div className="-top-20 sticky flex flex-row justify-between p-4">
-        <div className="p-2 rounded-full bg-purple-100">
+      <div className="md:hidden flex top-0 h-56 sticky flex-row justify-between p-4">
+        <div className="p-2 h-fit rounded-full bg-purple-100 ">
           <Link href="/initiatives" passHref>
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
           </Link>
@@ -198,9 +200,9 @@ function Body({ session, initiativeData, socket }) {
   }, []);
 
   return (
-    <div className="p-4 flex flex-col mt-40 gap-4">
+    <div className="p-4 flex flex-col gap-4 relative">
       {/* TITLE */}
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-row justify-between sticky top-0">
         <div className="flex flex-col">
           <span className="text-2xl font-bold">{data.initiative.title}</span>
           <div className="flex flex-row items-center space-x-2">
@@ -343,10 +345,28 @@ function initiative({ sessionFromProp, initiativeData, socket }) {
   const session = sessionFromProp;
 
   return (
-    <div className="flex relative flex-col min-h-screen">
-      <Header session={session} initiativeData={initiativeData} />
-      <Body session={session} initiativeData={initiativeData} socket={socket} />
-    </div>
+    <>
+      <Head>
+        <title>Welcome Profile!</title>
+      </Head>
+      <div className="sm:block hidden sticky top-0 z-50 overflow-x-clip">
+        <Header session={session} />
+      </div>
+      <div className="flex flex-col min-h-screen justify-between overflow-hidden relative">
+        <div className="flex flex-col items-center relative">
+          <div className="relative w-full">
+            <Navbar session={session} initiativeData={initiativeData} />
+          </div>
+          <div className="flex flex-col w-screen xl:max-w-7xl xl:px-8 gap-4">
+            <Body
+              session={session}
+              initiativeData={initiativeData}
+              socket={socket}
+            />
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
