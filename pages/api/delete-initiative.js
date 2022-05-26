@@ -22,6 +22,8 @@ async function handler(req, res) {
     // loop through array and remove initiative id from activeInitiatives array of users
     for (let i = 0; i < participantsList?.length; i++) {
       const user = await users.findOne({ _id: ObjectId(participantsList[i]) });
+      if(!user) continue;
+      
       const activeInitiatives = user.activeInitiatives;
       const index = activeInitiatives.indexOf(id);
       if (index > -1) {
@@ -36,6 +38,9 @@ async function handler(req, res) {
     // loop through array and remove initiative id from applications array of users
     for (let i = 0; i < registrantsList?.length; i++) {
       const user = await users.findOne({ _id: ObjectId(registrantsList[i]) });
+      
+      if (!user) continue;
+
       const applications = user.applications;
       const index = applications.indexOf(id);
       if (index > -1) {

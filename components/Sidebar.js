@@ -38,6 +38,7 @@ function Sidebar({ active }) {
         </Link>
       </div>
       <div>
+        <Link href="/initiatives" passHref>
         <button
           className={`relative rounded-xl btn btn-lg btn-ghost gap-4 capitalize ${
             active == 'initiatives' &&
@@ -47,6 +48,7 @@ function Sidebar({ active }) {
           <RiHandHeartLine className="text-3xl" />
           <span className="hidden xl:inline">Initiatives</span>
         </button>
+        </Link>
       </div>
       <div>
         <Link href="/bookmarks" passHref>
