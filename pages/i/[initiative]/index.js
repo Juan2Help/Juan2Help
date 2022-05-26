@@ -22,6 +22,7 @@ import Head from 'next/head';
 import Header from '../../../components/Header';
 
 function Navbar({ initiativeData, session }) {
+  const router = useRouter();
   return (
     <>
       <div className="flex-auto w-full md:min-h-[40vh] bg-slate-500 overflow-hidden">
@@ -33,10 +34,11 @@ function Navbar({ initiativeData, session }) {
         />
       </div>
       <div className="md:hidden flex top-0 h-56 sticky flex-row justify-between p-4">
-        <div className="p-2 h-fit rounded-full bg-purple-100 ">
-          <Link href="/initiatives" passHref>
-            <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
-          </Link>
+        <div
+          className="p-2 h-fit rounded-full bg-purple-100 "
+          onClick={() => router.back()}
+        >
+          <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
         </div>
         {session?.user?.role >= 2 && (
           <div className="dropdown dropdown-end">

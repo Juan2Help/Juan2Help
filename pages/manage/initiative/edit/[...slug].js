@@ -1,29 +1,29 @@
-import Link from "next/link";
-import { FiArrowLeft } from "react-icons/fi";
-import Participants from "../../../../components/add-initiative/Participant";
-import { Input, TextArea, Date } from "../../../../components/Input";
-import Button from "../../../../components/Button";
-import { getSession } from "next-auth/react";
-import ProtectedRoute from "../../../../components/ProtectedRoute";
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { GrantAccess } from "../../../../middleware/ProtectedRoute";
-import { fetchJSON } from "../../../../middleware/helper";
-import { geocodeByAddress } from "react-places-autocomplete";
-import { getLatLng } from "react-places-autocomplete";
+import Link from 'next/link';
+import { FiArrowLeft } from 'react-icons/fi';
+import Participants from '../../../../components/add-initiative/Participant';
+import { Input, TextArea, Date } from '../../../../components/Input';
+import Button from '../../../../components/Button';
+import { getSession } from 'next-auth/react';
+import ProtectedRoute from '../../../../components/ProtectedRoute';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { GrantAccess } from '../../../../middleware/ProtectedRoute';
+import { fetchJSON } from '../../../../middleware/helper';
+import { geocodeByAddress } from 'react-places-autocomplete';
+import { getLatLng } from 'react-places-autocomplete';
 
 function Edit({ sessionFromProp, data, socket }) {
   const session = sessionFromProp;
   const [initiativeData, setInitiativeData] = useState(data);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState('');
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
   const router = useRouter();
-  console.log("data", data);
+  console.log('data', data);
 
   useEffect(() => {
-    console.log("SOCKET INITIALIZED", socket);
-    socket?.emit("newUser", {
+    console.log('SOCKET INITIALIZED', socket);
+    socket?.emit('newUser', {
       userID: session?.user?._id,
     });
   }, [socket]);
@@ -36,32 +36,32 @@ function Edit({ sessionFromProp, data, socket }) {
     // add user email and NGO to initiative data
     initiativeData.NGOid = session.user.NGOid;
     initiativeData.location = {
-      type: "Point",
+      type: 'Point',
       address,
       coordinates: [longitude, latitude],
     };
     initiativeData.email = session.user.email;
-    initiativeData.name = session.user.name.split(" ")[0];
+    initiativeData.name = session.user.name.split(' ')[0];
     //
-    console.log("SENDING", initiativeData);
+    console.log('SENDING', initiativeData);
     // send a POST request to the api to create a new initiative
-    const response = await fetch("/api/edit-initiative", {
-      method: "POST",
+    const response = await fetch('/api/edit-initiative', {
+      method: 'POST',
       body: JSON.stringify(initiativeData),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     });
 
-    socket?.emit("updateInitiative", initiativeData.participantsList);
+    socket?.emit('updateInitiative', initiativeData.participantsList);
 
     //check if response is ok
     if (response.ok) {
       //redirect to login
-      router.push("/manage");
+      router.push('/manage');
     } else {
       const error = await response.json();
-      console.log("error", error);
+      console.log('error', error);
     }
 
     return;
@@ -74,10 +74,10 @@ function Edit({ sessionFromProp, data, socket }) {
   const handleChange = (e) => {
     // Grab values from form and create local state
     const { name, value } = e.target;
-    if (name === "publish") {
+    if (name === 'publish') {
       setInitiativeData({
         ...initiativeData,
-        [name]: value === "on",
+        [name]: value === 'on',
       });
       return;
     }
@@ -90,17 +90,17 @@ function Edit({ sessionFromProp, data, socket }) {
     setAddress(results[0].formatted_address);
     setLatitude(lat);
     setLongitude(lng);
-    console.log("results", results);
-    console.log("latLng", lat, lng);
+    console.log('results', results);
+    console.log('latLng', lat, lng);
   };
 
   return (
     <ProtectedRoute session={session} authority={2}>
       <div className="bg-white min-h-screen w-screen px-4 flex flex-col">
         <div className="bg-white sticky top-0 text-xl py-4 z-50 flex flex-row w-full items-center space-x-2">
-          <Link href="/manage" passHref>
+          <div onClick={() => router.back()}>
             <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
-          </Link>
+          </div>
           <span className="font-bold">Edit Initiative</span>
         </div>
         <form className="space-y-5 pb-4" onSubmit={handleSubmit}>
@@ -180,7 +180,7 @@ function Edit({ sessionFromProp, data, socket }) {
               className="select select-bordered w-full bg-white"
               onChange={handleChange}
               name="causeType"
-              defaultValue={initiativeData?.causeType || "Food"}
+              defaultValue={initiativeData?.causeType || 'Food'}
             >
               <option value="Food">Food</option>
               <option value="Medicine">Medicine</option>

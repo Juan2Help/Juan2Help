@@ -64,7 +64,7 @@ function MessageItem({ threadData, onClick }) {
           width={40}
         />
         <div className="flex flex-col w-9/12">
-          <div className="w-full font-bold truncate">
+          <div className="w-full font-bold text-lg truncate">
             {tileData?.message?.name}
           </div>
           <div className="flex flex-row text-gray-500 text-xs gap-1 items-center">
@@ -437,8 +437,11 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
                 }`}
               >
                 {/* Header */}
-                <div className="px-4">
-                  <h1 className="font-bold text-lg">Messages</h1>
+                <div className="px-4 flex flex-row gap-4 items-center">
+                  <Link href="/initiatives" passHref>
+                    <FiArrowLeft className="cursor-pointer hover:text-gray-500" />
+                  </Link>
+                  <h1 className="font-bold text-xl">Messages</h1>
                 </div>
                 {/* Search */}
                 <div className="px-4">
@@ -446,7 +449,7 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
                     <input
                       type="text"
                       placeholder="Search messages"
-                      className="input input-xs input-ghost w-full px-4"
+                      className="input input-sm input-ghost w-full px-4"
                       onChange={onChangeSearchName}
                     />
                   </div>

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Input } from "../Input";
+import React, { useState } from 'react';
+import { Input } from '../Input';
 
 function Participants({ getParticipants, defaultValue }) {
-  const [sliderValue, setSliderValue] = useState(0);
+  const [sliderValue, setSliderValue] = useState(defaultValue);
 
   const changeValue = (e) => {
     setSliderValue(e.target.value);

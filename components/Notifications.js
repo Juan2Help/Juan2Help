@@ -25,8 +25,8 @@ function Notification({ notificationData, key }) {
   return (
     <div key={key}>
       <Link href={data.notification.href} key={key} passHref>
-        <div className="flex flex-row gap-3">
-          <div className="w-1/4 rounded-full flex justify-center">
+        <div className="grid grid-flow-row grid-cols-5 gap-4">
+          <div className="rounded-full flex justify-center">
             <div className="flex items-center">
               <Image
                 src={data.notification.avatar || '/images/avatar.png'}
@@ -38,7 +38,7 @@ function Notification({ notificationData, key }) {
               />
             </div>
           </div>
-          <div className="flex flex-col">
+          <div className="col-span-4 flex flex-col">
             <div>
               <span className="font-bold">{data.notification.name}</span>{' '}
               <span className="text-sm">{data.notification.message}</span>
@@ -75,7 +75,7 @@ function NotificationList({ session }) {
 
   console.log(notifications);
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 p-4">
       {/* sort by time and map */}
       {notifications.map((notification) => (
         <>
