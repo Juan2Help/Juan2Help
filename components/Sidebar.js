@@ -25,28 +25,28 @@ function Sidebar({ active }) {
         </Link>
       </div>
       <div>
-        <Link href="" passHref>
-          <button
-            className={`relative rounded-xl btn btn-lg btn-ghost gap-4 capitalize ${
-              active == 'feed' &&
-              `font-bold text-purple-700 after:content-[''] after:bg-purple-700 after:left-1.5 after:h-1/3 after:w-1 after:rounded-full after:absolute`
-            }`}
-          >
-            <FiCopy className="text-3xl" />
-            <span className="hidden xl:inline">Feed</span>
-          </button>
-        </Link>
-      </div>
-      <div>
         <button
           className={`relative rounded-xl btn btn-lg btn-ghost gap-4 capitalize ${
-            active == 'initiatives' &&
+            active == 'feed' &&
             `font-bold text-purple-700 after:content-[''] after:bg-purple-700 after:left-1.5 after:h-1/3 after:w-1 after:rounded-full after:absolute`
           }`}
         >
-          <RiHandHeartLine className="text-3xl" />
-          <span className="hidden xl:inline">Initiatives</span>
+          <FiCopy className="text-3xl" />
+          <span className="hidden xl:inline">Feed</span>
         </button>
+      </div>
+      <div>
+        <Link href="/initiatives" passHref>
+          <button
+            className={`relative rounded-xl btn btn-lg btn-ghost gap-4 capitalize ${
+              active == 'initiatives' &&
+              `font-bold text-purple-700 after:content-[''] after:bg-purple-700 after:left-1.5 after:h-1/3 after:w-1 after:rounded-full after:absolute`
+            }`}
+          >
+            <RiHandHeartLine className="text-3xl" />
+            <span className="hidden xl:inline">Initiatives</span>
+          </button>
+        </Link>
       </div>
       <div>
         <Link href="/bookmarks" passHref>
