@@ -87,27 +87,12 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
           <Header session={session} />
           <div className="flex flex-col w-screen xl:max-w-7xl px-4 xl:px-8 gap-4">
             {/* User details */}
-<<<<<<< HEAD
-            <div className="w-full flex flex-row justify-center items-center gap-4">
-              <div className="flex flex-col items-center">
-                <div className="rounded-full overflow-clip h-40 w-40">
-                  <Image
-                    alt="avatar"
-                    src={
-                      session?.user?._id === userDetails._id ? avatar : '/images/avatar.png'
-                    }
-                    className="min-h-full min-w-full"
-                    width={200}
-                    height={200}
-                  />
-=======
             <div className="w-full flex flex-row gap-10 sm:justify-start justify-center">
               <div className="flex sm:flex-row flex-col items-center sm:gap-4">
                 <div>
                   <div className="overflow-clip sm:h-64 sm:w-64 h-40 w-40">
                     <Image alt="avatar" src={avatar} width={256} height={256} />
                   </div>
->>>>>>> 3dfca4d89e8f14bd9291c2847b329a8c2d1cf7f0
                 </div>
                 <div className="h-full p-2 flex flex-col sm:text-left text-center justify-between flex-auto">
                   <div className="flex flex-col gap-2 relative w-fit sm:py-10">

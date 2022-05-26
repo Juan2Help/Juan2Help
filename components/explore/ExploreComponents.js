@@ -177,12 +177,12 @@ function Nearby() {
   
   useEffect(() => {
     grabLatLng();
-    fetchNearByInitiatives();
+    
   }, []);
 
   const grabLatLng = () => {
     const success = (data) => {
-      setLatLng([data.coords.latitude, data.coords.longitude]);
+      fetchNearByInitiatives(data.coords.latitude, data.coords.longitude);
     };
     const error = (err) => {
       console.error(err);
@@ -195,12 +195,12 @@ function Nearby() {
     });
   };
   
-  const fetchNearByInitiatives = async () => {
+  const fetchNearByInitiatives = async (lat, lng) => {
     const data = await fetchJSON('/api/initiatives/get-initiatives', {
       type: '2',
       center: {
-        lat: latlng[0],
-        lng: latlng[1],
+        lat: lat || 0,
+        lng: lng || 0,
       },
     });
     setNearByInitiatives(data);
