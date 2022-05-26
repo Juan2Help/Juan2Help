@@ -133,7 +133,7 @@ function Header({ session, socket }) {
                 </div>
                 <hr />
               </div>
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col gap-2 p-2">
                 {/* sort by time and map */}
                 {notifications.map((notification) => (
                   <Notification

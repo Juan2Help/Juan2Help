@@ -26,17 +26,15 @@ function Navbar({ active }) {
           <FiCompass className="text-2xl" />
         </div>
       </Link>
-      <Link href="/feed" passHref>
-        <div
-          className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
-            active == 'feed'
-              ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
-              : 'text-gray-300'
-          }`}
-        >
-          <FiCopy className="text-2xl" />
-        </div>
-      </Link>
+      <div
+        className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
+          active == 'feed'
+            ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
+            : 'text-gray-300'
+        }`}
+      >
+        <FiCopy className="text-2xl" />
+      </div>
       <Link href="/initiatives" passHref>
         <div
           className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
@@ -59,17 +57,15 @@ function Navbar({ active }) {
           <FiBookmark className="text-2xl" />
         </div>
       </Link>
-      <Link href="/schedule" passHref>
-        <div
-          className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
-            active == 'schedule'
-              ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
-              : 'text-gray-300'
-          }`}
-        >
-          <FiCalendar className="text-2xl" />
-        </div>
-      </Link>
+      <div
+        className={`relative flex flex-row flex-auto space-x-2 justify-center items-center p-4 rounded-md ${
+          active == 'schedule'
+            ? `bg-purple-50 text-purple-700 after:content-[''] after:bg-purple-700 after:bottom-1.5 after:h-1 after:w-1/3 after:rounded-full after:absolute`
+            : 'text-gray-300'
+        }`}
+      >
+        <FiCalendar className="text-2xl" />
+      </div>
     </div>
   );
 }
