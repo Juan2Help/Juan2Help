@@ -20,8 +20,10 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Header from '../../../components/Header';
+import Sidebar from '../../../components/Sidebar';
+import Navbar from '../../../components/Navbar';
 
-function Navbar({ initiativeData, session }) {
+function Cover({ initiativeData, session }) {
   return (
     <>
       <div className="flex-auto w-full md:min-h-[40vh] bg-slate-500 overflow-hidden">
@@ -203,14 +205,14 @@ function Body({ session, initiativeData, socket }) {
   return (
     <div className="p-4 flex flex-col gap-4 relative min-h-[90vh]">
       {/* TITLE */}
-      <div className="flex flex-row justify-between sticky top-0">
+      <div className="flex flex-row justify-between sticky top-0 bg-base-100">
         <div className="flex flex-col">
           <div className="flex flex-row items-center">
             <div className="text-2xl font-bold">{data.initiative.title}</div>
             {session?.user?.role >= 2 && (
               <div className="dropdown dropdown-end sm:block hidden">
                 <label tabIndex="0">
-                  <div className="p-1">
+                  <div className="pl-2 pt-1 text-2xl cursor-pointer">
                     <FiChevronDown />
                   </div>
                 </label>
@@ -374,23 +376,29 @@ function initiative({ sessionFromProp, initiativeData, socket }) {
       <Head>
         <title>{initiativeData?.title}</title>
       </Head>
-      <div className="sm:block hidden sticky top-0 z-50 overflow-x-clip">
-        <Header session={session} />
-      </div>
-      <div className="flex flex-col min-h-screen justify-between overflow-hidden relative">
-        <div className="flex flex-col items-center relative">
-          <div className="relative w-full">
-            <Navbar session={session} initiativeData={initiativeData} />
+      <div className="bg-base-100 min-h-screen flex flex-col items-center justify-between text-neutral overflow-clip">
+        <div className="flex flex-col items-center">
+          <div className="sm:block hidden sticky top-0 z-50 overflow-x-clip">
+            <Header session={session} />
           </div>
-          <div className="flex flex-col w-screen xl:max-w-7xl xl:px-8 gap-4">
-            <Body
-              session={session}
-              initiativeData={initiativeData}
-              socket={socket}
-            />
+          <div className="flex flex-row w-screen xl:max-w-7xl xl:px-8">
+            <Sidebar active="initiatives" />
+            <div className="relative w-full sm:w-sm md:w-xl lg:w-2xl xl:w-10/12 flex flex-col">
+              <div className="relative w-full xl:max-w-7xl">
+                <Cover session={session} initiativeData={initiativeData} />
+              </div>
+              <div className="flex flex-col w-full xl:max-w-7xl gap-4">
+                <Body
+                  session={session}
+                  initiativeData={initiativeData}
+                  socket={socket}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <Navbar active="initiatives" />
     </>
   );
 }
