@@ -50,7 +50,9 @@ function Navbar({ initiativeData, session }) {
               className="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
             >
               <li>
-                <a>Edit initiative</a>
+                <Link href={`/manage/initiative/edit/${initiativeData._id}`}>
+                  Edit initiative
+                </Link>
               </li>
               <li>
                 <Link href={`/i/${initiativeData._id}/registrants`}>
@@ -219,7 +221,11 @@ function Body({ session, initiativeData, socket }) {
                   className="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
                 >
                   <li>
-                    <a>Edit initiative</a>
+                    <Link
+                      href={`/manage/initiative/edit/${initiativeData._id}`}
+                    >
+                      Edit initiative
+                    </Link>
                   </li>
                   <li>
                     <Link href={`/i/${initiativeData._id}/registrants`}>
