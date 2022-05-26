@@ -15,7 +15,9 @@ function Notification({ notificationData, key }) {
       name: notificationData?.name,
       message: notificationData?.message,
       time: time,
-      avatar: faker.image.avatar(),
+      avatar: notificationData?.moderatorID
+        ? `http://www.gravatar.com/avatar/${notificationData?.moderatorID}?d=retro&f=y`
+        : faker.image.avatar(),
       href: `/i/${notificationData?.initiativeID}`,
     },
   });
@@ -77,10 +79,6 @@ function NotificationList({ session }) {
       {/* sort by time and map */}
       {notifications.map((notification) => (
         <>
-          <Notification
-            key={notification._id}
-            notificationData={notification}
-          />
           <Notification
             key={notification._id}
             notificationData={notification}

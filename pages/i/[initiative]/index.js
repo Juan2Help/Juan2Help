@@ -10,6 +10,7 @@ import {
   FiBookmark,
   FiClock,
   FiMapPin,
+  FiChevronDown,
 } from 'react-icons/fi';
 import {
   GrantAccess,
@@ -204,7 +205,31 @@ function Body({ session, initiativeData, socket }) {
       {/* TITLE */}
       <div className="flex flex-row justify-between sticky top-0">
         <div className="flex flex-col">
-          <span className="text-2xl font-bold">{data.initiative.title}</span>
+          <div className="flex flex-row items-center">
+            <div className="text-2xl font-bold">{data.initiative.title}</div>
+            {session?.user?.role >= 2 && (
+              <div className="dropdown dropdown-end sm:block hidden">
+                <label tabIndex="0">
+                  <div className="p-1">
+                    <FiChevronDown />
+                  </div>
+                </label>
+                <ul
+                  tabIndex="0"
+                  className="dropdown-content menu menu-compact p-2 shadow bg-base-100 rounded-box w-40 mt-1"
+                >
+                  <li>
+                    <a>Edit initiative</a>
+                  </li>
+                  <li>
+                    <Link href={`/i/${initiativeData._id}/registrants`}>
+                      View registrants
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
           <div className="flex flex-row items-center space-x-2">
             <span className="text-sm text-gray-400 font-bold inline">
               {data.author.name}
@@ -347,7 +372,7 @@ function initiative({ sessionFromProp, initiativeData, socket }) {
   return (
     <>
       <Head>
-        <title>Welcome Profile!</title>
+        <title>{initiativeData?.title}</title>
       </Head>
       <div className="sm:block hidden sticky top-0 z-50 overflow-x-clip">
         <Header session={session} />
