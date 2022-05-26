@@ -38,17 +38,22 @@ async function handler(req, res) {
     for (const threadID of user?.activeThreads) {
       const receiverID = threadID.replace(String(session?.user?._id), "");
       // get receiverData
-      const { name, email, mobileNumber, _id } = await users.findOne({
+      const user = await users.findOne({
         _id: ObjectId(receiverID),
       });
-      const entry = {
-        threadID,
-        name,
-        email,
-        mobileNumber,
-        _id,
-      };
-      activeThreads.push(entry);
+
+      if (user) {
+        const { name, email, mobileNumber, _id } = user
+        const entry = {
+          threadID,
+          name,
+          email,
+          mobileNumber,
+          _id,
+        };
+        activeThreads.push(entry);
+      }
+      
     }
 
     // respond with activeThreads
