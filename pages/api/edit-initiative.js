@@ -79,7 +79,7 @@ async function handler(req, res) {
                   type: 1,
                   initiativeID: _id,
                   name: name,
-                  message: `${title} has been updated`,
+                  message: `has updated ${title}. Click to check it out!`,
                   dateCreated: new Date(),
                 },
               },

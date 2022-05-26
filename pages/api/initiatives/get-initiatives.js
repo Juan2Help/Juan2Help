@@ -95,7 +95,6 @@ const getNearByInitiatives = async (req, res) => {
 
   console.log("DONE ENSURING INDEX");
 
-  // find initiatives within a radius of 10km
   const nearByInitiatives = await initiatives
     .find({
       location: {

@@ -76,7 +76,7 @@ async function handler(req, res) {
             type: 2,
             initiativeID: initiative._id,
             name: name,
-            message: `your application for ${initiative.title} has been rejected.`,
+            message: `has rejected your application for ${initiative.title}. Maybe now is not the best time for us.`,
             dateCreated: new Date(),
           },
         },
