@@ -70,6 +70,7 @@ function Initiative({ initiativeData, bookmarkList }) {
         .format('ddd, DD MMM YYYY')
         .toUpperCase(),
       location: initiativeLocation,
+      banner: `https://picsum.photos/seed/${initiativeData?._id}/500/500?grayscale&blur=1&random=${initiativeData?._id}`,
       title: initiativeData?.title?.toUpperCase(),
       content: initiativeData?.description,
       participantcount: initiativeData?.participantsList?.length,
@@ -96,7 +97,7 @@ function Initiative({ initiativeData, bookmarkList }) {
         <Link href={`/i/${initiativeData._id}`} passHref>
           <Image
             alt="initiative"
-            src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+            src={data.initiative.banner}
             layout="fill"
             objectFit="cover"
           />
@@ -157,15 +158,12 @@ function Initiative({ initiativeData, bookmarkList }) {
   );
 }
 
-function InitiativeCarousel({nearby}) {
+function InitiativeCarousel({ nearby }) {
   return (
     <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 p-1">
       {nearby?.map((initiative) => (
-        <Initiative
-          key={initiative.id}
-          initiativeData={initiative}
-        />
-        ))}
+        <Initiative key={initiative.id} initiativeData={initiative} />
+      ))}
     </div>
   );
 }
@@ -174,10 +172,8 @@ function Nearby() {
   const [nearbyInitiatives, setNearByInitiatives] = useState([]);
   const [latlng, setLatLng] = useState([0, 0]);
 
-  
   useEffect(() => {
     grabLatLng();
-    
   }, []);
 
   const grabLatLng = () => {
@@ -194,7 +190,7 @@ function Nearby() {
       timeout: 10000,
     });
   };
-  
+
   const fetchNearByInitiatives = async (lat, lng) => {
     const data = await fetchJSON('/api/initiatives/get-initiatives', {
       type: '2',
@@ -216,7 +212,7 @@ function Nearby() {
             <FiArrowRight className="inline" />
           </div>
         </div>
-        <InitiativeCarousel nearby = {nearbyInitiatives}/>
+        <InitiativeCarousel nearby={nearbyInitiatives} />
       </div>
     </>
   );

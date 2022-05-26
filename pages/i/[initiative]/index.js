@@ -27,7 +27,7 @@ function Navbar({ initiativeData, session }) {
       <div className="flex-auto w-full md:min-h-[40vh] bg-slate-500 overflow-hidden">
         <Image
           alt=""
-          src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+          src={`https://picsum.photos/seed/${initiativeData._id}/2000/1000?grayscale&blur=1&random=${initiativeData._id}`}
           objectFit="cover"
           layout="fill"
         />
@@ -201,7 +201,7 @@ function Body({ session, initiativeData, socket }) {
   }, []);
 
   return (
-    <div className="p-4 flex flex-col gap-4 relative">
+    <div className="p-4 flex flex-col gap-4 relative min-h-[90vh]">
       {/* TITLE */}
       <div className="flex flex-row justify-between sticky top-0">
         <div className="flex flex-col">

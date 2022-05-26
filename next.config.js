@@ -8,6 +8,7 @@ const nextConfig = {
       'tailwindui.com',
       'api.lorem.space',
       'www.gravatar.com',
+      'picsum.photos',
     ],
   },
 };

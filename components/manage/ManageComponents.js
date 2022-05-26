@@ -58,7 +58,13 @@ function InitiativeModal({ editHandler, deleteHandler, manageHandler }) {
 }
 
 function InitiativeTile({ initiative, id, onClickHandler }) {
-  console.log(initiative);
+  const numId = id
+    .split('')
+    .map((s) =>
+      s >= 'A' && s <= 'z' ? s.toLowerCase().charCodeAt(0) - 97 + 1 : s
+    )
+    .join('');
+  console.log(numId);
   const { title, startDate, description, location } = initiative;
   const details = {
     date: moment(startDate).format('ddd, DD MMM YYYY').toUpperCase(),
@@ -76,7 +82,7 @@ function InitiativeTile({ initiative, id, onClickHandler }) {
         <div className="min-w-[4rem] w-2/12 relative overflow-hidden">
           <Image
             alt="Organization Logo"
-            src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+            src={`https://picsum.photos/seed/${id}/300/300?grayscale&blur=1&random=${id}`}
             height={200}
             width={200}
             objectFit="cover"
@@ -138,8 +144,8 @@ function ModeratorTile({ moderator, onClickHandler }) {
     moderator: {
       id: moderator._id,
       name: moderator.name,
-      avatar: faker.image.avatar(),
-      location: faker.address.city(),
+      avatar: `http://www.gravatar.com/avatar/${moderator._id}?d=retro&f=y`,
+      location: moderator.location,
       level: moderator.role / 2,
     },
   });
@@ -147,13 +153,13 @@ function ModeratorTile({ moderator, onClickHandler }) {
   return (
     <label htmlFor="moderator-modal" name="tile" key={details.moderator.id}>
       <div
-        className="w-full rounded-xl"
+        className="w-full"
         id={details.moderator.id}
         onClick={onClickHandler}
       >
         <div className="w-full bg-white flex flex-row items-center overflow-clip space-x-4 cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-purple-600">
-          <div className="h-full w-full relative rounded-xl overflow-clip">
-            <div className="rounded-xl w-full pb-full flex justify-center items-center overflow-clip">
+          <div className="h-full w-full relative overflow-clip">
+            <div className="w-full pb-full flex justify-center items-center overflow-clip">
               <Image
                 alt="moderator-avatar"
                 className="min-w-full min-h-full"
@@ -169,8 +175,12 @@ function ModeratorTile({ moderator, onClickHandler }) {
                   {details.moderator.name}
                 </span>
                 <div className="text-xs text-gray-400 flex flex-row space-x-2 items-center">
-                  <FiMapPin />
-                  <span>{details.moderator.location}</span>
+                  {moderator.location && (
+                    <>
+                      <FiMapPin />
+                      <span>{details.moderator.location}</span>
+                    </>
+                  )}
                 </div>
               </div>
               <span className="badge badge-sm badge-primary">
@@ -204,7 +214,7 @@ function ModeratorList({ moderators, onClickHandler, id = '', admin = false }) {
 function AddModeratorTile({ admin = false, id = '' }) {
   return (
     <div
-      className="w-full min-h-[9rem] flex items-center justify-center outline outline-dotted outline-gray-300 text-gray-400 cursor-pointer
+      className="w-full min-h-[14.556rem] flex items-center justify-center outline outline-dotted outline-gray-300 text-gray-400 cursor-pointer
                     hover:outline-3 hover:outline hover:outline-gray-600 hover:text-gray-600"
     >
       <Link href={`/manage/moderator/add/${admin ? id : ''}`} passHref>
@@ -265,7 +275,7 @@ function NGODetails({ router, details, session, override = false }) {
           <div className="w-full pb-full">
             <Image
               alt="Organization Logo"
-              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+              src={`http://www.gravatar.com/avatar/${details?._id}?d=retro&f=y`}
               className="rounded-lg"
               height={200}
               width={200}
@@ -321,7 +331,7 @@ function OrganizationTile({ organization, id, onClickHandler }) {
           <div className="w-full pb-full">
             <Image
               alt="Organization Logo"
-              src="https://i.pinimg.com/originals/bb/03/86/bb0386babaccc66c484292d2c50973a8.png"
+              src={`http://www.gravatar.com/avatar/${id}?d=retro&f=y`}
               objectFit="cover"
               height={200}
               width={200}
