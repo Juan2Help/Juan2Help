@@ -78,9 +78,9 @@ function MessageItem({ threadData, onClick }) {
 
 function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
   return (
-    <>
+    <div className="relative">
       <div
-        className={`absolute z-10 bg-white p-2 mt-16 w-full overflow-y-auto ${
+        className={`absolute z-10 bg-white w-full overflow-y-auto ${
           nameSearch?.length > 0 ? 'min-h-[80vh] block' : 'hidden'
         }`}
       >
@@ -116,7 +116,7 @@ function MessageList({ activeThreads, onClick, fetchedSearch, nameSearch }) {
           <div className="text-center text-gray-500 text-xs">No messages</div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -229,7 +229,7 @@ function PersonDetails({ threadData, onClick }) {
         content: faker.lorem.sentence(),
         author: threadData.name,
         organization: faker.company.companyName(),
-        location: threadData?.location?.address || 'No location',
+        location: threadData?.location?.address,
         email: threadData.email,
         phone: threadData.mobileNumber,
         avatar: threadData?.avatar,
@@ -271,21 +271,24 @@ function PersonDetails({ threadData, onClick }) {
           <FiChevronDown />
         </div>
         <div className="collapse-content flex flex-col gap-4 text-sm">
-          <div className="flex flex-row gap-3 items-center">
-            <FiMapPin className="text-gray-400 text-lg" />
-            <div>{data?.message?.location}</div>
-          </div>
-          <div className="flex flex-row gap-3 items-center">
-            <FiPhone className="text-gray-400 text-lg" />
-            <div>{data?.message?.phone}</div>
-          </div>
-          <div className="flex flex-row gap-3 items-center">
-            <FiMail className="text-gray-400 text-lg" />
-            <div>{data?.message?.email}</div>
-          </div>
-        </div>
-        <div className="w-80% p-10">
-          <Button onClick={onClick} text={'Load Messages'} />
+          {data?.message?.location && (
+            <div className="flex flex-row gap-3 items-center">
+              <FiMapPin className="text-gray-400 text-lg" />
+              <div>{data?.message?.location}</div>
+            </div>
+          )}
+          {data?.message?.phone != undefined && (
+            <div className="flex flex-row gap-3 items-center">
+              <FiPhone className="text-gray-400 text-lg" />
+              <div>{data?.message?.phone}</div>
+            </div>
+          )}
+          {data?.message?.email && (
+            <div className="flex flex-row gap-3 items-center">
+              <FiMail className="text-gray-400 text-lg" />
+              <div>{data?.message?.email}</div>
+            </div>
+          )}
         </div>
       </div>
     </>
@@ -421,9 +424,11 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
           <Head>
             <title>Messages</title>
           </Head>
-          <Header session={session} />
-          <div className="flex flex-row w-screen xl:max-w-7xl px-4 xl:px-8">
-            <div className="w-full grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 grid-flow-row bg-white rounded-md min-h-[90vh] shadow-sm overflow-clip">
+          <div className="sm:block hidden">
+            <Header session={session} />
+          </div>
+          <div className="flex flex-row w-screen xl:max-w-7xl xl:px-8">
+            <div className="w-full grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 grid-flow-row bg-white rounded-md sm:min-h-[80vh] min-h-[100vh] shadow-sm overflow-clip">
               <div
                 className={`py-4 gap-2 min-h-[10vh] z-10 shadow-md w-full relative ${
                   activeThreadData.threadID
@@ -437,7 +442,7 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
                 </div>
                 {/* Search */}
                 <div className="px-4">
-                  <div className="lg:col-span-2 flex items-center w-full h-8 rounded-full bg-gray-100">
+                  <div className="lg:col-span-2 flex items-center w-full h-10 rounded-full bg-gray-100">
                     <input
                       type="text"
                       placeholder="Search messages"
@@ -480,7 +485,6 @@ function Thread({ sessionFromProp, socket, activeThreadData, threadMessages }) {
           </div>
         </div>
       </div>
-      <Navbar active="explore" />
     </ProtectedRoute>
   );
 }

@@ -38,6 +38,29 @@ const getInitiatives = async (type, session) => {
   return data;
 };
 
+function UserInfo({ session, userDetails }) {
+  return (
+    <div className="sm:grid hidden grid-flow-col grid-cols-2 bg-white rounded-xl p-2 self-end justify-end w-full">
+      <div className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
+        <FiMail />
+        <span>{userDetails?.email}</span>
+      </div>
+      <div className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
+        <FiMapPin />
+        <span>{userDetails?.location?.address}</span>
+      </div>
+      <div className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
+        <FiPhone />
+        <span>{userDetails?.mobileNumber}</span>
+      </div>
+      <div className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
+        <FiCalendar />
+        <span>{userDetails?.birthday}</span>
+      </div>
+    </div>
+  );
+}
+
 function Profile({ sessionFromProp, userDetails, bookmarkList }) {
   const session = sessionFromProp;
   const [isOpen, setOpenState] = useState(false);
@@ -64,6 +87,7 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
           <Header session={session} />
           <div className="flex flex-col w-screen xl:max-w-7xl px-4 xl:px-8 gap-4">
             {/* User details */}
+<<<<<<< HEAD
             <div className="w-full flex flex-row justify-center items-center gap-4">
               <div className="flex flex-col items-center">
                 <div className="rounded-full overflow-clip h-40 w-40">
@@ -76,74 +100,55 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                     width={200}
                     height={200}
                   />
-                </div>
-                <div className="w-full p-2 flex-col text-center justify-center">
-                  <div className="flex flex-row gap-2 relative">
-                    <h2 className="font-bold text-3xl">{userDetails?.name}</h2>
-                    <button
-                      onClick={() => setOpenState(!isOpen)}
-                      className="p-1 rounded-full bg-purple-100 text-primary"
-                    >
-                      <FiEdit3 />
-                    </button>
-                    {isOpen && (
-                      <div className="absolute top-10 overflow-clip right-0 w-fit rounded-md shadow-lg bg-white divide-y divide-gray-100">
-                        <Link href="/u/edit/profile" passHref>
-                          <div className="flex py-2 px-4 hover:bg-purple-300 cursor-pointer">
-                            <span className=" text-gray-700 text-sm text-left">
-                              Edit Profile
-                            </span>
-                          </div>
-                        </Link>
-                        {/* <Link href="/settings">
-                    <div className="flex py-2 px-4 hover:bg-purple-300 cursor-pointer">
-                      <Link href="/u/edit/account">
-                        <span className=" text-gray-700 text-sm text-left">
-                          Edit Account
-                        </span>
-                      </Link>
-                    </div>
-                  </Link> */}
-                      </div>
-                    )}
+=======
+            <div className="w-full flex flex-row gap-10 sm:justify-start justify-center">
+              <div className="flex sm:flex-row flex-col items-center sm:gap-4">
+                <div>
+                  <div className="overflow-clip sm:h-64 sm:w-64 h-40 w-40">
+                    <Image alt="avatar" src={avatar} width={256} height={256} />
                   </div>
-                  <h3 className="text-gray-400 text-sm">
-                    {'@' +
-                      userDetails?.name.split(' ').join('').toLocaleLowerCase()}
-                  </h3>
-                  <h3 className="text-neutral text-sm p-2">
-                    {userDetails?.bio || 'This user has no bio.'}
-                  </h3>
+>>>>>>> 3dfca4d89e8f14bd9291c2847b329a8c2d1cf7f0
                 </div>
-              </div>
-              <div className="sm:flex hidden flex-col bg-white rounded-xl p-2 ">
-                <ul>
-                  <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
-                    <FiAtSign />
-                    <span>
-                      {userDetails?.name
-                        .split(' ')
-                        .join('')
-                        .toLocaleLowerCase()}
-                    </span>
-                  </li>
-                  <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
-                    <FiMail />
-                    <span>{userDetails?.email}</span>
-                  </li>
-                  <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
-                    <FiMapPin />
-                    <span>{userDetails?.location?.address}</span>
-                  </li>
-                  <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
-                    <FiPhone />
-                    <span>{userDetails?.mobileNumber}</span>
-                  </li>
-                  <li className="text-neutral text-sm gap-3 flex flex-row items-center p-2">
-                    <FiCalendar />
-                    <span>{userDetails?.birthday}</span>
-                  </li>
-                </ul>
+                <div className="h-full p-2 flex flex-col sm:text-left text-center justify-between flex-auto">
+                  <div className="flex flex-col gap-2 relative w-fit sm:py-10">
+                    <div className="relative">
+                      <div className="font-bold text-3xl flex items-center">
+                        {userDetails?.name}
+                        <button
+                          onClick={() => setOpenState(!isOpen)}
+                          className="text-sm absolute -right-8 h-fit self-center p-1 rounded-full bg-purple-100 text-primary"
+                        >
+                          <FiEdit3 />
+                        </button>
+                      </div>
+                      {isOpen && (
+                        <div className="absolute top-10 overflow-clip right-0 w-fit rounded-md shadow-lg bg-white divide-y divide-gray-100">
+                          <Link href="/u/edit/profile" passHref>
+                            <div className="flex py-2 px-4 hover:bg-purple-300 cursor-pointer">
+                              <span className=" text-gray-700 text-sm text-left">
+                                Edit Profile
+                              </span>
+                            </div>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="text-gray-400 text-sm">
+                        {'@' +
+                          userDetails?.name
+                            .split(' ')
+                            .join('')
+                            .toLocaleLowerCase()}
+                      </h3>
+                      <h3 className="text-neutral text-sm sm:mt-4 mt-2">
+                        {userDetails?.bio || 'This user has no bio.'}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <UserInfo session={session} userDetails={userDetails} />
+                </div>
               </div>
             </div>
             <hr />

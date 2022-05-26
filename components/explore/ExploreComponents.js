@@ -6,6 +6,8 @@ import { FiArrowRight, FiBookmark, FiMapPin } from 'react-icons/fi';
 import { MdOutlineLocalFireDepartment } from 'react-icons/md';
 import Link from 'next/link';
 import { fetchJSON } from '../../middleware/helper';
+import { useState, useEffect } from 'react';
+
 function OrganizerTile({ name }) {
   return (
     <div className="min-w-[6rem] w-32 p-4 rounded-lg bg-white flex flex-col items-center gap-2">
@@ -155,21 +157,58 @@ function Initiative({ initiativeData, bookmarkList }) {
   );
 }
 
-function InitiativeCarousel() {
+function InitiativeCarousel({nearby}) {
   return (
-    <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 scrollbar-none p-1">
-      {/* <Initiative />
-      <Initiative />
-      <Initiative />
-      <Initiative /> */}
+    <div className="flex flex-row space-x-4 overflow-x-scroll pb-2 p-1">
+      {nearby?.map((initiative) => (
+        <Initiative
+          key={initiative.id}
+          initiativeData={initiative}
+        />
+        ))}
     </div>
   );
 }
 
 function Nearby() {
+  const [nearbyInitiatives, setNearByInitiatives] = useState([]);
+  const [latlng, setLatLng] = useState([0, 0]);
+
+  
+  useEffect(() => {
+    grabLatLng();
+    fetchNearByInitiatives();
+  }, []);
+
+  const grabLatLng = () => {
+    const success = (data) => {
+      setLatLng([data.coords.latitude, data.coords.longitude]);
+    };
+    const error = (err) => {
+      console.error(err);
+    };
+
+    const data = navigator.geolocation.getCurrentPosition(success, error, {
+      enableHighAccuracy: true,
+      maximumAge: 0,
+      timeout: 10000,
+    });
+  };
+  
+  const fetchNearByInitiatives = async () => {
+    const data = await fetchJSON('/api/initiatives/get-initiatives', {
+      type: '2',
+      center: {
+        lat: latlng[0],
+        lng: latlng[1],
+      },
+    });
+    setNearByInitiatives(data);
+  };
+
   return (
     <>
-      <div className="w-full xl:w-1/2 overflow-clip gap-2">
+      <div className="w-full overflow-clip gap-2">
         <div className="flex flex-row justify-between items-center">
           <span className="text-xl font-bold">Nearby Initiatives</span>
           <div className="text-sm text-primary font-bold gap-2 flex flex-row items-center">
@@ -177,7 +216,7 @@ function Nearby() {
             <FiArrowRight className="inline" />
           </div>
         </div>
-        <InitiativeCarousel />
+        <InitiativeCarousel nearby = {nearbyInitiatives}/>
       </div>
     </>
   );
@@ -186,7 +225,6 @@ function Nearby() {
 function Initiatives() {
   return (
     <div className="w-full flex flex-col space-y-4 xl:flex-row xl:space-y-0 xl:space-x-8">
-      <Nearby />
       <Nearby />
     </div>
   );
@@ -201,6 +239,20 @@ function Featured() {
       </span>
     </div>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+  if (!GrantAccess(context, session)) return redirectToLogin(context);
+  return {
+    props: {
+      sessionFromProp: session,
+      bookmarkList: await fetchJSON(
+        `${process.env.NEXTAUTH_URL}/api/user/list-bookmarks`,
+        { id: session.user._id }
+      ),
+    },
+  };
 }
 
 export {
