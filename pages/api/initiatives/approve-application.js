@@ -82,6 +82,7 @@ async function handler(req, res) {
           notifications: {
             type: 2,
             initiativeID: initiative._id,
+            moderatorID: session?.user?._id,
             name: name,
             message: `has approved your application for ${initiative.title}. See you!`,
             dateCreated: new Date(),
