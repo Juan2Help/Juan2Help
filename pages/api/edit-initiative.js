@@ -28,6 +28,7 @@ async function handler(req, res) {
     const db = conn.db();
     const initiatives = db.collection("initiatives");
     const notifications = db.collection("notifications");
+    const users = db.collection("users");
 
     // update initiative
     const initiative = await initiatives.updateOne(
@@ -48,6 +49,12 @@ async function handler(req, res) {
         },
       }
     );
+
+    const user = await users.findOne({
+      email,
+    });
+
+
 
     console.log("PUSHING TO NOTIFICATIONS", participantsList);
 
@@ -79,6 +86,7 @@ async function handler(req, res) {
                   type: 1,
                   initiativeID: _id,
                   name: name,
+                  moderatorID: user?._id,
                   message: `has updated ${title}. Click to check it out!`,
                   dateCreated: new Date(),
                 },
