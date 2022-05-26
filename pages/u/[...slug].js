@@ -70,9 +70,7 @@ function Profile({ sessionFromProp, userDetails, bookmarkList }) {
                   <Image
                     alt="avatar"
                     src={
-                      session?.user?._id === userDetails._id
-                        ? profilePicture || '/images/avatar.png'
-                        : avatar || '/images/avatar.png'
+                      session?.user?._id === userDetails._id ? avatar : '/images/avatar.png'
                     }
                     className="min-h-full min-w-full"
                     width={200}

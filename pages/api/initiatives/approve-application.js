@@ -83,7 +83,7 @@ async function handler(req, res) {
             type: 2,
             initiativeID: initiative._id,
             name: name,
-            message: `your application for ${initiative.title} has been approved. See you!`,
+            message: `has approved your application for ${initiative.title}. See you!`,
             dateCreated: new Date(),
           },
         },
